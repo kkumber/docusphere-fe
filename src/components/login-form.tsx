@@ -10,24 +10,33 @@ export function LoginForm({
   return (
     <form className={cn('flex flex-col gap-6', className)} {...props}>
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+        <div className="flex flex-col items-start gap-1 text-center">
+          <h1 className="text-2xl font-bold ">Login to your account</h1>
           <p className="text-muted-foreground text-sm text-balance">
             Enter your email below to login to your account
           </p>
         </div>
         <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
+          <FieldLabel htmlFor="email" className="">
+            Email
+          </FieldLabel>
           <Input id="email" type="email" placeholder="m@example.com" required />
         </Field>
         <Field>
           <div className="flex items-center">
-            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <FieldLabel htmlFor="password" className="">
+              Password
+            </FieldLabel>
           </div>
           <Input id="password" type="password" required />
         </Field>
         <Field>
-          <Button type="submit">Login</Button>
+          <Button
+            type="submit"
+            className="bg-primary-blue hover:bg-primary-blue/80"
+          >
+            Login
+          </Button>
         </Field>
       </FieldGroup>
     </form>

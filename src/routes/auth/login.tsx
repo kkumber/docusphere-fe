@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { GalleryVerticalEnd } from 'lucide-react'
 
 import { LoginForm } from '@/components/login-form'
 
@@ -13,8 +12,8 @@ function LoginPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
+            <div className="flex size-6 items-center justify-center rounded-md">
+              <img src="/public/docusphere-icon.png" alt="docusphere icon" />
             </div>
             Docusphere
           </a>
@@ -25,12 +24,18 @@ function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="bg-muted relative hidden lg:block">
-        <img
-          src="/placeholder.svg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="bg-[url('/public/login-bg.png')] bg-cover relative hidden lg:block space-y-40 text-white">
+        <div className="w-full flex items-center justify-center ">
+          <img src="/public/DepEd.png" alt="DepEd Icon" className="w-1/4" />
+        </div>
+
+        <div className="flex items-center justify-center">
+          <h1 className="text-6xl text-center">Document Tracking System</h1>
+        </div>
+
+        <div className="mx-auto flex items-center justify-center rounded-full bg-white/20 px-8 py-2 max-w-max">
+          <p>DepEd Makati Division</p>
+        </div>
       </div>
     </div>
   )
