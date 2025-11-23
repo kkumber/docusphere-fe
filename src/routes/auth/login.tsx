@@ -13,7 +13,7 @@ function LoginPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
             <div className="flex size-6 items-center justify-center rounded-md">
-              <img src="/public/docusphere-icon.png" alt="docusphere icon" />
+              <img src="/docusphere-icon.png" alt="docusphere icon" />
             </div>
             Docusphere
           </a>
@@ -24,9 +24,9 @@ function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="bg-[url('/public/login-bg.png')] bg-cover relative hidden lg:block space-y-40 text-white">
+      <div className="bg-[url('/login-bg.png')] bg-cover relative hidden lg:block space-y-40 text-white">
         <div className="w-full flex items-center justify-center ">
-          <img src="/public/DepEd.png" alt="DepEd Icon" className="w-1/4" />
+          <img src="/DepEd.png" alt="DepEd Icon" className="w-1/4" />
         </div>
 
         <div className="flex items-center justify-center">
