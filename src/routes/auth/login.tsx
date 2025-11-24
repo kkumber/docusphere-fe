@@ -1,12 +1,36 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { LoginForm } from '@/components/login-form'
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { useRef } from 'react'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
+  const [email, setEmail] = useState<string>()
+  const [password, setPassword] = useState<string>()
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      })
+      return response.json()
+    },
+  })
+
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setEmail(event.target.value)
+  }
+
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(event.target.value)
+  }
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -20,7 +44,10 @@ function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm />
+            <LoginForm
+              handleEmailChange={handleEmailChange}
+              handlePasswordChange={handlePasswordChange}
+            />
           </div>
         </div>
       </div>

@@ -2,11 +2,15 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { useState } from 'react'
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'form'>) {
+  const [email, setEmail] = useState<string>()
+  const [password, setPassword] = useState<string>()
+
   return (
     <form className={cn('flex flex-col gap-6', className)} {...props}>
       <FieldGroup>
@@ -20,7 +24,12 @@ export function LoginForm({
           <FieldLabel htmlFor="email" className="">
             Email
           </FieldLabel>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            id="email"
+            type="email"
+            placeholder="employee@example.com"
+            required
+          />
         </Field>
         <Field>
           <div className="flex items-center">
