@@ -13,6 +13,7 @@ function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
 
+  // Need to call this one first dumbass hoho
   const mutation = useMutation({
     mutationFn: async () => {
       const { data } = await api.post('/auth/login', {
