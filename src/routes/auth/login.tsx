@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { LoginForm } from '@/components/login-form'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { useRef } from 'react'
+import api from '@/lib/api'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
@@ -15,11 +15,12 @@ function LoginPage() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
+      const { data } = await api.post('/auth/login', {
+        email: email,
+        password: password,
       })
-      return response.json()
+      console.log(data)
+      return data
     },
   })
 
