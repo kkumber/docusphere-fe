@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query'
 type LoginFormProps = {
   handleEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
 }
 
 type Props = React.ComponentProps<'form'> & LoginFormProps
@@ -16,10 +17,15 @@ export function LoginForm({
   className,
   handleEmailChange,
   handlePasswordChange,
+  handleSubmit,
   ...props
 }: Props) {
   return (
-    <form className={cn('flex flex-col gap-6', className)} {...props}>
+    <form
+      className={cn('flex flex-col gap-6', className)}
+      {...props}
+      onSubmit={handleSubmit}
+    >
       <FieldGroup>
         <div className="flex flex-col items-start gap-1 text-center">
           <h1 className="text-2xl font-bold ">Login to your account</h1>

@@ -13,24 +13,27 @@ function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
 
-  // Need to call this one first dumbass hoho
   const mutation = useMutation({
     mutationFn: async () => {
       const { data } = await api.post('/auth/login', {
         email: email,
         password: password,
       })
-      console.log(data)
       return data
     },
   })
 
-  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setEmail(event.target.value)
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.currentTarget.value)
   }
 
-  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setPassword(event.target.value)
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.currentTarget.value)
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    mutation.mutate()
   }
 
   return (
@@ -49,6 +52,7 @@ function LoginPage() {
             <LoginForm
               handleEmailChange={handleEmailChange}
               handlePasswordChange={handlePasswordChange}
+              handleSubmit={handleSubmit}
             />
           </div>
         </div>
