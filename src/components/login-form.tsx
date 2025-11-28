@@ -9,6 +9,7 @@ type LoginFormProps = {
   handleEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+  isPending: boolean
 }
 
 type Props = React.ComponentProps<'form'> & LoginFormProps
@@ -18,6 +19,7 @@ export function LoginForm({
   handleEmailChange,
   handlePasswordChange,
   handleSubmit,
+  isPending,
   ...props
 }: Props) {
   return (
@@ -62,8 +64,9 @@ export function LoginForm({
           <Button
             type="submit"
             className="bg-primary-blue hover:bg-primary-blue/80"
+            disabled={isPending}
           >
-            Login
+            {isPending ? 'Logging in...' : 'Login'}
           </Button>
         </Field>
       </FieldGroup>

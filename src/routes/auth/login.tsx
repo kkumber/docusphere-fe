@@ -15,7 +15,9 @@ function LoginPage() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const { data } = await api.post('/auth/login', {
+      await api.get('/sanctum/csrf-cookie')
+
+      const { data } = await api.post('/login', {
         email: email,
         password: password,
       })
@@ -34,6 +36,7 @@ function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     mutation.mutate()
+    console.log(mutation.data)
   }
 
   return (
@@ -53,6 +56,7 @@ function LoginPage() {
               handleEmailChange={handleEmailChange}
               handlePasswordChange={handlePasswordChange}
               handleSubmit={handleSubmit}
+              isPending={mutation.isPending}
             />
           </div>
         </div>
