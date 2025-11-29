@@ -36,7 +36,7 @@ function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     mutation.mutate()
-    console.log(mutation.data)
+    console.log(mutation.data.data)
   }
 
   return (
