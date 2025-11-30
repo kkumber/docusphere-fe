@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { LoginForm } from '@/components/login-form'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import { useUserContext } from '@/context/user-context'
 import api from '@/lib/api'
 
 export const Route = createFileRoute('/auth/login')({
@@ -12,6 +13,7 @@ export const Route = createFileRoute('/auth/login')({
 function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
+  const { setUser } = useUserContext()
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -36,7 +38,11 @@ function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     mutation.mutate()
-    console.log(mutation.data.data)
+    const data = mutation.data.data
+    if (!data) {
+      return alert('Login failed')
+    }
+    setUser(data)
   }
 
   return (
