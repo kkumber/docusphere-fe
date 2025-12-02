@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useUserContext } from '@/context/user-context'
 import api from '@/lib/api'
+import { signIn } from '@/utils/auth'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
@@ -43,6 +44,7 @@ function LoginPage() {
       return alert('Login failed')
     }
     setUser(data)
+    signIn()
   }
 
   return (

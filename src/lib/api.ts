@@ -1,5 +1,5 @@
 import axios from "axios"
-import getCookie from "@/helpers/get-cookie";
+import getCookie from "@/utils/get-cookie";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
