@@ -6,26 +6,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { UserContext } from '@/context/user-context'
 import { useState } from 'react'
 import type { User } from '@/types/user'
-import { useAuth } from '@/hooks/use-auth'
+import type { AuthContext } from '@/hooks/use-auth'
 
 const queryClient = new QueryClient()
 
-interface useAuthContext {
-  isAuthenticated: () => boolean
-  signIn: () => void
-  signOut: () => void
-}
-
-interface AuthenticationContext {
-  authentication: useAuthContext
-}
-
-export const Route = createRootRouteWithContext<AuthenticationContext>()({
+export const Route = createRootRouteWithContext<{
+  authentication: AuthContext
+}>()({
   component: App,
 })
 
 function App() {
-  const auth = useAuth()
   const [user, setUser] = useState<User | null>(null)
   return (
     <>

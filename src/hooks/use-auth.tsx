@@ -29,3 +29,5 @@ export const useAuth = () => {
     signOut,
   }
 }
+
+export type AuthContext = ReturnType<typeof useAuth>
