@@ -8,14 +8,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import type { Breadcrumbs } from '@/types/ui'
 
 interface BreadcrumbItems {
   breadcrumbs: Breadcrumbs[]
-}
-
-interface Breadcrumbs {
-  title: string
-  link: string
 }
 
 export default function Header({ breadcrumbs }: BreadcrumbItems) {
@@ -43,7 +39,7 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
             ) : (
               <>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href={breadcrumb.link}>
+                  <BreadcrumbLink href={breadcrumb.href}>
                     {breadcrumb.title}
                   </BreadcrumbLink>
                 </BreadcrumbItem>

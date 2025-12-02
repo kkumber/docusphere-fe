@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useUserContext } from '@/context/user-context'
 import api from '@/lib/api'
-import { signIn } from '@/utils/auth'
+import { useAuth } from '@/hooks/use-auth'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
@@ -15,6 +15,7 @@ function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
   const { setUser } = useUserContext()
+  const { signIn } = useAuth()
 
   const mutation = useMutation({
     mutationFn: async () => {
