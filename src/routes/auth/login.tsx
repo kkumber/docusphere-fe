@@ -36,6 +36,7 @@ function LoginPage() {
     setPassword(event.currentTarget.value)
   }
 
+  // submit form and then set the user context
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     mutation.mutate()

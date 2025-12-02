@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 
-const useAuth = () => {
+export const useAuth = () => {
   const navigate = useNavigate()
 
   const isAuthenticated = () => {
