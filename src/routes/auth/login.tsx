@@ -3,21 +3,27 @@ import { createFileRoute } from '@tanstack/react-router'
 import { LoginForm } from '@/components/login-form'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { useUserContext } from '@/context/user-context'
 import api from '@/lib/api'
-import { useAuth } from '@/hooks/use-auth'
+import { AxiosError } from 'axios'
+import type { User } from '@/types/user'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
 })
 
+interface ApiError {
+  message: string
+  errors: {
+    [key: string]: string[]
+  }
+}
+
 function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
-  const { setUser } = useUserContext()
-  const { signIn } = useAuth()
+  const { authentication } = Route.useRouteContext()
 
-  const mutation = useMutation({
+  const mutation = useMutation<User, AxiosError<ApiError>>({
     mutationFn: async () => {
       await api.get('/sanctum/csrf-cookie')
 
@@ -25,7 +31,13 @@ function LoginPage() {
         email: email,
         password: password,
       })
-      return data
+      return data.data
+    },
+    onSuccess: (data) => {
+      authentication.signIn(data)
+    },
+    onError: (error) => {
+      console.error('Login failed', error.response?.data.message)
     },
   })
 
@@ -37,17 +49,15 @@ function LoginPage() {
     setPassword(event.currentTarget.value)
   }
 
-  // submit form and then set the user context
+  // submit and set user context
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     mutation.mutate()
-    const data = mutation.data.data
-    if (!data) {
-      return alert('Login failed')
-    }
-    setUser(data)
-    signIn()
   }
+
+  const errorMessage = mutation.isError
+    ? mutation.error.response?.data.message
+    : null
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -67,6 +77,7 @@ function LoginPage() {
               handlePasswordChange={handlePasswordChange}
               handleSubmit={handleSubmit}
               isPending={mutation.isPending}
+              errorMessage={errorMessage}
             />
           </div>
         </div>

@@ -2,14 +2,13 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
 
 type LoginFormProps = {
   handleEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
   isPending: boolean
+  errorMessage: string | null | undefined
 }
 
 type Props = React.ComponentProps<'form'> & LoginFormProps
@@ -20,6 +19,7 @@ export function LoginForm({
   handlePasswordChange,
   handleSubmit,
   isPending,
+  errorMessage,
   ...props
 }: Props) {
   return (
@@ -35,6 +35,7 @@ export function LoginForm({
             Enter your email below to login to your account
           </p>
         </div>
+        {errorMessage && <p className="text-destructive">{errorMessage}</p>}
         <Field>
           <FieldLabel htmlFor="email" className="">
             Email

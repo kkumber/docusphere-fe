@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthenticatedAuthenticatedRouteImport } from './routes/_authenticated/_authenticated'
+import { Route as AuthenticatedLayoutRouteImport } from './routes/_authenticated/_layout'
 
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/_authenticated/',
@@ -23,11 +23,10 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAuthenticatedRoute =
-  AuthenticatedAuthenticatedRouteImport.update({
-    id: '/_authenticated/_authenticated',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const AuthenticatedLayoutRoute = AuthenticatedLayoutRouteImport.update({
+  id: '/_authenticated/_layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
@@ -39,7 +38,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_authenticated/_authenticated': typeof AuthenticatedAuthenticatedRoute
+  '/_authenticated/_layout': typeof AuthenticatedLayoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
@@ -50,13 +49,13 @@ export interface FileRouteTypes {
   to: '/auth/login' | '/'
   id:
     | '__root__'
-    | '/_authenticated/_authenticated'
+    | '/_authenticated/_layout'
     | '/auth/login'
     | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedAuthenticatedRoute: typeof AuthenticatedAuthenticatedRoute
+  AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
@@ -77,18 +76,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/_authenticated': {
-      id: '/_authenticated/_authenticated'
+    '/_authenticated/_layout': {
+      id: '/_authenticated/_layout'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthenticatedAuthenticatedRouteImport
+      preLoaderRoute: typeof AuthenticatedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthenticatedAuthenticatedRoute: AuthenticatedAuthenticatedRoute,
+  AuthenticatedLayoutRoute: AuthenticatedLayoutRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }

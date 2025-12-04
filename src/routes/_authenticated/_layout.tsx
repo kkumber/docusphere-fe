@@ -3,7 +3,7 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Outlet } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_authenticated/_authenticated')({
+export const Route = createFileRoute('/_authenticated/_layout')({
   beforeLoad: async ({ location, context }) => {
     const { isAuthenticated } = context.authentication
     if (!isAuthenticated()) {
@@ -15,13 +15,19 @@ export const Route = createFileRoute('/_authenticated/_authenticated')({
       })
     }
   },
-  component: RouteComponent,
+  component: LayoutComponent,
 })
 
-function RouteComponent() {
+function LayoutComponent() {
   return (
     <>
-      <SidebarProvider>
+      <SidebarProvider
+        style={
+          {
+            '--sidebar-width': '350px',
+          } as React.CSSProperties
+        }
+      >
         <AppSidebar />
         <SidebarInset>
           <Outlet />

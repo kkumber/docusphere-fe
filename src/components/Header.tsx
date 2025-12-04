@@ -30,24 +30,26 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
           <BreadcrumbItem>
             <BreadcrumbPage>Inbox</BreadcrumbPage>
           </BreadcrumbItem> */}
-        {breadcrumbs.map((breadcrumb, index) => (
-          <BreadcrumbList>
-            {breadcrumbs.length - 1 === index ? (
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
-              </BreadcrumbItem>
-            ) : (
-              <>
+        <BreadcrumbList>
+          {breadcrumbs.map((breadcrumb, index) => (
+            <>
+              {breadcrumbs.length - 1 === index ? (
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href={breadcrumb.href}>
-                    {breadcrumb.title}
-                  </BreadcrumbLink>
+                  <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-              </>
-            )}
-          </BreadcrumbList>
-        ))}
+              ) : (
+                <>
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbLink href={breadcrumb.href}>
+                      {breadcrumb.title}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                </>
+              )}
+            </>
+          ))}
+        </BreadcrumbList>
       </Breadcrumb>
     </header>
   )

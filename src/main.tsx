@@ -1,13 +1,13 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { useAuth } from './hooks/use-auth.tsx'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
+import { useAuth } from './hooks/use-auth.tsx'
 
 // Create a new router instance
 const router = createRouter({
@@ -28,7 +28,7 @@ declare module '@tanstack/react-router' {
 
 function Root() {
   const authentication = useAuth()
-  return RouterProvider({ router, context: { authentication } })
+  return <RouterProvider router={router} context={{ authentication }} />
 }
 
 // Render the app

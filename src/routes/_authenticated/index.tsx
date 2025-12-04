@@ -17,6 +17,7 @@ function DashboardPage() {
   return (
     <>
       <Header breadcrumbs={breadcrumbList} />
+      hello dashboard Page
     </>
   )
 }
