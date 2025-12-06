@@ -8,7 +8,7 @@ interface UserContext {
 
 export const UserContext = createContext<UserContext | null>(null)
 
-export const useUserContext = () => {
+export const useUserContext = (): UserContext => {
   const context = useContext(UserContext)
   if (!context) {
     throw new Error('useUserContext must be used within a UserProvider.')

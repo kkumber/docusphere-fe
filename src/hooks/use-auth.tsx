@@ -1,33 +1,46 @@
-import { useNavigate } from '@tanstack/react-router'
-import { useUserContext } from '@/context/user-context'
 import type { User } from '@/types/user'
+import { useEffect, useState } from 'react'
+import api from '@/lib/api'
 
 export const useAuth = () => {
-  const navigate = useNavigate()
-  const { user, setUser } = useUserContext()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    api
+      .get('/api/user')
+      .then((res) => {
+        console.log(res.data)
+        signIn(res.data.data)
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error('Error Message: ', error.response.data)
+          signOut()
+        }
+      })
+  })
 
   const isAuthenticated = () => {
-    return user !== null
+    const loggedIn = localStorage.getItem('isAuthenticated')
+    return loggedIn ? JSON.parse(loggedIn) : false
   }
 
   const signIn = (userPayload: User) => {
-    // In a real application, you'd get the user object from your authentication API response
-    // For this example, we'll use a dummy user based on the payload
     setUser(userPayload)
-    localStorage.setItem('isAuthenticated', 'true')
-    navigate({ to: '/' })
+    localStorage.setItem('isAuthenticated', JSON.stringify('true'))
   }
 
   const signOut = () => {
     setUser(null)
     localStorage.removeItem('isAuthenticated')
-    navigate({ to: '/auth/login' })
   }
 
   return {
     isAuthenticated,
     signIn,
     signOut,
+    setUser,
+    user,
   }
 }
 

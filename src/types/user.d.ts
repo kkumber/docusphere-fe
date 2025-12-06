@@ -1,4 +1,4 @@
-export interface User {
+interface UserInterface {
     id: number;
     first_name: string;
     last_name: string;
@@ -10,3 +10,5 @@ export interface User {
     created_at: string;
     updated_at: string;
 }
+
+export type User = UserInterface | null | undefined;

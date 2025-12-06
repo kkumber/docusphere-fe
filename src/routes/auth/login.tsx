@@ -34,7 +34,7 @@ function LoginPage() {
       return data.data
     },
     onSuccess: (data) => {
-      authentication.signIn(data)
+      // authentication.signIn(data)
     },
     onError: (error) => {
       console.error('Login failed', error.response?.data.message)
