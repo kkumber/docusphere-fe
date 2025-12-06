@@ -9,15 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthenticatedLayoutRouteImport } from './routes/_authenticated/_layout'
+import { Route as AuthenticatedLayoutIndexRouteImport } from './routes/_authenticated/_layout/index'
 
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/_authenticated/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
@@ -27,20 +22,26 @@ const AuthenticatedLayoutRoute = AuthenticatedLayoutRouteImport.update({
   id: '/_authenticated/_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedLayoutIndexRoute =
+  AuthenticatedLayoutIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
-  '/': typeof AuthenticatedIndexRoute
+  '/': typeof AuthenticatedLayoutIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
-  '/': typeof AuthenticatedIndexRoute
+  '/': typeof AuthenticatedLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_authenticated/_layout': typeof AuthenticatedLayoutRoute
+  '/_authenticated/_layout': typeof AuthenticatedLayoutRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/_layout/': typeof AuthenticatedLayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -51,24 +52,16 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated/_layout'
     | '/auth/login'
-    | '/_authenticated/'
+    | '/_authenticated/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRoute
+  AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth/login': {
       id: '/auth/login'
       path: '/auth/login'
@@ -83,13 +76,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/_layout/': {
+      id: '/_authenticated/_layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedLayoutIndexRouteImport
+      parentRoute: typeof AuthenticatedLayoutRoute
+    }
   }
 }
 
+interface AuthenticatedLayoutRouteChildren {
+  AuthenticatedLayoutIndexRoute: typeof AuthenticatedLayoutIndexRoute
+}
+
+const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
+  AuthenticatedLayoutIndexRoute: AuthenticatedLayoutIndexRoute,
+}
+
+const AuthenticatedLayoutRouteWithChildren =
+  AuthenticatedLayoutRoute._addFileChildren(AuthenticatedLayoutRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  AuthenticatedLayoutRoute: AuthenticatedLayoutRoute,
+  AuthenticatedLayoutRoute: AuthenticatedLayoutRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
