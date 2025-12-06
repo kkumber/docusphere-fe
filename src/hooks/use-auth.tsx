@@ -18,7 +18,7 @@ export const useAuth = () => {
           signOut()
         }
       })
-  })
+  }, [])
 
   const isAuthenticated = () => {
     const loggedIn = localStorage.getItem('isAuthenticated')

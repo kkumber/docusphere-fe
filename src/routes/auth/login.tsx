@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { LoginForm } from '@/components/login-form'
 import { useState } from 'react'
@@ -22,9 +22,11 @@ function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
   const { authentication } = Route.useRouteContext()
+  const navigate = useNavigate()
 
   const mutation = useMutation<User, AxiosError<ApiError>>({
     mutationFn: async () => {
+      // Get csrf cookie then call login
       await api.get('/sanctum/csrf-cookie')
 
       const { data } = await api.post('/login', {
@@ -34,7 +36,8 @@ function LoginPage() {
       return data.data
     },
     onSuccess: (data) => {
-      // authentication.signIn(data)
+      authentication.signIn(data)
+      navigate({ to: '/' })
     },
     onError: (error) => {
       console.error('Login failed', error.response?.data.message)
