@@ -7,6 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card'
+import { ChartAreaInteractive } from '@/components/ui/chart-area'
 
 const breadcrumbList: Breadcrumbs[] = [
   {
@@ -44,7 +45,7 @@ const DashboardPage = () => {
       <Header breadcrumbs={breadcrumbList} />
 
       <MainContainer>
-        <div className="flex gap-6 flex-wrap justify-center items-center">
+        <div className="flex gap-6 flex-wrap justify-center items-center mb-8">
           {SampleCards.map((card) => (
             <Card key={card.title} className="flex-1 min-w-40">
               <CardHeader>
@@ -57,6 +58,9 @@ const DashboardPage = () => {
               </CardHeader>
             </Card>
           ))}
+        </div>
+        <div className="">
+          <ChartAreaInteractive />
         </div>
       </MainContainer>
     </>
