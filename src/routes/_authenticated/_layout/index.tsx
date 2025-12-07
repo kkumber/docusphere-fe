@@ -1,27 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import Header from '@/components/Header'
-import type { Breadcrumbs } from '@/types/ui'
-import MainContainer from '@/components/MainContainer'
+import DashboardPage from '@/pages/dashboard'
 
 export const Route = createFileRoute('/_authenticated/_layout/')({
-  component: DashboardPage,
+  component: Dashboard,
 })
 
-const breadcrumbList: Breadcrumbs[] = [
-  {
-    title: 'Dashboard',
-    href: '/',
-  },
-]
-
-function DashboardPage() {
-  return (
-    <>
-      <Header breadcrumbs={breadcrumbList} />
-
-      <MainContainer>
-        <div className="">Hello</div>
-      </MainContainer>
-    </>
-  )
+function Dashboard() {
+  return <DashboardPage />
 }

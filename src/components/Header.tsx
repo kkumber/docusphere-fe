@@ -34,12 +34,12 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
           {breadcrumbs.map((breadcrumb, index) => (
             <>
               {breadcrumbs.length - 1 === index ? (
-                <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbItem className="hidden md:block" key={index}>
                   <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
                 </BreadcrumbItem>
               ) : (
                 <>
-                  <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbItem className="hidden md:block" key={index}>
                     <BreadcrumbLink href={breadcrumb.href}>
                       {breadcrumb.title}
                     </BreadcrumbLink>

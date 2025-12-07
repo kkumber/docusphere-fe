@@ -5,7 +5,7 @@ type MainProps = {
 
 export default function MainContainer({ children, ...props }: MainProps) {
   return (
-    <main className="w-100 p-4" {...props}>
+    <main className="w-full p-4" {...props}>
       {children}
     </main>
   )
