@@ -23,13 +23,6 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
         className="mr-2 data-[orientation=vertical]:h-4"
       />
       <Breadcrumb>
-        {/* <BreadcrumbItem className="hidden md:block">
-            <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="hidden md:block" />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Inbox</BreadcrumbPage>
-          </BreadcrumbItem> */}
         <BreadcrumbList>
           {breadcrumbs.map((breadcrumb, index) => (
             <>
