@@ -6,7 +6,6 @@ interface UserInterface {
     office: string;
     status: number;
     email_verified_at: string;
-    password: string;
     created_at: string;
     updated_at: string;
 }

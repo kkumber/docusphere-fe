@@ -9,12 +9,10 @@ export const useAuth = () => {
     api
       .get('/api/user')
       .then((res) => {
-        console.log(res.data)
         signIn(res.data.data)
       })
       .catch((error) => {
         if (error.response) {
-          console.error('Error Message: ', error.response.data)
           signOut()
         }
       })
