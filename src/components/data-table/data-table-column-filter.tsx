@@ -8,11 +8,17 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '../ui/separator'
 import { Circle } from 'lucide-react'
 import type { Table } from '@tanstack/react-table'
+import type { ColumnValuesForFilterStatus } from '@/pages/user-management'
 
 interface StatusFilterProps<TData> {
   table: Table<TData>
+  columnValuesForFilter: ColumnValuesForFilterStatus[]
 }
-export function TableColumnFilter<TData>({ table }: StatusFilterProps<TData>) {
+
+export function TableColumnFilter<TData>({
+  table,
+  columnValuesForFilter,
+}: StatusFilterProps<TData>) {
   const column = table.getColumn('status')
   const value = (column?.getFilterValue() as string[]) ?? []
 
@@ -39,20 +45,15 @@ export function TableColumnFilter<TData>({ table }: StatusFilterProps<TData>) {
       <PopoverContent className="w-40 space-y-2">
         Filter By:
         <Separator className="my-2" />
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            checked={value.includes('1')}
-            onCheckedChange={() => toggle('1')}
-          />
-          <span>Active</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            checked={value.includes('0')}
-            onCheckedChange={() => toggle('0')}
-          />
-          <span>Inactive</span>
-        </div>
+        {columnValuesForFilter.map((item, index) => (
+          <div className="flex items-center space-x-2" key={index}>
+            <Checkbox
+              checked={value.includes(item.value)}
+              onCheckedChange={() => toggle(item.value)}
+            />
+            <span>{item.label}</span>
+          </div>
+        ))}
       </PopoverContent>
     </Popover>
   )

@@ -24,23 +24,19 @@ import { Input } from '@/components/ui/input'
 
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableViewOptions } from './data-table-column-toggle'
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from '@/components/ui/select'
 import { TableColumnFilter } from './data-table-column-filter'
+import type { ColumnValuesForFilterStatus } from '@/pages/user-management'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  columnValuesForFilter: ColumnValuesForFilterStatus[]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  columnValuesForFilter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]) // state for sorting function columns
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // state for filters or search function on the table
@@ -79,7 +75,10 @@ export function DataTable<TData, TValue>({
         />
 
         {/* Status filter */}
-        <TableColumnFilter table={table} />
+        <TableColumnFilter
+          table={table}
+          columnValuesForFilter={columnValuesForFilter}
+        />
         {/* Column visibility */}
         <DataTableViewOptions table={table} />
       </div>

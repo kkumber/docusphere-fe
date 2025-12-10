@@ -13,11 +13,21 @@ const breadcrumbs: Breadcrumbs[] = [
   },
 ]
 
+export interface ColumnValuesForFilterStatus {
+  value: string
+  label: string
+}
+
 const UserManagementPage = () => {
   const { isPending, data, isError, error } = useGetRequest({
     url: '/api/users',
     key: ['users'],
   })
+
+  const columnValuesForFilter: ColumnValuesForFilterStatus[] = [
+    { value: '1', label: 'Active' },
+    { value: '0', label: 'Inactive' },
+  ]
 
   return (
     <>
@@ -26,7 +36,13 @@ const UserManagementPage = () => {
       <MainContainer>
         {isPending && <SkeletonTableBasic />}
         {isError && <p>{error?.message}</p>}
-        {data && <DataTable columns={userColumns} data={data.data} />}
+        {data && (
+          <DataTable
+            columns={userColumns}
+            data={data.data}
+            columnValuesForFilter={columnValuesForFilter}
+          />
+        )}
       </MainContainer>
     </>
   )
