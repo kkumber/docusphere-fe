@@ -19,18 +19,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { SlidersHorizontal } from 'lucide-react'
+
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableViewOptions } from './data-table-column-toggle'
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select'
+import { TableColumnFilter } from './data-table-column-filter'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -76,6 +77,9 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+
+        {/* Status filter */}
+        <TableColumnFilter table={table} />
         {/* Column visibility */}
         <DataTableViewOptions table={table} />
       </div>

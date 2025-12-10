@@ -9,7 +9,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ArrowUpDown } from 'lucide-react'
 import { DataTableColumnHeader } from './data-table-column-header'
 
 export const userColumns: ColumnDef<User>[] = [
@@ -39,6 +38,9 @@ export const userColumns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className="text-right font-medium">{row.original?.status}</div>
     ),
+    filterFn: (row, id, value) => {
+      return value.length ? value.includes(String(row.getValue(id))) : true
+    },
   },
   {
     id: 'actions',
