@@ -5,6 +5,7 @@ import SkeletonTableBasic from '@/components/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import type { Breadcrumbs } from '@/types/ui'
+import type { ColumnValuesForFilterStatus } from '@/types/ui'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -12,11 +13,6 @@ const breadcrumbs: Breadcrumbs[] = [
     href: '/user-management',
   },
 ]
-
-export interface ColumnValuesForFilterStatus {
-  value: string
-  label: string
-}
 
 const UserManagementPage = () => {
   const { isPending, data, isError, error } = useGetRequest({

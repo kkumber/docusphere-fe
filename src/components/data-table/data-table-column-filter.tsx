@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '../ui/separator'
 import { Circle } from 'lucide-react'
 import type { Table } from '@tanstack/react-table'
-import type { ColumnValuesForFilterStatus } from '@/pages/user-management'
+import type { ColumnValuesForFilterStatus } from '@/types/ui'
 
 interface StatusFilterProps<TData> {
   table: Table<TData>

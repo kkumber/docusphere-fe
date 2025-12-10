@@ -25,7 +25,7 @@ import { Input } from '@/components/ui/input'
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableViewOptions } from './data-table-column-toggle'
 import { TableColumnFilter } from './data-table-column-filter'
-import type { ColumnValuesForFilterStatus } from '@/pages/user-management'
+import type { ColumnValuesForFilterStatus } from '@/types/ui'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
