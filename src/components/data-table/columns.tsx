@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ArrowUpDown } from 'lucide-react'
+import { DataTableColumnHeader } from './data-table-column-header'
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -18,31 +19,15 @@ export const userColumns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'last_name',
-    header: ({ column }) => {
-      return (
-        <div
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="flex items-center justify-start text-left hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 py-2"
-        >
-          Last Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      )
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Last Name" />
+    ),
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <div
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="flex items-center justify-start text-left hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 py-2"
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      )
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
   },
   {
     accessorKey: 'office',
