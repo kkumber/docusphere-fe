@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { SlidersHorizontal } from 'lucide-react'
 import { DataTablePagination } from './data-table-pagination'
+import { DataTableViewOptions } from './data-table-column-toggle'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -76,33 +77,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         {/* Column visibility */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              <SlidersHorizontal className="" />
-              Show/Hide Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DataTableViewOptions table={table} />
       </div>
 
       {/* Table */}
