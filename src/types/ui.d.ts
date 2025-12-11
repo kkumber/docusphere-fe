@@ -9,6 +9,7 @@ export interface ColumnValuesForFilterStatus {
 }
 
 export interface FilterSearchInput {
-    placeholder: string
-    column: string
+  placeholder: string
+  column: string
 }
+

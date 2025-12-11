@@ -25,18 +25,20 @@ import { Input } from '@/components/ui/input'
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableViewOptions } from './data-table-column-toggle'
 import { TableColumnFilter } from './data-table-column-filter'
-import type { ColumnValuesForFilterStatus } from '@/types/ui'
+import type { ColumnValuesForFilterStatus, FilterSearchInput } from '@/types/ui'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   columnValuesForFilter: ColumnValuesForFilterStatus[]
+  searchFilterInput: FilterSearchInput
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   columnValuesForFilter,
+  searchFilterInput,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]) // state for sorting function columns
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // state for filters or search function on the table
@@ -64,12 +66,16 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         {/* Search filter */}
         <Input
-          placeholder="Filter last name..."
+          placeholder={searchFilterInput.placeholder}
           value={
-            (table.getColumn('last_name')?.getFilterValue() as string) ?? ''
+            (table
+              .getColumn(searchFilterInput.column)
+              ?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('last_name')?.setFilterValue(event.target.value)
+            table
+              .getColumn(searchFilterInput.column)
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

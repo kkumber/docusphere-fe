@@ -4,8 +4,11 @@ import { userColumns } from '@/components/data-table/columns'
 import SkeletonTableBasic from '@/components/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
-import type { Breadcrumbs } from '@/types/ui'
-import type { ColumnValuesForFilterStatus } from '@/types/ui'
+import type {
+  ColumnValuesForFilterStatus,
+  FilterSearchInput,
+  Breadcrumbs,
+} from '@/types/ui'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -25,6 +28,11 @@ const UserManagementPage = () => {
     { value: '0', label: 'Inactive' },
   ]
 
+  const searchFilterInputValues: FilterSearchInput = {
+    placeholder: 'Search by last_name',
+    column: 'last_name',
+  }
+
   return (
     <>
       <Header breadcrumbs={breadcrumbs} />
@@ -37,6 +45,7 @@ const UserManagementPage = () => {
             columns={userColumns}
             data={data.data}
             columnValuesForFilter={columnValuesForFilter}
+            searchFilterInput={searchFilterInputValues}
           />
         )}
       </MainContainer>
