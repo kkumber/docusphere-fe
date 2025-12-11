@@ -27,8 +27,9 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Switch } from '@/components/ui/switch'
+import { useNavigate } from '@tanstack/react-router'
 
-// This is sample data
+// This is sample data get user data from context here
 const data = {
   user: {
     name: 'shadcn',
@@ -68,7 +69,7 @@ const data = {
     },
     {
       title: 'User Management',
-      url: '#',
+      url: '/admin/user-management',
       icon: UserCog,
       isActive: false,
     },
@@ -163,6 +164,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [activeItem, setActiveItem] = React.useState(data.navMain[0])
   const [mails, setMails] = React.useState(data.mails)
   const { setOpen } = useSidebar()
+  const navigate = useNavigate()
 
   return (
     <Sidebar
@@ -215,6 +217,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           ),
                         )
                         setOpen(true)
+                        navigate({ to: item.url })
                       }}
                       isActive={activeItem?.title === item.title}
                       className="px-2.5 md:px-2"
