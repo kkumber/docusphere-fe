@@ -43,7 +43,7 @@ export function TableColumnFilter<TData>({
       </PopoverTrigger>
 
       <PopoverContent className="w-40 space-y-2">
-        Filter By:
+        <p className="text-sm font-medium leading-none">Filter By:</p>
         <Separator className="my-2" />
         {columnValuesForFilter.map((item, index) => (
           <div className="flex items-center space-x-2" key={index}>
@@ -51,7 +51,7 @@ export function TableColumnFilter<TData>({
               checked={value.includes(item.value)}
               onCheckedChange={() => toggle(item.value)}
             />
-            <span>{item.label}</span>
+            <span className="text-sm">{item.label}</span>
           </div>
         ))}
       </PopoverContent>

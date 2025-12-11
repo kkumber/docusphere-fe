@@ -29,7 +29,7 @@ const UserManagementPage = () => {
   ]
 
   const searchFilterInputValues: FilterSearchInput = {
-    placeholder: 'Search by last_name',
+    placeholder: 'Search by last name',
     column: 'last_name',
   }
 
