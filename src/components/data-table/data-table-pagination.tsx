@@ -59,13 +59,13 @@ export function DataTablePagination<TData>({
         </div>
 
         {/* Page Desktop */}
-        <div className="hidden md:flex w-[100px] items-center justify-center text-sm font-medium">
+        <div className=" md:flex w-[100px] items-center justify-center text-sm font-medium">
           Page {table.getState().pagination.pageIndex + 1} of{' '}
           {table.getPageCount()}
         </div>
         {/* Buttons */}
         <div className="flex items-center justify-center max-md:mt-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-center space-x-2">
             <Button
               variant="outline"
               size="icon"
@@ -107,12 +107,6 @@ export function DataTablePagination<TData>({
               <ChevronsRight />
             </Button>
           </div>
-        </div>
-
-        {/* Page Mobile */}
-        <div className="flex md:hidden items-center justify-center text-sm font-medium mt-4">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount()}
         </div>
       </div>
     </div>
