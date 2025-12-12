@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import type { Breadcrumbs } from '@/types/ui'
+import { SignupForm } from '@/components/signup-form'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -19,7 +20,7 @@ const RegisterUserPage = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        <h1>Register User</h1>
+        <SignupForm />
       </MainContainer>
     </>
   )

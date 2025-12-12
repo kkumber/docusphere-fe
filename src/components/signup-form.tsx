@@ -6,63 +6,79 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+        <CardTitle>Register User</CardTitle>
         <CardDescription>
-          Enter your information below to create your account
+          Fill out the required fields to create a new account.
         </CardDescription>
       </CardHeader>
+
       <CardContent>
-        <form>
-          <FieldGroup>
+        <form className="space-y-4">
+          {/* Name Row */}
+          <div className="grid grid-cols-2 gap-3">
             <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-              <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email
-                with anyone else.
-              </FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
-              <FieldDescription>
-                Must be at least 8 characters long.
-              </FieldDescription>
+              <FieldLabel htmlFor="first_name">First Name</FieldLabel>
+              <Input id="first_name" type="text" placeholder="Juan" required />
             </Field>
 
-            <FieldGroup>
-              <Field>
-                <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
-                <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="#">Sign in</a>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="last_name">Last Name</FieldLabel>
+              <Input
+                id="last_name"
+                type="text"
+                placeholder="Dela Cruz"
+                required
+              />
+            </Field>
+          </div>
+
+          {/* Office */}
+          <Field>
+            <FieldLabel htmlFor="office">Office</FieldLabel>
+            <Input
+              id="office"
+              type="text"
+              placeholder="Division Office / HR / Accounting"
+              required
+            />
+          </Field>
+
+          {/* Email */}
+          <Field>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <Input
+              id="email"
+              type="email"
+              placeholder="example@deped.gov.ph"
+              required
+            />
+          </Field>
+
+          {/* Password */}
+          <Field>
+            <FieldLabel htmlFor="password">Temporary Password</FieldLabel>
+            <FieldDescription>
+              This will be the user's initial login password.
+            </FieldDescription>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              required
+            />
+          </Field>
+
+          {/* Submit Button */}
+          <Button type="submit" className="w-full mt-2">
+            Create Account
+          </Button>
         </form>
       </CardContent>
     </Card>
