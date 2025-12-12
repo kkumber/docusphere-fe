@@ -8,6 +8,13 @@ import {
 } from '@/components/ui/card'
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
@@ -48,6 +55,28 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               placeholder="Division Office / HR / Accounting"
               required
             />
+          </Field>
+
+          {/* Role Dropdown */}
+          <Field>
+            <FieldLabel htmlFor="role">Role</FieldLabel>
+            <FieldDescription>
+              Limit access to the system by assigning a role
+            </FieldDescription>
+
+            <Select required>
+              <SelectTrigger id="role">
+                <SelectValue placeholder="Assign a role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="records">Records</SelectItem>
+                <SelectItem value="sds">
+                  Schools Division Superintendent
+                </SelectItem>
+                <SelectItem value="chief">Chief</SelectItem>
+                <SelectItem value="staff">Staff</SelectItem>
+              </SelectContent>
+            </Select>
           </Field>
 
           {/* Email */}
