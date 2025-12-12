@@ -9,11 +9,13 @@ import type {
   FilterSearchInput,
   Breadcrumbs,
 } from '@/types/ui'
-
+import { Button } from '@/components/ui/button'
+import { UserPlus } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 const breadcrumbs: Breadcrumbs[] = [
   {
     title: 'User Management',
-    href: '/user-management',
+    href: '/admin/user-management',
   },
 ]
 
@@ -33,6 +35,17 @@ const UserManagementPage = () => {
     column: 'last_name',
   }
 
+  const btnActions = () => {
+    return (
+      <Button size="sm" asChild>
+        <Link to="/admin/register-user">
+          <UserPlus />
+          Add User
+        </Link>
+      </Button>
+    )
+  }
+
   return (
     <>
       <Header breadcrumbs={breadcrumbs} />
@@ -46,6 +59,7 @@ const UserManagementPage = () => {
             data={data.data}
             columnValuesForFilter={columnValuesForFilter}
             searchFilterInput={searchFilterInputValues}
+            btnActions={btnActions()}
           />
         )}
       </MainContainer>

@@ -6,9 +6,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '../ui/separator'
-import { Circle } from 'lucide-react'
 import type { Table } from '@tanstack/react-table'
 import type { ColumnValuesForFilterStatus } from '@/types/ui'
+import { Filter } from 'lucide-react'
 
 interface StatusFilterProps<TData> {
   table: Table<TData>
@@ -35,9 +35,10 @@ export function TableColumnFilter<TData>({
       <PopoverTrigger asChild>
         <Button
           variant="secondary"
-          className="w-40 justify-start border-2 border-dashed"
+          className="justify-start border-2 border-dashed"
+          size="sm"
         >
-          <Circle />
+          <Filter />
           Status
         </Button>
       </PopoverTrigger>
