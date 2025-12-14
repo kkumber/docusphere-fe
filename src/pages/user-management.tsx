@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/data-table/data-table'
 import useGetRequest from '@/hooks/use-get'
 import { userColumns } from '@/components/data-table/columns'
-import SkeletonTableBasic from '@/components/skeleton-table'
+import { DataTableSkeleton } from '@/components/data-table/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import type {
@@ -51,7 +51,7 @@ const UserManagementPage = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        {isPending && <SkeletonTableBasic />}
+        {isPending && <DataTableSkeleton columnCount={6} />}
         {isError && <p>{error?.message}</p>}
         {data && (
           <DataTable
