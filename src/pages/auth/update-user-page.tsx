@@ -1,8 +1,8 @@
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
+import UpdateUserForm from '@/components/update-user-form'
 import type { Breadcrumbs } from '@/types/ui'
-import { SignupForm } from '@/components/signup-form'
-import useRegisterUser from '@/hooks/use-register-user'
+import type { User } from '@/types/user'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -10,21 +10,25 @@ const breadcrumbs: Breadcrumbs[] = [
     href: '/admin/user-management',
   },
   {
-    title: 'Register User',
-    href: '/admin/register-user',
+    title: 'Update User',
+    href: '/admin/users/$userId/update',
   },
 ]
 
-const RegisterUserPage = () => {
+type Props = {
+  user: User
+}
+
+const UpdateUserPage = ({ user }: Props) => {
   return (
     <>
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        <SignupForm />
+        <UpdateUserForm user={user} />
       </MainContainer>
     </>
   )
 }
 
-export default RegisterUserPage
+export default UpdateUserPage

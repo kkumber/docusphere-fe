@@ -1,6 +1,6 @@
 import { DataTable } from '@/components/data-table/data-table'
 import useGetRequest from '@/hooks/use-get'
-import { userColumns } from '@/components/data-table/columns'
+import { userColumns } from '@/components/data-table/user-columns'
 import { DataTableSkeleton } from '@/components/data-table/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
@@ -12,6 +12,7 @@ import type {
 import { Button } from '@/components/ui/button'
 import { UserPlus } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
+
 const breadcrumbs: Breadcrumbs[] = [
   {
     title: 'User Management',

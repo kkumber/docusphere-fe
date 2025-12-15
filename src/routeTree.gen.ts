@@ -14,6 +14,7 @@ import { Route as AuthenticatedLayoutRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedLayoutIndexRouteImport } from './routes/_authenticated/_layout/index'
 import { Route as AuthenticatedLayoutAdminUserManagementRouteImport } from './routes/_authenticated/_layout/admin/user-management'
 import { Route as AuthenticatedLayoutAdminRegisterUserRouteImport } from './routes/_authenticated/_layout/admin/register-user'
+import { Route as AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport } from './routes/_authenticated/_layout/admin/users/$userId/update'
 
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
@@ -42,18 +43,26 @@ const AuthenticatedLayoutAdminRegisterUserRoute =
     path: '/admin/register-user',
     getParentRoute: () => AuthenticatedLayoutRoute,
   } as any)
+const AuthenticatedLayoutAdminUsersUserIdUpdateRoute =
+  AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport.update({
+    id: '/admin/users/$userId/update',
+    path: '/admin/users/$userId/update',
+    getParentRoute: () => AuthenticatedLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/': typeof AuthenticatedLayoutIndexRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
+  '/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/': typeof AuthenticatedLayoutIndexRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
+  '/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +71,7 @@ export interface FileRoutesById {
   '/_authenticated/_layout/': typeof AuthenticatedLayoutIndexRoute
   '/_authenticated/_layout/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/_authenticated/_layout/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
+  '/_authenticated/_layout/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -70,8 +80,14 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/register-user'
     | '/admin/user-management'
+    | '/admin/users/$userId/update'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth/login' | '/' | '/admin/register-user' | '/admin/user-management'
+  to:
+    | '/auth/login'
+    | '/'
+    | '/admin/register-user'
+    | '/admin/user-management'
+    | '/admin/users/$userId/update'
   id:
     | '__root__'
     | '/_authenticated/_layout'
@@ -79,6 +95,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_layout/'
     | '/_authenticated/_layout/admin/register-user'
     | '/_authenticated/_layout/admin/user-management'
+    | '/_authenticated/_layout/admin/users/$userId/update'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -123,6 +140,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLayoutAdminRegisterUserRouteImport
       parentRoute: typeof AuthenticatedLayoutRoute
     }
+    '/_authenticated/_layout/admin/users/$userId/update': {
+      id: '/_authenticated/_layout/admin/users/$userId/update'
+      path: '/admin/users/$userId/update'
+      fullPath: '/admin/users/$userId/update'
+      preLoaderRoute: typeof AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport
+      parentRoute: typeof AuthenticatedLayoutRoute
+    }
   }
 }
 
@@ -130,6 +154,7 @@ interface AuthenticatedLayoutRouteChildren {
   AuthenticatedLayoutIndexRoute: typeof AuthenticatedLayoutIndexRoute
   AuthenticatedLayoutAdminRegisterUserRoute: typeof AuthenticatedLayoutAdminRegisterUserRoute
   AuthenticatedLayoutAdminUserManagementRoute: typeof AuthenticatedLayoutAdminUserManagementRoute
+  AuthenticatedLayoutAdminUsersUserIdUpdateRoute: typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 
 const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
@@ -138,6 +163,8 @@ const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
     AuthenticatedLayoutAdminRegisterUserRoute,
   AuthenticatedLayoutAdminUserManagementRoute:
     AuthenticatedLayoutAdminUserManagementRoute,
+  AuthenticatedLayoutAdminUsersUserIdUpdateRoute:
+    AuthenticatedLayoutAdminUsersUserIdUpdateRoute,
 }
 
 const AuthenticatedLayoutRouteWithChildren =

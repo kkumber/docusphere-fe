@@ -15,90 +15,130 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import type { User } from '@/types/user'
+import { useState } from 'react'
 
-export function UpdateUserForm({
-  ...props
-}: React.ComponentProps<typeof Card>) {
+type UpdateUserFormProps = {
+  user: User
+  props?: React.ComponentProps<typeof Card>
+}
+
+export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
+  const [userData, setUserData] = useState<User>(user)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!userData) return
+    setUserData({ ...userData, [event.target.id]: event.target.value })
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // check if userData has not change if so return if not continue to update
+    event.preventDefault()
+  }
+
   return (
-    <Card {...props}>
-      <CardHeader>
-        <CardTitle>Register User</CardTitle>
-        <CardDescription>
-          Fill out the required fields to create a new account.
-        </CardDescription>
-      </CardHeader>
+    <>
+      {userData && (
+        <Card {...props}>
+          <CardHeader>
+            <CardTitle>Update User</CardTitle>
+            <CardDescription>
+              Change only the fields you want to update.
+            </CardDescription>
+          </CardHeader>
 
-      <CardContent>
-        <form className="space-y-4">
-          {/* Name Row */}
-          <div className="grid grid-cols-2 gap-3">
-            <Field>
-              <FieldLabel htmlFor="first_name">First Name</FieldLabel>
-              <Input id="first_name" type="text" placeholder="Juan" required />
-            </Field>
+          <CardContent>
+            <form className="space-y-4">
+              {/* Name Row */}
+              <div className="grid grid-cols-2 gap-3">
+                <Field>
+                  <FieldLabel htmlFor="first_name">First Name</FieldLabel>
+                  <Input
+                    id="first_name"
+                    type="text"
+                    placeholder="Juan"
+                    required
+                    value={userData!.first_name}
+                    onChange={handleChange}
+                  />
+                </Field>
 
-            <Field>
-              <FieldLabel htmlFor="last_name">Last Name</FieldLabel>
-              <Input
-                id="last_name"
-                type="text"
-                placeholder="Dela Cruz"
-                required
-              />
-            </Field>
-          </div>
+                <Field>
+                  <FieldLabel htmlFor="last_name">Last Name</FieldLabel>
+                  <Input
+                    id="last_name"
+                    type="text"
+                    placeholder="Dela Cruz"
+                    required
+                    value={userData!.last_name}
+                    onChange={handleChange}
+                  />
+                </Field>
+              </div>
 
-          {/* Office */}
-          <Field>
-            <FieldLabel htmlFor="office">Office</FieldLabel>
-            <Input
-              id="office"
-              type="text"
-              placeholder="Division Office / HR / Accounting"
-              required
-            />
-          </Field>
+              {/* Office */}
+              <Field>
+                <FieldLabel htmlFor="office">Office</FieldLabel>
+                <Input
+                  id="office"
+                  type="text"
+                  placeholder="Division Office / HR / Accounting"
+                  required
+                  value={userData!.office}
+                  onChange={handleChange}
+                />
+              </Field>
 
-          {/* Role Dropdown */}
-          <Field>
-            <FieldLabel htmlFor="role">Role</FieldLabel>
-            <FieldDescription>
-              Be cautious in assigning a new role.
-            </FieldDescription>
+              {/* Role Dropdown */}
+              <Field>
+                <FieldLabel htmlFor="role">Role</FieldLabel>
+                <FieldDescription>
+                  Be cautious in assigning a new role.
+                </FieldDescription>
 
-            <Select required>
-              <SelectTrigger id="role">
-                <SelectValue placeholder="Assign a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="records">Records</SelectItem>
-                <SelectItem value="sds">
-                  Schools Division Superintendent
-                </SelectItem>
-                <SelectItem value="chief">Chief</SelectItem>
-                <SelectItem value="staff">Staff</SelectItem>
-              </SelectContent>
-            </Select>
-          </Field>
+                <Select
+                  required
+                  onValueChange={(value) =>
+                    setUserData({ ...userData!, role: value })
+                  }
+                  value={userData!.role}
+                >
+                  <SelectTrigger id="role">
+                    <SelectValue placeholder={userData!.role} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="records">Records</SelectItem>
+                    <SelectItem value="sds">
+                      Schools Division Superintendent
+                    </SelectItem>
+                    <SelectItem value="chief">Chief</SelectItem>
+                    <SelectItem value="staff">Staff</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Field>
 
-          {/* Email */}
-          <Field>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
-            <Input
-              id="email"
-              type="email"
-              placeholder="example@deped.gov.ph"
-              required
-            />
-          </Field>
+              {/* Email */}
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="example@deped.gov.ph"
+                  required
+                  value={userData!.email}
+                  onChange={handleChange}
+                />
+              </Field>
 
-          {/* Submit Button */}
-          <Button type="submit" className="w-full mt-2">
-            Update User
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+              {/* Submit Button */}
+              <Button type="submit" className="w-full mt-2">
+                Update User
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+    </>
   )
 }
 

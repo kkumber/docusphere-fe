@@ -10,6 +10,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { DataTableColumnHeader } from './data-table-column-header'
+import { Link } from '@tanstack/react-router'
+
+// handler functions for actions
+const handleUpdateUser = (user: User) => {}
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -31,6 +35,11 @@ export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'office',
     header: 'Office',
+  },
+  {
+    accessorKey: 'role',
+    header: 'Role',
+    cell: ({ row }) => <div className="uppercase">{row.getValue('role')}</div>,
   },
   {
     accessorKey: 'status',
@@ -57,7 +66,14 @@ export const userColumns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Update User</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                to="/admin/users/$userId/update"
+                params={{ userId: user!.id }}
+              >
+                Update User
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete User</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

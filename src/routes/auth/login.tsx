@@ -6,17 +6,12 @@ import { useMutation } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { AxiosError } from 'axios'
 import type { User } from '@/types/user'
+import type { ApiError } from '@/types/response'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
 })
 
-interface ApiError {
-  message: string
-  errors: {
-    [key: string]: string[]
-  }
-}
 
 function LoginPage() {
   const [email, setEmail] = useState<string>()
