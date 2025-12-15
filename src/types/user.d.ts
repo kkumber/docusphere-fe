@@ -12,3 +12,12 @@ interface UserInterface {
 }
 
 export type User = UserInterface | null | undefined;
+
+export interface UserRegister {
+  first_name: string
+  last_name: string
+  email: string
+  password: string
+  role: string
+  office: string
+}

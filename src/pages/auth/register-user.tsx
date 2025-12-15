@@ -2,6 +2,7 @@ import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import type { Breadcrumbs } from '@/types/ui'
 import { SignupForm } from '@/components/signup-form'
+import useRegisterUser from '@/hooks/use-register-user'
 
 const breadcrumbs: Breadcrumbs[] = [
   {

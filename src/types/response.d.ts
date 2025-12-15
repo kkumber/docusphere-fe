@@ -3,3 +3,10 @@ export interface Response<TData> {
     data: TData
     error: string | null
 }
+
+export interface ApiError {
+  message: string
+  errors: {
+    [key: string]: string[]
+  }
+}
