@@ -4,10 +4,10 @@ interface UserInterface {
     last_name: string;
     email: string;
     office: string;
-    status: number;
-    email_verified_at: string;
-    created_at: string;
-    updated_at: string;
+    status?: number;
+    email_verified_at?: string;
+    created_at?: string;
+    updated_at?: string;
     role: string;
 }
 
