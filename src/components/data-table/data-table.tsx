@@ -20,18 +20,19 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useState } from 'react'
-import { Input } from '@/components/ui/input'
 
 import { DataTablePagination } from './data-table-pagination'
-import { DataTableViewOptions } from './data-table-column-toggle'
-import { TableColumnFilter } from './data-table-column-filter'
+
 import type { ColumnValuesForFilterStatus, FilterSearchInput } from '@/types/ui'
+
+import ActionBars from './action-bars'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   columnValuesForFilter: ColumnValuesForFilterStatus[]
   searchFilterInput: FilterSearchInput
+  btnActions?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -39,6 +40,7 @@ export function DataTable<TData, TValue>({
   data,
   columnValuesForFilter,
   searchFilterInput,
+  btnActions,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]) // state for sorting function columns
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // state for filters or search function on the table
@@ -63,31 +65,12 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        {/* Search filter */}
-        <Input
-          placeholder={searchFilterInput.placeholder}
-          value={
-            (table
-              .getColumn(searchFilterInput.column)
-              ?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table
-              .getColumn(searchFilterInput.column)
-              ?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-
-        {/* Status filter */}
-        <TableColumnFilter
-          table={table}
-          columnValuesForFilter={columnValuesForFilter}
-        />
-        {/* Column visibility */}
-        <DataTableViewOptions table={table} />
-      </div>
+      <ActionBars
+        table={table}
+        searchFilterInput={searchFilterInput}
+        columnValuesForFilter={columnValuesForFilter}
+        btnActions={btnActions}
+      />
 
       {/* Table */}
       <div className="overflow-hidden rounded-md border">

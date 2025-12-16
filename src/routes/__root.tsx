@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { type AuthContext } from '@/hooks/use-auth'
 import { UserContext } from '@/context/user-context'
+import { Toaster } from 'sonner'
 
 const queryClient = new QueryClient()
 
@@ -21,6 +22,7 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
+        <Toaster position="bottom-right" richColors closeButton />
         <UserContext value={{ user, setUser }}>
           <Outlet />
         </UserContext>
