@@ -11,15 +11,20 @@ import {
 } from '@/components/ui/dialog'
 
 interface ErrorDialogProps {
-  trigger: React.ReactNode
   title?: string
   description?: string
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-const ErrorDialog = ({ trigger, title, description }: ErrorDialogProps) => {
+const ErrorDialog = ({
+  title,
+  description,
+  open,
+  onOpenChange,
+}: ErrorDialogProps) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

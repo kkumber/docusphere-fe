@@ -12,8 +12,8 @@ import {
 
 interface DialogConfirmationProps {
   trigger: React.ReactNode
-  title?: string
-  description?: string
+  title: string
+  description: string
   infoSection?: React.ReactNode
   submitFn: () => void
 }

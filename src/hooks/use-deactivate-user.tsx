@@ -5,16 +5,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
-const useActivateUser = () => {
+const useDeactivateUser = () => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation<void, AxiosError<ApiError>, User>({
     mutationFn: async (user: User) => {
-      const { data } = await api.patch(`/api/users/${user!.id}/activate`)
+      const { data } = await api.patch(`/api/users/${user!.id}/deactivate`)
       return data.data
     },
     onSuccess: () => {
-      toast.success('User activated successfully')
+      toast.success('User deactivated successfully')
       queryClient.invalidateQueries({
         queryKey: ['users'],
         exact: true,
@@ -25,4 +25,4 @@ const useActivateUser = () => {
   return mutation
 }
 
-export default useActivateUser
+export default useDeactivateUser

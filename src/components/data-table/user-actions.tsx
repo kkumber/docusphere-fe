@@ -11,17 +11,34 @@ import { MoreHorizontal } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Link } from '@tanstack/react-router'
 import useActivateUser from '@/hooks/use-activate-user'
+import { DialogConfirmation } from '../dialog-confirmation'
+import { useState } from 'react'
+import useDeactivateUser from '@/hooks/use-deactivate-user'
+import ErrorDialog from '../error-dialog'
 
 type Props = {
   row: Row<User>
 }
 
 const UserActions = ({ row }: Props) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false)
+
   const user = row.original
   const activate = useActivateUser()
+  const deactivate = useDeactivateUser()
 
   const handleActivateUser = () => {
     activate.mutate(user)
+  }
+
+  const handleDropdownSelect = (e: Event) => {
+    e.preventDefault()
+    setDropdownOpen(!dropdownOpen)
+  }
+
+  const handleDeactivateUser = () => {
+    deactivate.mutate(user)
   }
 
   return (
@@ -40,9 +57,36 @@ const UserActions = ({ row }: Props) => {
           </Link>
         </DropdownMenuItem>
         {user!.status === 1 ? (
-          <DropdownMenuItem>Deactivate User</DropdownMenuItem>
+          <DialogConfirmation
+            trigger={
+              <DropdownMenuItem onSelect={handleDropdownSelect}>
+                Deactivate User
+              </DropdownMenuItem>
+            }
+            title="Deactivate User"
+            description="Are you sure you want to deactivate this user?"
+            submitFn={handleDeactivateUser}
+          />
         ) : (
-          <DropdownMenuItem>Activate User</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleActivateUser}>
+            Activate User
+          </DropdownMenuItem>
+        )}
+        {activate.isError && (
+          <ErrorDialog
+            title="Error"
+            description={activate.error?.response?.data.message}
+            open={errorDialogOpen}
+            onOpenChange={setErrorDialogOpen}
+          />
+        )}
+        {deactivate.isError && (
+          <ErrorDialog
+            title="Error"
+            description={deactivate.error?.response?.data.message}
+            open={errorDialogOpen}
+            onOpenChange={setErrorDialogOpen}
+          />
         )}
       </DropdownMenuContent>
     </DropdownMenu>
