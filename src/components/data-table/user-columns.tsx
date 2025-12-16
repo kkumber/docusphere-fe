@@ -1,16 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import type { User } from '@/types/user'
-import { MoreHorizontal } from 'lucide-react'
-import { Button } from '../ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { DataTableColumnHeader } from './data-table-column-header'
-import { Link } from '@tanstack/react-router'
 import UserActions from './user-actions'
 
 export const userColumns: ColumnDef<User>[] = [
