@@ -13,7 +13,7 @@ import { DataTableColumnHeader } from './data-table-column-header'
 import { Link } from '@tanstack/react-router'
 
 // handler functions for actions
-const handleUpdateUser = (user: User) => {}
+const handleDeactivateUser = (user: User) => {}
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -45,7 +45,9 @@ export const userColumns: ColumnDef<User>[] = [
     accessorKey: 'status',
     header: () => <div className="text-right">Status</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium">{row.original?.status}</div>
+      <div className="text-right font-medium">
+        {row.original?.status === 1 ? 'Active' : 'Inactive'}
+      </div>
     ),
     filterFn: (row, id, value) => {
       return value.length ? value.includes(String(row.getValue(id))) : true
@@ -74,7 +76,11 @@ export const userColumns: ColumnDef<User>[] = [
                 Update User
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete User</DropdownMenuItem>
+            {user!.status === 1 ? (
+              <DropdownMenuItem>Deactivate User</DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem>Activate User</DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       )

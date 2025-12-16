@@ -15,8 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import useUpdateUser from '@/hooks/use-update-user'
 import type { User } from '@/types/user'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 type UpdateUserFormProps = {
   user: User
@@ -25,7 +27,9 @@ type UpdateUserFormProps = {
 
 export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
   const [userData, setUserData] = useState<User>(user)
+  const mutation = useUpdateUser()
 
+  // handle input change
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!userData) return
     setUserData({ ...userData, [event.target.id]: event.target.value })
@@ -34,6 +38,17 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     // check if userData has not change if so return if not continue to update
     event.preventDefault()
+    if (
+      userData!.first_name === user?.first_name &&
+      userData!.last_name === user.last_name &&
+      userData!.office === user.office &&
+      userData!.role === user.role &&
+      userData?.email === user.email
+    ) {
+      return toast.error('No changes detected.')
+    }
+
+    mutation.mutate(userData)
   }
 
   return (
@@ -45,10 +60,15 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
             <CardDescription>
               Change only the fields you want to update.
             </CardDescription>
+            {mutation.error && (
+              <p className="text-red-500">
+                {mutation.error.response?.data.message}
+              </p>
+            )}
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               {/* Name Row */}
               <div className="grid grid-cols-2 gap-3">
                 <Field>
@@ -131,8 +151,12 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
               </Field>
 
               {/* Submit Button */}
-              <Button type="submit" className="w-full mt-2">
-                Update User
+              <Button
+                type="submit"
+                className="w-full mt-2"
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending ? 'Updating...' : 'Update User'}
               </Button>
             </form>
           </CardContent>
