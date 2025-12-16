@@ -12,9 +12,6 @@ import {
 import { DataTableColumnHeader } from './data-table-column-header'
 import { Link } from '@tanstack/react-router'
 
-// handler functions for actions
-const handleDeactivateUser = (user: User) => {}
-
 export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'first_name',
