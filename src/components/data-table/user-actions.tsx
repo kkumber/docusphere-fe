@@ -39,57 +39,72 @@ const UserActions = ({ row }: Props) => {
 
   const handleDeactivateUser = () => {
     deactivate.mutate(user)
+    setDropdownOpen(!dropdownOpen)
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem asChild>
-          <Link to="/admin/users/$userId/update" params={{ userId: user!.id }}>
-            Update User
-          </Link>
-        </DropdownMenuItem>
-        {user!.status === 1 ? (
-          <DialogConfirmation
-            trigger={
-              <DropdownMenuItem onSelect={handleDropdownSelect}>
-                Deactivate User
+    <>
+      {row!.original!.role === 'admin' ? (
+        <span className="sr-only">Admin</span>
+      ) : (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+            <DropdownMenuItem asChild>
+              <Link
+                to="/admin/users/$userId/update"
+                params={{ userId: user!.id }}
+              >
+                Update User
+              </Link>
+            </DropdownMenuItem>
+
+            {user!.status === 1 ? (
+              <DialogConfirmation
+                trigger={
+                  <DropdownMenuItem onSelect={handleDropdownSelect}>
+                    Deactivate User
+                  </DropdownMenuItem>
+                }
+                title="Deactivate User"
+                description="Are you sure you want to deactivate this user?"
+                submitFn={handleDeactivateUser}
+              />
+            ) : (
+              <DropdownMenuItem onClick={handleActivateUser}>
+                Activate User
               </DropdownMenuItem>
-            }
-            title="Deactivate User"
-            description="Are you sure you want to deactivate this user?"
-            submitFn={handleDeactivateUser}
-          />
-        ) : (
-          <DropdownMenuItem onClick={handleActivateUser}>
-            Activate User
-          </DropdownMenuItem>
-        )}
-        {activate.isError && (
-          <ErrorDialog
-            title="Error"
-            description={activate.error?.response?.data.message}
-            open={errorDialogOpen}
-            onOpenChange={setErrorDialogOpen}
-          />
-        )}
-        {deactivate.isError && (
-          <ErrorDialog
-            title="Error"
-            description={deactivate.error?.response?.data.message}
-            open={errorDialogOpen}
-            onOpenChange={setErrorDialogOpen}
-          />
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            )}
+
+            {activate.isError && (
+              <ErrorDialog
+                title="Error"
+                description={activate.error?.response?.data.message}
+                open={errorDialogOpen}
+                onOpenChange={setErrorDialogOpen}
+              />
+            )}
+
+            {deactivate.isError && (
+              <ErrorDialog
+                title="Error"
+                description={deactivate.error?.response?.data.message}
+                open={errorDialogOpen}
+                onOpenChange={setErrorDialogOpen}
+              />
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </>
   )
 }
 
