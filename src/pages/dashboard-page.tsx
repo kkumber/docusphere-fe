@@ -8,6 +8,10 @@ import {
   CardContent,
 } from '@/components/ui/card'
 import { ChartAreaInteractive } from '@/components/ui/chart-area'
+import useGetRequest from '@/hooks/use-get'
+import DashboardSkeleton from '@/components/dashboard-skeleton'
+import { useEffect, useState } from 'react'
+import type { DashboardValues } from '@/types/response'
 
 const breadcrumbList: Breadcrumbs[] = [
   {
@@ -16,52 +20,45 @@ const breadcrumbList: Breadcrumbs[] = [
   },
 ]
 
-const SampleCards = [
-  {
-    title: 'Card 1',
-    data: 21,
-    color: 'text-black',
-  },
-  {
-    title: 'Card 2',
-    data: 28,
-    color: 'text-yellow-500',
-  },
-  {
-    title: 'Card 3',
-    data: 40,
-    color: 'text-green-500',
-  },
-  {
-    title: 'Card 4',
-    data: 500,
-    color: 'text-red-500',
-  },
-]
-
 const DashboardPage = () => {
+  const { isPending, data, isError, error } = useGetRequest({
+    url: '/api/dashboard',
+    key: ['dashboard'],
+  })
+
+  const [dashboardData, setDashboardData] = useState<DashboardValues>()
+
+  useEffect(() => {
+    if (data) {
+      setDashboardData(data.data)
+    }
+  }, [data])
+
   return (
     <>
       <Header breadcrumbs={breadcrumbList} />
-
       <MainContainer>
-        <div className="flex gap-6 flex-wrap justify-center items-center mb-8">
-          {SampleCards.map((card) => (
-            <Card key={card.title} className="flex-1 min-w-40">
-              <CardHeader>
-                <CardDescription>{card.title}</CardDescription>
-                <CardContent
-                  className={`text-3xl font-bold ${card.color} p-0 m-0`}
-                >
-                  {card.data}
-                </CardContent>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-        <div className="">
-          <ChartAreaInteractive />
-        </div>
+        {isPending && <DashboardSkeleton />}
+        {isError && <p>{error?.message}</p>}
+        {dashboardData && (
+          <>
+            <div className="flex gap-6 flex-wrap justify-center items-center mb-8">
+              {dashboardData.cards.map((card) => (
+                <Card key={card.title} className="flex-1 min-w-40">
+                  <CardHeader>
+                    <CardDescription>{card.title}</CardDescription>
+                    <CardContent className={`text-3xl font-bold p-0 m-0`}>
+                      {card.value}
+                    </CardContent>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+            <div className="">
+              <ChartAreaInteractive areaChart={dashboardData.area_chart} />
+            </div>
+          </>
+        )}
       </MainContainer>
     </>
   )
