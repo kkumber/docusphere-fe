@@ -24,6 +24,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import useLogoutUser from '@/hooks/use-logout'
+import ErrorDialog from './error-dialog'
 
 export function NavUser({
   user,
@@ -35,6 +37,11 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const mutation = useLogoutUser()
+
+  const handleLogout = () => {
+    mutation.mutate()
+  }
 
   return (
     <SidebarMenu>
@@ -87,10 +94,21 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             {/* Log Out */}
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              disabled={mutation.isPending}
+            >
               <LogOut />
-              Log out
+              {mutation.isPending ? 'Logging out...' : 'Log out'}
             </DropdownMenuItem>
+            {mutation.isError && (
+              <ErrorDialog
+                title="Error"
+                description={mutation.error.message}
+                open={mutation.isError}
+                onOpenChange={mutation.reset}
+              />
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
