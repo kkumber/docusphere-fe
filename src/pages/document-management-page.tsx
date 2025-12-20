@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/data-table/data-table'
+import { documentColumns } from '@/components/data-table/document-columns'
 import { DataTableSkeleton } from '@/components/data-table/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
@@ -21,7 +22,7 @@ const breadcrumbs: Breadcrumbs[] = [
 
 const DocumentManagementPage = () => {
   const { isPending, data, isError, error } = useGetRequest({
-    url: '/records/document',
+    url: '/api/record/documents',
     key: ['documents'],
   })
 
@@ -39,7 +40,7 @@ const DocumentManagementPage = () => {
   const btnActions = () => {
     return (
       <Button size="sm" asChild>
-        <Link to="/records/upload-document">
+        <Link to="/records/document-management">
           <Upload />
           Upload
         </Link>
@@ -52,11 +53,11 @@ const DocumentManagementPage = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        {isPending && <DataTableSkeleton columnCount={8} />}
+        {isPending && <DataTableSkeleton columnCount={9} />}
         {isError && <p>{error?.message}</p>}
         {data && (
           <DataTable
-            columns={userColumns}
+            columns={documentColumns}
             data={data.data}
             columnValuesForFilter={columnValuesForFilter}
             searchFilterInput={searchFilterInputValues}

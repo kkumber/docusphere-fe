@@ -1,15 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import {
-  ArchiveX,
-  Command,
-  File,
-  Inbox,
-  Send,
-  Trash2,
-  UserCog,
-} from 'lucide-react'
+import { Command, Files, Inbox, UserCog } from 'lucide-react'
 
 import { NavUser } from '@/components/nav-user'
 import { Label } from '@/components/ui/label'
@@ -42,6 +34,12 @@ const data = {
       url: '/',
       icon: Inbox,
       isActive: true,
+    },
+    {
+      title: 'Documents',
+      url: '/records/document-management',
+      icon: Files,
+      isActive: false,
     },
     {
       title: 'User Management',
