@@ -9,6 +9,7 @@ import { Separator } from '../ui/separator'
 import type { Table } from '@tanstack/react-table'
 import type { ColumnValuesForFilterStatus } from '@/types/ui'
 import { Filter } from 'lucide-react'
+import { useEffect } from 'react'
 
 interface StatusFilterProps<TData> {
   table: Table<TData>
@@ -20,8 +21,6 @@ export function TableColumnFilter<TData>({
   columnValuesForFilter,
 }: StatusFilterProps<TData>) {
   const column = table.getColumn('status')
-    ? table.getColumn('status')
-    : table.getColumn('status_id')
   const value = (column?.getFilterValue() as string[]) ?? []
 
   const toggle = (item: string) => {

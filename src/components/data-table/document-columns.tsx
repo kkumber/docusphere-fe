@@ -54,6 +54,7 @@ export const documentColumns: ColumnDef<Document>[] = [
     header: 'Request Type',
   },
   {
+    id: 'status',
     accessorKey: 'status_id',
     header: 'Status',
     cell: ({ row }) => {
@@ -65,6 +66,10 @@ export const documentColumns: ColumnDef<Document>[] = [
           {statusMap[statusId].label}
         </span>
       )
+    },
+    filterFn: (row, id, value: string[]) => {
+      if (value.length === 0) return true
+      return value.includes(String(row.getValue(id)))
     },
   },
   {
