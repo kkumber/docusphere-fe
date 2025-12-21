@@ -27,11 +27,11 @@ const DocumentManagementPage = () => {
   })
 
   const columnValuesForFilter: ColumnValuesForFilterStatus[] = [
-    { value: 1, label: 'Pending' },
-    { value: 2, label: 'Archived' },
-    { value: 3, label: 'Completed' },
-    { value: 4, label: 'Delayed' },
-    { value: 5, label: 'Released' },
+    { value: '1', label: 'Pending' },
+    { value: '2', label: 'Archived' },
+    { value: '3', label: 'Completed' },
+    { value: '4', label: 'Delayed' },
+    { value: '5', label: 'Released' },
   ]
 
   const searchFilterInputValues: FilterSearchInput = {
@@ -55,7 +55,7 @@ const DocumentManagementPage = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        {isPending && <DataTableSkeleton columnCount={9} />}
+        {isPending && <DataTableSkeleton columnCount={8} />}
         {isError && <p>{error?.message}</p>}
         {data && (
           <DataTable
