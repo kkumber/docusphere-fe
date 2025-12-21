@@ -54,7 +54,7 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
   return (
     <>
       {userData && (
-        <Card {...props}>
+        <Card {...props} className="max-w-3xl mx-auto shadow-xl border-muted">
           <CardHeader>
             <CardTitle>Update User</CardTitle>
             <CardDescription>
