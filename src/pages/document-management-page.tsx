@@ -27,9 +27,11 @@ const DocumentManagementPage = () => {
   })
 
   const columnValuesForFilter: ColumnValuesForFilterStatus[] = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'delayed', label: 'Delayed' },
-    { value: 'completed', label: 'Completed' },
+    { value: 1, label: 'Pending' },
+    { value: 2, label: 'Archived' },
+    { value: 3, label: 'Completed' },
+    { value: 4, label: 'Delayed' },
+    { value: 5, label: 'Released' },
   ]
 
   const searchFilterInputValues: FilterSearchInput = {
