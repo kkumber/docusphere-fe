@@ -4,7 +4,7 @@ export interface Breadcrumbs {
 }
 
 export interface ColumnValuesForFilterStatus {
-  value: string
+  value: string | number
   label: string
 }
 
@@ -12,4 +12,8 @@ export interface FilterSearchInput {
   placeholder: string
   column: string
 }
+
+
+
+export type DocumentStatusMap = Record<number, { label: string, color: string }>
 

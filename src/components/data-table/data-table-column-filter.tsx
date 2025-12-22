@@ -49,8 +49,8 @@ export function TableColumnFilter<TData>({
         {columnValuesForFilter.map((item, index) => (
           <div className="flex items-center space-x-2" key={index}>
             <Checkbox
-              checked={value.includes(item.value)}
-              onCheckedChange={() => toggle(item.value)}
+              checked={value.includes(String(item.value))}
+              onCheckedChange={() => toggle(String(item.value))}
             />
             <span className="text-sm">{item.label}</span>
           </div>

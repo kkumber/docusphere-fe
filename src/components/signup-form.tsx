@@ -40,7 +40,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   }
 
   return (
-    <Card {...props}>
+    <Card {...props} className="max-w-3xl mx-auto shadow-xl border-muted">
       <CardHeader>
         <CardTitle>Register User</CardTitle>
         <CardDescription>

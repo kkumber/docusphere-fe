@@ -16,7 +16,7 @@ interface BreadcrumbItems {
 
 export default function Header({ breadcrumbs }: BreadcrumbItems) {
   return (
-    <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4 z-50">
+    <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4 max-md:z-50">
       <SidebarTrigger className="-ml-1" />
       <Separator
         orientation="vertical"
