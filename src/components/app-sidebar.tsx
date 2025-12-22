@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Command, Files, Inbox, UserCog } from 'lucide-react'
+import { Command, Files, LayoutDashboard, UserCog } from 'lucide-react'
 
 import { NavUser } from '@/components/nav-user'
 import { Label } from '@/components/ui/label'
@@ -30,9 +30,9 @@ const data = {
   },
   navMain: [
     {
-      title: 'Inbox',
+      title: 'Dashboard',
       url: '/',
-      icon: Inbox,
+      icon: LayoutDashboard,
       isActive: true,
     },
     {
