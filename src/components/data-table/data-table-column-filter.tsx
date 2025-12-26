@@ -20,8 +20,6 @@ export function TableColumnFilter<TData>({
   columnValuesForFilter,
 }: StatusFilterProps<TData>) {
   const column = table.getColumn('status')
-    ? table.getColumn('status')
-    : table.getColumn('status_id')
   const value = (column?.getFilterValue() as string[]) ?? []
 
   const toggle = (item: string) => {

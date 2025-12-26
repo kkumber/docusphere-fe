@@ -42,7 +42,7 @@ const DocumentManagementPage = () => {
   const btnActions = () => {
     return (
       <Button size="sm" asChild>
-        <Link to="/records/document-management">
+        <Link to="/records/upload-document">
           <Upload />
           Upload
         </Link>

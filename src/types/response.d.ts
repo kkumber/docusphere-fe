@@ -6,7 +6,7 @@ export interface Response<TData> {
 
 export interface ApiError {
   message: string
-  errors: {
+  errors?: {
     [key: string]: string[]
   }
 }

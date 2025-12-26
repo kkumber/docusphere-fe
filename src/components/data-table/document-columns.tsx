@@ -54,17 +54,22 @@ export const documentColumns: ColumnDef<Document>[] = [
     header: 'Request Type',
   },
   {
+    id: 'status',
     accessorKey: 'status_id',
     header: 'Status',
     cell: ({ row }) => {
-      const statusId: number = row.original.status_id
+      const statusId: number = row?.original?.status_id!
       return (
         <span
-          className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${statusMap[statusId].color}`}
+          className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${statusMap[statusId!].color}`}
         >
-          {statusMap[statusId].label}
+          {statusMap[statusId!].label}
         </span>
       )
+    },
+    filterFn: (row, id, value: string[]) => {
+      if (value.length === 0) return true
+      return value.includes(String(row.getValue(id)))
     },
   },
   {
