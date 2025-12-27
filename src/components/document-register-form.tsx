@@ -92,7 +92,6 @@ export default function DocumentRegistrationForm() {
         return setFileError('File size must be less than 10MB.')
       }
     }
-    return console.log(formData)
     mutation.mutate(formData)
   }
 
@@ -110,6 +109,7 @@ export default function DocumentRegistrationForm() {
         {errorResponse && (
           <p className="text-destructive">{errorResponse.message}</p>
         )}
+        {dueDateError && <p className="text-destructive">{dueDateError}</p>}
       </CardHeader>
 
       <CardContent>
@@ -128,9 +128,6 @@ export default function DocumentRegistrationForm() {
 
             <Field>
               <FieldLabel>Due Date</FieldLabel>
-              {dueDateError && (
-                <p className="text-destructive">{dueDateError}</p>
-              )}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
