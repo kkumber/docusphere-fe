@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { MoreHorizontal } from 'lucide-react'
+import { MoreHorizontal, UserCog, UserX, UserCheck } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Link } from '@tanstack/react-router'
 import useActivateUser from '@/hooks/use-activate-user'
@@ -56,14 +56,16 @@ const UserActions = ({ row }: Props) => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>User Actions</DropdownMenuLabel>
 
             <DropdownMenuItem asChild>
               <Link
                 to="/admin/users/$userId/update"
                 params={{ userId: user!.id }}
+                className="flex items-center"
               >
-                Update User
+                <UserCog className="mr-2 h-4 w-4" />
+                Update user details
               </Link>
             </DropdownMenuItem>
 
@@ -71,7 +73,8 @@ const UserActions = ({ row }: Props) => {
               <DialogConfirmation
                 trigger={
                   <DropdownMenuItem onSelect={handleDropdownSelect}>
-                    Deactivate User
+                    <UserX className="mr-2 h-4 w-4" />
+                    Deactivate user
                   </DropdownMenuItem>
                 }
                 title="Deactivate User"
@@ -80,7 +83,8 @@ const UserActions = ({ row }: Props) => {
               />
             ) : (
               <DropdownMenuItem onClick={handleActivateUser}>
-                Activate User
+                <UserCheck className="mr-2 h-4 w-4" />
+                Activate user
               </DropdownMenuItem>
             )}
 
