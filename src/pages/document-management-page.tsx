@@ -4,6 +4,7 @@ import { DataTableSkeleton } from '@/components/data-table/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import { Button } from '@/components/ui/button'
+import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
 import type {
   Breadcrumbs,
@@ -21,8 +22,15 @@ const breadcrumbs: Breadcrumbs[] = [
 ]
 
 const DocumentManagementPage = () => {
+  const { user } = useUserContext()
+
+  const url =
+    user?.role === 'records' || user?.role === 'admin'
+      ? '/api/record/documents'
+      : '/api/documents'
+
   const { isPending, data, isError, error } = useGetRequest({
-    url: '/api/record/documents',
+    url: url,
     key: ['documents'],
   })
 
