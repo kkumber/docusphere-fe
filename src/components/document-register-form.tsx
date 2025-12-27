@@ -27,8 +27,9 @@ import {
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
+import useUploadDocument from '@/hooks/use-upload-document'
 
-interface DocumentFormState {
+export interface DocumentFormState {
   tracking_no: string
   title: string
   instructions: string
@@ -40,6 +41,8 @@ interface DocumentFormState {
 }
 
 export default function DocumentRegistrationForm() {
+  const mutation = useUploadDocument()
+
   const [formData, setFormData] = useState<DocumentFormState>({
     tracking_no: '',
     title: '',
@@ -50,6 +53,8 @@ export default function DocumentRegistrationForm() {
     due_date: null,
     file: null,
   })
+  const [fileError, setFileError] = useState('')
+  const [dueDateError, setDueDateError] = useState('')
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -60,10 +65,37 @@ export default function DocumentRegistrationForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!formData.due_date || !formData.file) return
+    // clear previous errors
+    setFileError('')
+    setDueDateError('')
+    const file = formData.file
+    const due_date = formData.due_date
 
-    console.log(formData)
+    if (!file) return setFileError('Please upload a file.')
+    if (!due_date) return setDueDateError('Please select a due date.')
+
+    // 1. Get current date and set it to the very beginning of today (midnight)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const selectedDate = new Date(due_date)
+
+    // 3. Validation Logic
+    if (selectedDate < today) {
+      return setDueDateError('Due date cannot be in the past.')
+    }
+
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        return setFileError('Please upload a PDF file.')
+      } else if (file.size > 10 * 1024 * 1024) {
+        return setFileError('File size must be less than 10MB.')
+      }
+    }
+    mutation.mutate(formData)
   }
+
+  const errorResponse = mutation.error?.response?.data
 
   return (
     <Card className="max-w-3xl mx-auto shadow-xl border-muted">
@@ -74,6 +106,10 @@ export default function DocumentRegistrationForm() {
         <CardDescription>
           All fields are required. Please ensure details are accurate.
         </CardDescription>
+        {errorResponse && (
+          <p className="text-destructive">{errorResponse.message}</p>
+        )}
+        {dueDateError && <p className="text-destructive">{dueDateError}</p>}
       </CardHeader>
 
       <CardContent>
@@ -221,6 +257,7 @@ export default function DocumentRegistrationForm() {
             <FieldDescription>
               Upload the official document file (PDF, DOCX).
             </FieldDescription>
+            {fileError && <p className="text-destructive">{fileError}</p>}
             <Input
               id="file"
               type="file"
