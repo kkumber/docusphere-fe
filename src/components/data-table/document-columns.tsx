@@ -2,6 +2,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from './data-table-column-header'
 import type { Document } from '@/types/document'
 import type { DocumentStatusMap } from '@/types/ui'
+import DocumentActions from './document-actions'
 
 const statusMap: DocumentStatusMap = {
   1: {
@@ -42,12 +43,19 @@ export const documentColumns: ColumnDef<Document>[] = [
     header: 'Instructions',
   },
   {
-    accessorKey: 'category',
-    header: 'Category',
-  },
-  {
     accessorKey: 'originating_office',
     header: 'Originating Office',
+  },
+  {
+    accessorKey: 'category',
+    header: 'Category',
+    cell: ({ row }) => {
+      return (
+        <span className="inline-flex items-center rounded-md border px-2 py-0.5 font-medium capitalize">
+          {row.original.category}
+        </span>
+      )
+    },
   },
   {
     accessorKey: 'request_type',
@@ -78,10 +86,10 @@ export const documentColumns: ColumnDef<Document>[] = [
       <DataTableColumnHeader column={column} title="Due Date" />
     ),
   },
-  //   {
-  //     id: 'actions',
-  //     cell: ({ row }) => {
-  //       return <UserActions row={row} />
-  //     },
-  //   },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      return <DocumentActions row={row} />
+    },
+  },
 ]
