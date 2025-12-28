@@ -229,9 +229,7 @@ export default function DocumentRegistrationForm() {
                   <SelectItem value="for_information">
                     For Information
                   </SelectItem>
-                  <SelectItem value="for_endorsement">
-                    For Endorsement
-                  </SelectItem>
+                  <SelectItem value="for_review">For Review</SelectItem>
                   <SelectItem value="for_response">For Response</SelectItem>
                 </SelectContent>
               </Select>
