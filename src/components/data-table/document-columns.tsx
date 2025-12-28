@@ -25,6 +25,19 @@ const statusMap: DocumentStatusMap = {
     label: 'Released',
     color: 'bg-blue-100 text-blue-800 border-blue-300',
   },
+  // New Document Assignment statuses for assign documents
+  6: {
+    label: 'Pending',
+    color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  },
+  7: {
+    label: 'Completed',
+    color: 'bg-green-100 text-green-800 border-green-300',
+  },
+  8: {
+    label: 'Delayed',
+    color: 'bg-red-100 text-red-800 border-red-300',
+  },
 }
 
 export const documentColumns: ColumnDef<Document>[] = [
@@ -66,7 +79,7 @@ export const documentColumns: ColumnDef<Document>[] = [
     accessorKey: 'status_id',
     header: 'Status',
     cell: ({ row }) => {
-      const statusId: number = row?.original?.status_id!
+      const statusId: number | undefined = row?.original?.status_id
       return (
         <span
           className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${statusMap[statusId!].color}`}

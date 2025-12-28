@@ -58,6 +58,7 @@ const DocumentManagementPage = () => {
     )
   }
 
+  console.log(data)
   return (
     <>
       <Header breadcrumbs={breadcrumbs} />
