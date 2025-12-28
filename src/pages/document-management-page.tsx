@@ -24,23 +24,30 @@ const breadcrumbs: Breadcrumbs[] = [
 const DocumentManagementPage = () => {
   const { user } = useUserContext()
 
-  const url =
-    user?.role === 'records' || user?.role === 'admin'
-      ? '/api/record/documents'
-      : '/api/documents'
+  const isHigherThanSds: boolean =
+    user?.role === 'records' || user?.role === 'admin' ? true : false
+  const url = isHigherThanSds
+    ? '/api/record/documents'
+    : '/api/document/assignments'
 
   const { isPending, data, isError, error } = useGetRequest({
     url: url,
     key: ['documents'],
   })
 
-  const columnValuesForFilter: ColumnValuesForFilterStatus[] = [
-    { value: '1', label: 'Pending' },
-    { value: '2', label: 'Archived' },
-    { value: '3', label: 'Completed' },
-    { value: '4', label: 'Delayed' },
-    { value: '5', label: 'Released' },
-  ]
+  const columnValuesForFilter: ColumnValuesForFilterStatus[] = isHigherThanSds
+    ? [
+        { value: '1', label: 'Pending' },
+        { value: '2', label: 'Archived' },
+        { value: '3', label: 'Completed' },
+        { value: '4', label: 'Delayed' },
+        { value: '5', label: 'Released' },
+      ]
+    : [
+        { value: '6', label: 'Pending' },
+        { value: '7', label: 'Completed' },
+        { value: '8', label: 'Delayed' },
+      ]
 
   const searchFilterInputValues: FilterSearchInput = {
     placeholder: 'Search by tracking number',
