@@ -2,7 +2,7 @@ interface UserInterface {
     id: number;
     first_name: string;
     last_name: string;
-    email: string;
+    email?: string;
     office: string;
     status?: number;
     email_verified_at?: string;

@@ -6,11 +6,13 @@ import MainContainer from '@/components/MainContainer'
 import { Button } from '@/components/ui/button'
 import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
+import usePrefetchRequest from '@/hooks/use-prefetch-request'
 import type {
   Breadcrumbs,
   ColumnValuesForFilterStatus,
   FilterSearchInput,
 } from '@/types/ui'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
 
@@ -23,6 +25,12 @@ const breadcrumbs: Breadcrumbs[] = [
 
 const DocumentManagementPage = () => {
   const { user } = useUserContext()
+
+  // PRefetch users
+  usePrefetchRequest({
+    key: ['usersByRole'],
+    url: '/api/users',
+  })
 
   const role = user?.role
 
