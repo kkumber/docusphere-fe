@@ -44,19 +44,9 @@ const DocumentActions = ({ row }: Props) => {
           View document
         </DropdownMenuItem>
 
-        <DropdownMenuItem>
-          <FileText className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
 
         {/* Workflow actions */}
-        <DropdownMenuItem>
-          <Route className="mr-2 h-4 w-4" />
-          Forward to office
-        </DropdownMenuItem>
-
         <DropdownMenuItem>
           <Send className="mr-2 h-4 w-4" />
           Assign for action

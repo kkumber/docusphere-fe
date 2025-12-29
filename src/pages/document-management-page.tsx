@@ -24,18 +24,16 @@ const breadcrumbs: Breadcrumbs[] = [
 const DocumentManagementPage = () => {
   const { user } = useUserContext()
 
-  const isHigherThanSds: boolean =
-    user?.role === 'records' || user?.role === 'admin' ? true : false
-  const url = isHigherThanSds
-    ? '/api/record/documents'
-    : '/api/document/assignments'
+  const role = user?.role
+
+  const isRecordsLevel = role === 'records' || role === 'admin'
 
   const { isPending, data, isError, error } = useGetRequest({
-    url: url,
-    key: ['documents'],
+    url: isRecordsLevel ? '/api/record/documents' : '/api/document/assignments',
+    key: ['documents', role],
   })
 
-  const columnValuesForFilter: ColumnValuesForFilterStatus[] = isHigherThanSds
+  const columnValuesForFilter: ColumnValuesForFilterStatus[] = isRecordsLevel
     ? [
         { value: '1', label: 'Pending' },
         { value: '2', label: 'Archived' },
@@ -65,7 +63,6 @@ const DocumentManagementPage = () => {
     )
   }
 
-  console.log(data)
   return (
     <>
       <Header breadcrumbs={breadcrumbs} />

@@ -54,6 +54,9 @@ export const documentColumns: ColumnDef<Document>[] = [
   {
     accessorKey: 'instructions',
     header: 'Instructions',
+    cell: ({ row }) => (
+      <div className="w-48 truncate">{row.original.instructions}</div>
+    ),
   },
   {
     accessorKey: 'originating_office',
