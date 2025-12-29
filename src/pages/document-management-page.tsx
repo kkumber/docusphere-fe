@@ -29,7 +29,7 @@ const DocumentManagementPage = () => {
   // PRefetch users
   usePrefetchRequest({
     key: ['usersByRole'],
-    url: '/api/users',
+    url: '/api/users/roles',
   })
 
   const role = user?.role

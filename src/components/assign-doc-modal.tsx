@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import useGetRequest from '@/hooks/use-get'
 
 interface AssignDocModalProps {
   trigger: React.ReactNode
@@ -30,13 +31,14 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   documentType,
 }) => {
   // CALL USE QUERY HERE TO GET ALL USERS PREFETCHED IN THE DOC MANAGEMENT MUST HAVE SAME KEY
-  const [selectedUser, setSelectedUser] = useState<number | null>(null)
+  const users = useGetRequest({
+    key: ['usersByRole'],
+    url: '/api/users/roles',
+  })
+  const [selectedUser, setSelectedUser] = useState<number[] | null>(null)
   const [instructions, setInstructions] = useState('')
 
-  const handleAssign = () => {
-    if (!selectedUser) return
-    onAssign({ assignedToId: selectedUser, role: selectedRole, instructions })
-  }
+  // MAKE FUNCTION HERE TO APPEND OR REMOVE USER FROM SELECTED USER ARRAY
 
   return (
     <AlertDialog>
