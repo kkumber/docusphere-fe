@@ -37,7 +37,7 @@ const data = {
     },
     {
       title: 'Documents',
-      url: '/records/document-management',
+      url: '/documents/document-management',
       icon: Files,
       isActive: false,
     },
