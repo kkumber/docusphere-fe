@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button'
 import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
 import usePrefetchRequest from '@/hooks/use-prefetch-request'
+import type { Document } from '@/types/document'
 import type {
   Breadcrumbs,
   ColumnValuesForFilterStatus,
   FilterSearchInput,
 } from '@/types/ui'
-import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
 
@@ -36,7 +36,9 @@ const DocumentManagementPage = () => {
 
   const isRecordsLevel = role === 'records' || role === 'admin'
 
-  const { isPending, data, isError, error } = useGetRequest({
+  const { isPending, data, isError, error } = useGetRequest<{
+    data: Document[]
+  }>({
     url: isRecordsLevel ? '/api/record/documents' : '/api/document/assignments',
     key: ['documents', role],
   })

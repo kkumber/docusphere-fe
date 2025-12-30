@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
@@ -19,7 +19,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import useGetRequest from '@/hooks/use-get'
+import type { User } from '@/types/user'
+
+interface UsersByRole {
+  [role: string]: User[]
+}
 
 interface AssignDocModalProps {
   trigger: React.ReactNode
@@ -30,83 +36,141 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   trigger,
   documentType,
 }) => {
-  // CALL USE QUERY HERE TO GET ALL USERS PREFETCHED IN THE DOC MANAGEMENT MUST HAVE SAME KEY
-  const users = useGetRequest({
+  /**
+   * We assume the API returns users grouped by role, e.g.
+   * {
+   *   sds: [{ id, frst_name, last_name, office }],
+   *   chief: [...],
+   *   staff: [...]
+   * }
+   */
+  const {
+    isPending,
+    data: users = {},
+    isError,
+    error,
+  } = useGetRequest<UsersByRole>({
     key: ['usersByRole'],
     url: '/api/users/roles',
   })
-  const [selectedUser, setSelectedUser] = useState<number[] | null>(null)
+
+  /**
+   * UX decision:
+   * - Roles are multi‑select (checkboxes)
+   * - Users are multi‑select but grouped visually by role
+   */
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [instructions, setInstructions] = useState('')
 
-  // MAKE FUNCTION HERE TO APPEND OR REMOVE USER FROM SELECTED USER ARRAY
+  const toggleRole = (role: string) => {
+    setSelectedRoles((prev) =>
+      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role],
+    )
+
+    // Remove users belonging to an unselected role
+    if (selectedRoles.includes(role)) {
+      const roleUserIds = users[role]?.map((u: User) => u?.id) ?? []
+      setSelectedUsers((prev) => prev.filter((id) => !roleUserIds.includes(id)))
+    }
+  }
+
+  const toggleUser = (userId: number) => {
+    setSelectedUsers((prev) =>
+      prev.includes(userId)
+        ? prev.filter((id) => id !== userId)
+        : [...prev, userId],
+    )
+  }
+
+  const visibleUsersByRole = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(users).filter(([role]) => selectedRoles.includes(role)),
+    )
+  }, [users, selectedRoles])
+
+  const handleAssign = () => {
+    // submit selectedRoles, selectedUsers, instructions
+  }
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
-      <AlertDialogContent className="sm:max-w-lg">
+      <AlertDialogContent className="sm:max-w-xl">
         <AlertDialogHeader>
           <AlertDialogTitle>Assign {documentType}</AlertDialogTitle>
           <AlertDialogDescription>
-            Select a user and role to assign this document for action.
+            Select one or more roles, then choose the users under each role.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         {/* Role Selection */}
         <div className="mt-4">
-          <label className="block mb-1 font-medium">Role</label>
-          <Select
-            value={selectedRole}
-            onValueChange={(val) => {
-              setSelectedRole(val as keyof typeof usersByRole)
-              setSelectedUser(null)
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select role" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(usersByRole).map((role) => (
-                <SelectItem key={role} value={role}>
-                  {role.charAt(0).toUpperCase() + role.slice(1)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <p className="mb-2 font-medium">Roles</p>
+          <div className="grid grid-cols-2 gap-2">
+            {Object.keys(users).map((role) => (
+              <label
+                key={role}
+                className="flex items-center gap-2 rounded-md border p-2 cursor-pointer"
+              >
+                <Checkbox
+                  checked={selectedRoles.includes(role)}
+                  onCheckedChange={() => toggleRole(role)}
+                />
+                <span className="capitalize">{role}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
-        {/* User Selection */}
-        <div className="mt-4">
-          <label className="block mb-1 font-medium">User</label>
-          <Select
-            value={selectedUser?.toString() || ''}
-            onValueChange={(val) => setSelectedUser(Number(val))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={`Select ${selectedRole} user`} />
-            </SelectTrigger>
-            <SelectContent>
-              {usersByRole[selectedRole].map((user) => (
-                <SelectItem key={user.id} value={user.id.toString()}>
-                  {user.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {/* User Selection (Grouped) */}
+        {selectedRoles.length > 0 && users && (
+          <div className="mt-6 space-y-4">
+            <p className="font-medium">Users</p>
+
+            {Object.entries(visibleUsersByRole).map(([role, users]) => (
+              <div key={role} className="rounded-md border p-3">
+                <p className="mb-2 text-sm font-semibold capitalize text-muted-foreground">
+                  {role}
+                </p>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {users.map((user: User) => (
+                    <label
+                      key={user!.id}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <Checkbox
+                        checked={selectedUsers.includes(user!.id)}
+                        onCheckedChange={() => toggleUser(user!.id)}
+                      />
+                      <span>{user!.first_name + ' ' + user!.last_name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Instructions */}
-        <div className="mt-4">
+        <div className="mt-6">
           <label className="block mb-1 font-medium">Instructions</label>
           <Textarea
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
-            placeholder="Optional instructions for the assignee"
+            placeholder="Optional instructions for the assignees"
           />
         </div>
 
         <AlertDialogFooter className="mt-6">
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleAssign}>Assign</AlertDialogAction>
+          <AlertDialogAction
+            disabled={selectedUsers.length === 0}
+            onClick={handleAssign}
+          >
+            Assign
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
