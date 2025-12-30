@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -29,6 +28,16 @@ import {
   User as UserIcon,
   FileText,
 } from 'lucide-react'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from './ui/calendar'
+import { Button } from './ui/button'
+import { cn } from '@/lib/utils'
+import { validateDueDate } from '@/utils/validate-due-date'
 
 interface UsersByRole {
   [role: string]: User[]
@@ -41,6 +50,7 @@ interface UserDataResponse {
 interface AssignDocModalProps {
   trigger: React.ReactNode
   documentTitle: string
+  documentId: number
 }
 
 type RequestType =
@@ -53,6 +63,7 @@ type RequestType =
 export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   trigger,
   documentTitle,
+  documentId,
 }) => {
   const { isPending, data, isError, error } = useGetRequest<UserDataResponse>({
     key: ['usersByRole'],
@@ -65,6 +76,8 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [instructions, setInstructions] = useState('')
   const [requestType, setRequestType] = useState<RequestType | ''>('')
+  const [dueDate, setDueDate] = useState<Date | null>(null)
+  const [dueDateError, setDueDateError] = useState<string | null>(null)
 
   // toggle open roles used in role accordion
   const toggleRoleOpen = (role: string) => {
@@ -96,9 +109,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
 
   // submit function
   const handleAssign = () => {
+    if (dueDate && !validateDueDate(dueDate))
+      return setDueDateError('Due date cannot be in the past')
+
     const payload = {
+      document_id: documentId,
       request_type: requestType,
-      users: selectedUsers,
+      assigned_to: selectedUsers,
       instructions,
     }
 
@@ -151,6 +168,42 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
               <SelectItem value="for_response">For Response</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* ---------------- Due Date ---------------- */}
+        <div className="rounded-md border p-3 mt-3">
+          <label className="block mb-2 font-medium">Due Date (optional)</label>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  'w-full justify-start text-left font-normal',
+                  !dueDate && 'text-muted-foreground',
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dueDate ? dueDate.toDateString() : 'Pick a date'}
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={dueDate ?? undefined}
+                onSelect={(date) => {
+                  setDueDate(date ?? null)
+                  setDueDateError(null)
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+
+          {dueDateError && (
+            <p className="mt-1 text-sm text-destructive">{dueDateError}</p>
+          )}
         </div>
 
         {/* ---------------- Roles & Users ---------------- */}
@@ -235,12 +288,12 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
         {/* ---------------- Footer ---------------- */}
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
             disabled={!requestType || selectedUsers.length === 0}
             onClick={handleAssign}
           >
             Assign ({selectedUsers.length})
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

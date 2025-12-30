@@ -28,6 +28,7 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import useUploadDocument from '@/hooks/use-upload-document'
+import { validateDueDate } from '@/utils/validate-due-date'
 
 export interface DocumentFormState {
   tracking_no: string
@@ -74,14 +75,7 @@ export default function DocumentRegistrationForm() {
     if (!file) return setFileError('Please upload a file.')
     if (!due_date) return setDueDateError('Please select a due date.')
 
-    // 1. Get current date and set it to the very beginning of today (midnight)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const selectedDate = new Date(due_date)
-
-    // 3. Validation Logic
-    if (selectedDate < today) {
+    if (!validateDueDate(due_date)) {
       return setDueDateError('Due date cannot be in the past.')
     }
 

@@ -62,6 +62,7 @@ const DocumentActions = ({ row }: Props) => {
             </DropdownMenuItem>
           }
           documentTitle={row.original.title}
+          documentId={row.original.id}
         />
 
         <DropdownMenuItem>
