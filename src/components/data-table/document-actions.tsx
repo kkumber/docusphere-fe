@@ -11,15 +11,14 @@ import {
 import { Button } from '@/components/ui/button'
 import {
   Eye,
-  Route,
   CheckCircle,
   Send,
-  FileText,
   Archive,
   Clock,
   XCircle,
   MoreHorizontal,
 } from 'lucide-react'
+import { AssignDocModal } from '../assign-doc-modal'
 
 type Props = {
   row: Row<Document>
@@ -48,8 +47,15 @@ const DocumentActions = ({ row }: Props) => {
 
         {/* Workflow actions */}
         <DropdownMenuItem>
-          <Send className="mr-2 h-4 w-4" />
-          Assign for action
+          <AssignDocModal
+            trigger={
+              <>
+                <Send className="mr-2 h-4 w-4" />
+                Assign for action
+              </>
+            }
+            documentType={row.original.request_type}
+          />
         </DropdownMenuItem>
 
         <DropdownMenuItem>

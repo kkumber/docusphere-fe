@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import useGetRequest from '@/hooks/use-get'
 import type { User } from '@/types/user'
+import { Spinner } from './ui/spinner'
 
 interface UsersByRole {
   [role: string]: User[]
@@ -97,6 +98,14 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-xl">
+        {isPending && (
+          <Spinner className="text-primary-blue size-8 flex items-center justify-center" />
+        )}
+        {isError && (
+          <p className="text-destructive">
+            Error fetching users: {error?.message}
+          </p>
+        )}
         <AlertDialogHeader>
           <AlertDialogTitle>Assign {documentType}</AlertDialogTitle>
           <AlertDialogDescription>
@@ -144,7 +153,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                         checked={selectedUsers.includes(user!.id)}
                         onCheckedChange={() => toggleUser(user!.id)}
                       />
-                      <span>{user!.first_name + ' ' + user!.last_name}</span>
+                      <span>
+                        {user!.first_name +
+                          ' ' +
+                          user!.last_name +
+                          ' ' +
+                          `(${user!.office})`}
+                      </span>
                     </label>
                   ))}
                 </div>
