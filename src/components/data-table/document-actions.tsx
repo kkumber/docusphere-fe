@@ -19,12 +19,15 @@ import {
   MoreHorizontal,
 } from 'lucide-react'
 import { AssignDocModal } from '../assign-doc-modal'
+import { useState } from 'react'
 
 type Props = {
   row: Row<Document>
 }
 
 const DocumentActions = ({ row }: Props) => {
+  const [showAssignModal, setShowAssignModal] = useState(false)
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -46,17 +49,20 @@ const DocumentActions = ({ row }: Props) => {
         <DropdownMenuSeparator />
 
         {/* Workflow actions */}
-        <DropdownMenuItem>
-          <AssignDocModal
-            trigger={
-              <>
-                <Send className="mr-2 h-4 w-4" />
-                Assign for action
-              </>
-            }
-            documentType={row.original.request_type}
-          />
-        </DropdownMenuItem>
+        <AssignDocModal
+          trigger={
+            <DropdownMenuItem
+              onSelect={(e: Event) => {
+                e.preventDefault()
+                setShowAssignModal(!showAssignModal)
+              }}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Assign for action
+            </DropdownMenuItem>
+          }
+          documentTitle={row.original.title}
+        />
 
         <DropdownMenuItem>
           <Clock className="mr-2 h-4 w-4" />
