@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { Button } from '@/components/ui/button'
+import React, { useState } from 'react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,14 +10,32 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Spinner } from './ui/spinner'
 import useGetRequest from '@/hooks/use-get'
 import type { User } from '@/types/user'
-import { Spinner } from './ui/spinner'
+import {
+  ChevronDown,
+  ChevronRight,
+  Users,
+  User as UserIcon,
+  FileText,
+} from 'lucide-react'
 
 interface UsersByRole {
   [role: string]: User[]
+}
+
+interface UserDataResponse {
+  data: UsersByRole
 }
 
 interface AssignDocModalProps {
@@ -26,49 +43,37 @@ interface AssignDocModalProps {
   documentTitle: string
 }
 
-interface UserDataResponse {
-  data: UsersByRole
-}
+type RequestType =
+  | 'for_signature'
+  | 'for_approval'
+  | 'for_information'
+  | 'for_review'
+  | 'for_response'
 
 export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   trigger,
   documentTitle,
 }) => {
-  /**
-   * We assume the API returns users grouped by role, e.g.
-   * {
-   *   sds: [{ id, frst_name, last_name, office }],
-   *   chief: [...],
-   *   staff: [...]
-   * }
-   */
   const { isPending, data, isError, error } = useGetRequest<UserDataResponse>({
     key: ['usersByRole'],
     url: '/api/users/roles',
   })
 
-  /**
-   * UX decision:
-   * - Roles are multi‑select (checkboxes)
-   * - Users are multi‑select but grouped visually by role
-   */
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const usersByRole = data?.data ?? {}
+
+  const [openRoles, setOpenRoles] = useState<string[]>([])
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [instructions, setInstructions] = useState('')
-  const [users, setUsers] = useState<UsersByRole>(data!.data)
+  const [requestType, setRequestType] = useState<RequestType | ''>('')
 
-  const toggleRole = (role: string) => {
-    setSelectedRoles((prev) =>
+  // toggle open roles used in role accordion
+  const toggleRoleOpen = (role: string) => {
+    setOpenRoles((prev) =>
       prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role],
     )
-
-    // Remove users belonging to an unselected role
-    if (selectedRoles.includes(role)) {
-      const roleUserIds = users[role]?.map((u: User) => u?.id) ?? []
-      setSelectedUsers((prev) => prev.filter((id) => !roleUserIds.includes(id)))
-    }
   }
 
+  // select users
   const toggleUser = (userId: number) => {
     setSelectedUsers((prev) =>
       prev.includes(userId)
@@ -77,109 +82,164 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     )
   }
 
-  const visibleUsersByRole = useMemo(() => {
-    return Object.fromEntries(
-      Object.entries(users).filter(([role]) => selectedRoles.includes(role)),
-    )
-  }, [users, selectedRoles])
+  // toggle select all users per role
+  const toggleSelectAll = (role: string) => {
+    const roleUserIds = usersByRole[role].map((u) => u!.id)
+    const allSelected = roleUserIds.every((id) => selectedUsers.includes(id))
 
+    setSelectedUsers((prev) =>
+      allSelected
+        ? prev.filter((id) => !roleUserIds.includes(id))
+        : [...new Set([...prev, ...roleUserIds])],
+    )
+  }
+
+  // submit function
   const handleAssign = () => {
-    // submit selectedRoles, selectedUsers, instructions
+    const payload = {
+      request_type: requestType,
+      users: selectedUsers,
+      instructions,
+    }
+
+    console.log(payload)
+    // submit payload
   }
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+
       <AlertDialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
-        {isPending && (
-          <Spinner className="text-primary-blue size-8 flex items-center justify-center" />
-        )}
+        {isPending && <Spinner className="size-8 mx-auto text-primary-blue" />}
+
         {isError && (
           <p className="text-destructive">
             Error fetching users: {error?.message}
           </p>
         )}
+
         <AlertDialogHeader>
           <AlertDialogTitle>Assign {documentTitle}</AlertDialogTitle>
           <AlertDialogDescription>
-            Select one or more roles, then choose the users under each role.
+            You can assign this document to multiple users. Only one request
+            type per assignment.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        {/* Role Selection */}
-        <div className="flex-1 overflow-y-auto pr-2">
-          <div className="mt-4">
-            <p className="mb-2 font-medium">Roles</p>
-            <div className="grid grid-cols-2 gap-2">
-              {Object.keys(users).map((role) => (
-                <label
-                  key={role}
-                  className="flex items-center gap-2 rounded-md border p-2 cursor-pointer"
+        {/* ---------------- Request Type ---------------- */}
+        <div className="rounded-md border bg-muted/40 p-3 mt-2">
+          <label className="flex items-center gap-2 mb-2 font-medium">
+            <FileText className="size-4 text-muted-foreground" />
+            Request Type
+          </label>
+
+          <Select
+            required
+            value={requestType}
+            onValueChange={(value) => setRequestType(value as RequestType)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select request type" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="for_signature">For Signature</SelectItem>
+              <SelectItem value="for_approval">For Approval</SelectItem>
+              <SelectItem value="for_information">For Information</SelectItem>
+              <SelectItem value="for_review">For Review</SelectItem>
+              <SelectItem value="for_response">For Response</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* ---------------- Roles & Users ---------------- */}
+        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mt-4">
+          {Object.entries(usersByRole).map(([role, users]) => {
+            const roleUserIds = users.map((u) => u!.id)
+            const selectedCount = roleUserIds.filter((id) =>
+              selectedUsers.includes(id),
+            ).length
+
+            const allSelected =
+              selectedCount === roleUserIds.length && roleUserIds.length > 0
+
+            return (
+              <div key={role} className="rounded-md border bg-background">
+                {/* Role Header */}
+                <button
+                  type="button"
+                  onClick={() => toggleRoleOpen(role)}
+                  className="flex w-full items-center justify-between p-3 hover:bg-muted transition"
                 >
-                  <Checkbox
-                    checked={selectedRoles.includes(role)}
-                    onCheckedChange={() => toggleRole(role)}
-                  />
-                  <span className="capitalize">{role}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* User Selection (Grouped) */}
-          {selectedRoles.length > 0 && users && (
-            <div className="mt-6 space-y-4">
-              <p className="font-medium">Users</p>
-
-              {Object.entries(visibleUsersByRole).map(([role, users]) => (
-                <div key={role} className="rounded-md border p-3">
-                  <p className="mb-2 text-sm font-semibold capitalize text-muted-foreground">
-                    {role}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    {users.map((user: User) => (
-                      <label
-                        key={user!.id}
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <Checkbox
-                          checked={selectedUsers.includes(user!.id)}
-                          onCheckedChange={() => toggleUser(user!.id)}
-                        />
-                        <span>
-                          {user!.first_name +
-                            ' ' +
-                            user!.last_name +
-                            ' ' +
-                            `(${user!.office})`}
-                        </span>
-                      </label>
-                    ))}
+                  <div className="flex items-center gap-2">
+                    <Users className="size-4 text-muted-foreground" />
+                    <span className="capitalize font-medium">{role}</span>
+                    <span className="text-xs text-muted-foreground">
+                      ({users.length})
+                    </span>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
 
-          {/* Instructions */}
-          <div className="mt-6">
+                  {openRoles.includes(role) ? (
+                    <ChevronDown className="size-4" />
+                  ) : (
+                    <ChevronRight className="size-4" />
+                  )}
+                </button>
+
+                {/* Users */}
+                {openRoles.includes(role) && (
+                  <div className="border-t p-3 space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
+                      <Checkbox
+                        checked={allSelected}
+                        onCheckedChange={() => toggleSelectAll(role)}
+                      />
+                      Select all
+                    </label>
+
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      {users.map((user) => (
+                        <label
+                          key={user?.id}
+                          className="flex items-center gap-2 cursor-pointer text-sm"
+                        >
+                          <Checkbox
+                            checked={selectedUsers.includes(user!.id)}
+                            onCheckedChange={() => toggleUser(user!.id)}
+                          />
+                          <UserIcon className="size-3 text-muted-foreground" />
+                          <span>
+                            {user?.first_name} {user?.last_name}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+
+          {/* ---------------- Instructions ---------------- */}
+          <div className="mt-4">
             <label className="block mb-1 font-medium">Instructions</label>
             <Textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              placeholder="Optional instructions for the assignees"
+              placeholder="Optional instructions for assignees"
             />
           </div>
         </div>
 
-        <AlertDialogFooter className="mt-6">
+        {/* ---------------- Footer ---------------- */}
+        <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            disabled={selectedUsers.length === 0}
+            disabled={!requestType || selectedUsers.length === 0}
             onClick={handleAssign}
           >
-            Assign
+            Assign ({selectedUsers.length})
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
