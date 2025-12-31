@@ -127,7 +127,12 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
 
-      <AlertDialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col gap-4">
+      <AlertDialogContent
+        className=" sm:max-w-xl
+        max-h-[90vh]
+        overflow-y-auto
+        flex flex-col gap-4"
+      >
         {isPending && <Spinner className="size-8 mx-auto text-primary-blue" />}
 
         {isError && (
@@ -217,7 +222,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
 
         {/* ---------------- Roles & Users ---------------- */}
         <label className="block mt-3 font-medium">Available Users</label>
-        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mt-2">
+        <div className="space-y-3 mt-2">
           {Object.entries(usersByRole).map(([role, users]) => {
             const roleUserIds = users.map((u) => u!.id)
             const selectedCount = roleUserIds.filter((id) =>
@@ -253,7 +258,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                 {/* Users */}
                 {openRoles.includes(role) && (
                   <div className="border-t p-3 space-y-2">
-                    <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
+                    <label className="flex items-center gap-2 text-sm font-medium cursor-pointer mb-4">
                       <Checkbox
                         checked={allSelected}
                         onCheckedChange={() => toggleSelectAll(role)}
@@ -261,7 +266,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                       Select all
                     </label>
 
-                    <div className="grid grid-cols-2 gap-2 mt-2">
+                    <div className="grid md:grid-cols-2 space-y-4 md:gap-2 mt-2">
                       {users.map((user) => (
                         <label
                           key={user?.id}
