@@ -33,7 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { CalendarIcon } from 'lucide-react'
+import { Calendar1Icon, CalendarIcon } from 'lucide-react'
 import { Calendar } from './ui/calendar'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
@@ -127,7 +127,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
 
-      <AlertDialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
+      <AlertDialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col gap-4">
         {isPending && <Spinner className="size-8 mx-auto text-primary-blue" />}
 
         {isError && (
@@ -144,70 +144,80 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        {/* ---------------- Request Type ---------------- */}
-        <div className="rounded-md border bg-muted/40 p-3 mt-2">
-          <label className="flex items-center gap-2 mb-2 font-medium">
-            <FileText className="size-4 text-muted-foreground" />
-            Request Type
-          </label>
+        <div className="flex flex-wrap gap-4">
+          {/* ---------------- Request Type ---------------- */}
+          <div className="rounded-md p-3 mt-2 border">
+            <label className="flex items-center gap-2 mb-2 font-medium">
+              <FileText className="size-4 text-muted-foreground" />
+              Request Type{' '}
+              <span className="text-destructive text-xs ml-2">*Required</span>
+            </label>
 
-          <Select
-            required
-            value={requestType}
-            onValueChange={(value) => setRequestType(value as RequestType)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select request type" />
-            </SelectTrigger>
+            <Select
+              required
+              value={requestType}
+              onValueChange={(value) => setRequestType(value as RequestType)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select request type" />
+              </SelectTrigger>
 
-            <SelectContent>
-              <SelectItem value="for_signature">For Signature</SelectItem>
-              <SelectItem value="for_approval">For Approval</SelectItem>
-              <SelectItem value="for_information">For Information</SelectItem>
-              <SelectItem value="for_review">For Review</SelectItem>
-              <SelectItem value="for_response">For Response</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+              <SelectContent>
+                <SelectItem value="for_signature">For Signature</SelectItem>
+                <SelectItem value="for_approval">For Approval</SelectItem>
+                <SelectItem value="for_information">For Information</SelectItem>
+                <SelectItem value="for_review">For Review</SelectItem>
+                <SelectItem value="for_response">For Response</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* ---------------- Due Date ---------------- */}
-        <div className="rounded-md border p-3 mt-3">
-          <label className="block mb-2 font-medium">Due Date (optional)</label>
+          {/* ---------------- Due Date ---------------- */}
+          <div className="rounded-md p-3 mt-2 border">
+            <label className="flex items-center gap-2 mb-2 font-medium">
+              <Calendar1Icon className="size-4 text-muted-foreground" />
+              Due Date{' '}
+              <span className="text-xs text-muted-foreground ml-2">
+                Optional
+              </span>
+            </label>
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'w-full justify-start text-left font-normal',
-                  !dueDate && 'text-muted-foreground',
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {dueDate ? dueDate.toDateString() : 'Pick a date'}
-              </Button>
-            </PopoverTrigger>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'w-full justify-start text-left font-normal',
+                    !dueDate && 'text-muted-foreground',
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dueDate ? dueDate.toDateString() : 'Pick a date'}
+                </Button>
+              </PopoverTrigger>
 
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={dueDate ?? undefined}
-                onSelect={(date) => {
-                  setDueDate(date ?? null)
-                  setDueDateError(null)
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dueDate ?? undefined}
+                  onSelect={(date) => {
+                    setDueDate(date ?? null)
+                    setDueDateError(null)
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
 
-          {dueDateError && (
-            <p className="mt-1 text-sm text-destructive">{dueDateError}</p>
-          )}
+            {dueDateError && (
+              <p className="mt-1 text-sm text-destructive">{dueDateError}</p>
+            )}
+          </div>
         </div>
 
         {/* ---------------- Roles & Users ---------------- */}
-        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mt-4">
+        <label className="block mt-3 font-medium">Available Users</label>
+        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mt-2">
           {Object.entries(usersByRole).map(([role, users]) => {
             const roleUserIds = users.map((u) => u!.id)
             const selectedCount = roleUserIds.filter((id) =>
@@ -275,8 +285,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
           })}
 
           {/* ---------------- Instructions ---------------- */}
-          <div className="mt-4">
-            <label className="block mb-1 font-medium">Instructions</label>
+          <div className="mt-8">
+            <label className="block mb-1 font-medium">
+              Instructions{' '}
+              <span className="text-xs text-muted-foreground ml-2">
+                Optional
+              </span>
+            </label>
             <Textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
