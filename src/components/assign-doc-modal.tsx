@@ -38,6 +38,7 @@ import { Calendar } from './ui/calendar'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
 import { validateDueDate } from '@/utils/validate-due-date'
+import useAssignDoc from '@/hooks/use-assign-doc'
 
 interface UsersByRole {
   [role: string]: User[]
@@ -69,6 +70,8 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     key: ['usersByRole'],
     url: '/api/users/roles',
   })
+
+  const mutation = useAssignDoc()
 
   const usersByRole = data?.data ?? {}
 
@@ -119,9 +122,18 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
       instructions,
     }
 
-    console.log(payload)
-    // submit payload
+    mutation.mutate(payload)
+
+    setOpenRoles([])
+    setSelectedUsers([])
+    setInstructions('')
+    setRequestType('')
+    setDueDate(null)
+    setDueDateError(null)
+    mutation.reset()
   }
+
+  const errorResponse = mutation.error?.response?.data
 
   return (
     <AlertDialog>
@@ -147,6 +159,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
             You can assign this document to multiple users. Only one request
             type per assignment.
           </AlertDialogDescription>
+          {mutation.isError && (
+            <p className="text-destructive">{errorResponse?.message}</p>
+          )}
         </AlertDialogHeader>
 
         <div className="flex flex-wrap gap-4">

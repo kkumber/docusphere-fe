@@ -265,8 +265,12 @@ export default function DocumentRegistrationForm() {
           </Field>
 
           {/* Submit */}
-          <Button type="submit" className="w-full">
-            Register Document
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? 'Uploading...' : 'Register Document'}
           </Button>
         </form>
       </CardContent>
