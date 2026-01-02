@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import { AssignDocModal } from '../assign-doc-modal'
 import { useState } from 'react'
-
+import { Link } from '@tanstack/react-router'
 type Props = {
   row: Row<Document>
 }
@@ -41,9 +41,14 @@ const DocumentActions = ({ row }: Props) => {
         <DropdownMenuSeparator />
 
         {/* View actions */}
-        <DropdownMenuItem>
-          <Eye className="mr-2 h-4 w-4" />
-          View document
+        <DropdownMenuItem asChild>
+          <Link
+            to="/documents/$documentId"
+            params={{ documentId: row.original.id.toString() }}
+          >
+            <Eye className="mr-2 h-4 w-4" />
+            View document
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

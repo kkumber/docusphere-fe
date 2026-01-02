@@ -32,3 +32,7 @@ export interface DashboardValues {
   cards: DashboardCardsData[]
   area_chart: DashboardAreaChartData
 }
+
+export interface DataReseponse<TData> {
+  data: TData
+}
