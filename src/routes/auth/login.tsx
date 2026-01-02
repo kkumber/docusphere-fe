@@ -12,7 +12,6 @@ export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
 })
 
-
 function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
@@ -32,6 +31,7 @@ function LoginPage() {
     },
     onSuccess: (data) => {
       authentication.signIn(data)
+      sessionStorage.setItem('userRole', JSON.stringify(data?.role))
       navigate({ to: '/' })
     },
     onError: (error) => {

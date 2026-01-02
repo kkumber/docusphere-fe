@@ -13,8 +13,9 @@ import type {
   ColumnValuesForFilterStatus,
   FilterSearchInput,
 } from '@/types/ui'
-import { Link } from '@tanstack/react-router'
+import { getRouteApi, Link, useRouteContext } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -24,24 +25,32 @@ const breadcrumbs: Breadcrumbs[] = [
 ]
 
 const DocumentManagementPage = () => {
-  const { user } = useUserContext()
+  const { authentication } = useRouteContext({
+    from: '/_authenticated/_layout/documents/document-management',
+  })
 
-  // PRefetch users
+  // Use directly instead of state
+  const userRole = authentication.userRole()
+  // Prefetch users
   usePrefetchRequest({
     key: ['usersByRole'],
     url: '/api/users/roles',
   })
 
-  const role = user?.role
-
-  const isRecordsLevel = role === 'records' || role === 'admin'
+  const isRecordsLevel = userRole === 'records' || userRole === 'admin'
 
   const { isPending, data, isError, error } = useGetRequest<{
     data: Document[]
   }>({
     url: isRecordsLevel ? '/api/record/documents' : '/api/document/assignments',
-    key: ['documents', role],
+    key: ['documents', userRole],
+    enabled: !!userRole,
   })
+
+  // Debug logging
+  if (isPending) console.log('Query is pending...')
+  if (isError) console.error('Query error:', error)
+  console.log(userRole)
 
   const columnValuesForFilter: ColumnValuesForFilterStatus[] = isRecordsLevel
     ? [

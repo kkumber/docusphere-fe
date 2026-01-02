@@ -31,12 +31,19 @@ export const useAuth = () => {
   const signOut = () => {
     setUser(null)
     localStorage.removeItem('isAuthenticated')
+    sessionStorage.removeItem('userRole')
+  }
+
+  const userRole = () => {
+    const user = sessionStorage.getItem('userRole')
+    return user ? JSON.parse(user) : null
   }
 
   return {
     isAuthenticated,
     signIn,
     signOut,
+    userRole,
     setUser,
     user,
   }
