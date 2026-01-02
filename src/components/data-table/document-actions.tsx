@@ -11,21 +11,23 @@ import {
 import { Button } from '@/components/ui/button'
 import {
   Eye,
-  Route,
   CheckCircle,
   Send,
-  FileText,
   Archive,
   Clock,
   XCircle,
   MoreHorizontal,
 } from 'lucide-react'
+import { AssignDocModal } from '../assign-doc-modal'
+import { useState } from 'react'
 
 type Props = {
   row: Row<Document>
 }
 
 const DocumentActions = ({ row }: Props) => {
+  const [showAssignModal, setShowAssignModal] = useState(false)
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -44,23 +46,24 @@ const DocumentActions = ({ row }: Props) => {
           View document
         </DropdownMenuItem>
 
-        <DropdownMenuItem>
-          <FileText className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
 
         {/* Workflow actions */}
-        <DropdownMenuItem>
-          <Route className="mr-2 h-4 w-4" />
-          Forward to office
-        </DropdownMenuItem>
-
-        <DropdownMenuItem>
-          <Send className="mr-2 h-4 w-4" />
-          Assign for action
-        </DropdownMenuItem>
+        <AssignDocModal
+          trigger={
+            <DropdownMenuItem
+              onSelect={(e: Event) => {
+                e.preventDefault()
+                setShowAssignModal(!showAssignModal)
+              }}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Assign for action
+            </DropdownMenuItem>
+          }
+          documentTitle={row.original.title}
+          documentId={row.original.id}
+        />
 
         <DropdownMenuItem>
           <Clock className="mr-2 h-4 w-4" />

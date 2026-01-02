@@ -6,7 +6,7 @@ import DocumentRegistrationForm from '@/components/document-register-form'
 const breadcrumbs: Breadcrumbs[] = [
   {
     title: 'Document Management',
-    href: '/records/document-management',
+    href: '/documents/document-management',
   },
   {
     title: 'Upload Document',

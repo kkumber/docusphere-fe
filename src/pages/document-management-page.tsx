@@ -4,7 +4,10 @@ import { DataTableSkeleton } from '@/components/data-table/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import { Button } from '@/components/ui/button'
+import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
+import usePrefetchRequest from '@/hooks/use-prefetch-request'
+import type { Document } from '@/types/document'
 import type {
   Breadcrumbs,
   ColumnValuesForFilterStatus,
@@ -21,18 +24,38 @@ const breadcrumbs: Breadcrumbs[] = [
 ]
 
 const DocumentManagementPage = () => {
-  const { isPending, data, isError, error } = useGetRequest({
-    url: '/api/record/documents',
-    key: ['documents'],
+  const { user } = useUserContext()
+
+  // PRefetch users
+  usePrefetchRequest({
+    key: ['usersByRole'],
+    url: '/api/users/roles',
   })
 
-  const columnValuesForFilter: ColumnValuesForFilterStatus[] = [
-    { value: '1', label: 'Pending' },
-    { value: '2', label: 'Archived' },
-    { value: '3', label: 'Completed' },
-    { value: '4', label: 'Delayed' },
-    { value: '5', label: 'Released' },
-  ]
+  const role = user?.role
+
+  const isRecordsLevel = role === 'records' || role === 'admin'
+
+  const { isPending, data, isError, error } = useGetRequest<{
+    data: Document[]
+  }>({
+    url: isRecordsLevel ? '/api/record/documents' : '/api/document/assignments',
+    key: ['documents', role],
+  })
+
+  const columnValuesForFilter: ColumnValuesForFilterStatus[] = isRecordsLevel
+    ? [
+        { value: '1', label: 'Pending' },
+        { value: '2', label: 'Archived' },
+        { value: '3', label: 'Completed' },
+        { value: '4', label: 'Delayed' },
+        { value: '5', label: 'Released' },
+      ]
+    : [
+        { value: '6', label: 'Pending' },
+        { value: '7', label: 'Completed' },
+        { value: '8', label: 'Delayed' },
+      ]
 
   const searchFilterInputValues: FilterSearchInput = {
     placeholder: 'Search by tracking number',
@@ -40,6 +63,7 @@ const DocumentManagementPage = () => {
   }
 
   const btnActions = () => {
+    if (!isRecordsLevel) return
     return (
       <Button size="sm" asChild>
         <Link to="/records/upload-document">
