@@ -47,11 +47,6 @@ const DocumentManagementPage = () => {
     enabled: !!userRole,
   })
 
-  // Debug logging
-  if (isPending) console.log('Query is pending...')
-  if (isError) console.error('Query error:', error)
-  console.log(userRole)
-
   const columnValuesForFilter: ColumnValuesForFilterStatus[] = isRecordsLevel
     ? [
         { value: '1', label: 'Pending' },

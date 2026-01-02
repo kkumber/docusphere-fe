@@ -1,10 +1,6 @@
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
-import useGetRequest from '@/hooks/use-get'
-import type { Document } from '@/types/document'
-import type { DataReseponse } from '@/types/response'
 import type { Breadcrumbs } from '@/types/ui'
-import type { User } from '@/types/user'
 import { getRouteApi } from '@tanstack/react-router'
 import { PdfViewer } from '@/components/pdf-viewer'
 
@@ -31,7 +27,7 @@ const DocumentView = () => {
     <>
       <Header breadcrumbs={breadcrumbs} />
       <MainContainer>
-        <PdfViewer pdfUrl={data.url} user={data.user} />
+        <PdfViewer pdfUrl={data.data.url} user={data.data.user} />
       </MainContainer>
     </>
   )

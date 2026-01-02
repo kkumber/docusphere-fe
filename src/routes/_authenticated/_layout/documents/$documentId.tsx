@@ -16,7 +16,7 @@ export const Route = createFileRoute(
 )({
   component: DocumentViewRoute,
   loader: async ({ params }) => {
-    const response = await api.get<DocumentResponse>(
+    const response = await api.get<{ data: DocumentResponse }>(
       '/api/documents/' + params.documentId,
     )
     return response.data
