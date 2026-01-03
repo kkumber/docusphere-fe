@@ -36,7 +36,7 @@ export const useAuth = () => {
   }
 
   const userRole = () => {
-    const user = sessionStorage.getItem('userRole')
+    const user = localStorage.getItem('userRole')
     return user ? JSON.parse(user) : null
   }
 

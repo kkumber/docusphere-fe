@@ -18,7 +18,7 @@ export const PdfViewer = ({ pdfUrl, user }: Props) => {
     <div className="relative w-full h-screen">
       <iframe
         src={pdfUrl}
-        className="w-full h-full border-none"
+        className="w-full h-full border-none rounded-md"
         title="PDF Viewer"
       />
 
