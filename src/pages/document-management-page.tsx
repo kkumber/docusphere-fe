@@ -4,7 +4,6 @@ import { DataTableSkeleton } from '@/components/data-table/skeleton-table'
 import Header from '@/components/Header'
 import MainContainer from '@/components/MainContainer'
 import { Button } from '@/components/ui/button'
-import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
 import usePrefetchRequest from '@/hooks/use-prefetch-request'
 import type { Document } from '@/types/document'
@@ -13,9 +12,8 @@ import type {
   ColumnValuesForFilterStatus,
   FilterSearchInput,
 } from '@/types/ui'
-import { getRouteApi, Link, useRouteContext } from '@tanstack/react-router'
+import { Link, useRouteContext } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 const breadcrumbs: Breadcrumbs[] = [
   {

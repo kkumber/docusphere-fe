@@ -24,8 +24,9 @@ export const PdfViewer = ({ pdfUrl, user }: Props) => {
 
       {user && (
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <div className="text-xl font-bold opacity-10 rotate-[-30deg] text-center select-none">
-            Viewed by {user.last_name}, {user.first_name} ({user.role}){' '}
+          <div className="text-xl font-bold opacity-30 rotate-[-30deg] text-center select-none">
+            Viewed by {user.last_name}, {user.first_name} - ({user.role})
+            <br />
             {user.email}
             <br />
             {time.toLocaleString()}

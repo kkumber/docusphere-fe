@@ -21,12 +21,14 @@ const DocumentView = () => {
   const { documentId } = route.useParams()
   const data = route.useLoaderData()
 
-  console.log(data)
-
   return (
     <>
       <Header breadcrumbs={breadcrumbs} />
       <MainContainer>
+        <div className="my-4">
+          <h3>{data.data.document.title}</h3>
+          <h5>{data.data.document.tracking_no}</h5>
+        </div>
         <PdfViewer pdfUrl={data.data.url} user={data.data.user} />
       </MainContainer>
     </>
