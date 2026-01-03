@@ -26,12 +26,13 @@ export const useAuth = () => {
   const signIn = (userPayload: User) => {
     setUser(userPayload)
     localStorage.setItem('isAuthenticated', JSON.stringify('true'))
+    localStorage.setItem('userRole', JSON.stringify(userPayload?.role))
   }
 
   const signOut = () => {
     setUser(null)
     localStorage.removeItem('isAuthenticated')
-    sessionStorage.removeItem('userRole')
+    localStorage.removeItem('userRole')
   }
 
   const userRole = () => {

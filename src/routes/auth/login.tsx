@@ -31,7 +31,6 @@ function LoginPage() {
     },
     onSuccess: (data) => {
       authentication.signIn(data)
-      sessionStorage.setItem('userRole', JSON.stringify(data?.role))
       navigate({ to: '/' })
     },
     onError: (error) => {
