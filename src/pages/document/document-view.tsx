@@ -5,6 +5,8 @@ import { getRouteApi } from '@tanstack/react-router'
 import { PdfViewer } from '@/components/pdf-viewer'
 import { Button } from '@/components/ui/button'
 import { Check, CheckCircle2, Paperclip, Info } from 'lucide-react'
+import { QueryClient } from '@tanstack/react-query'
+import usePrefetchRequest from '@/hooks/use-prefetch-request'
 
 const breadcrumbs: Breadcrumbs[] = [
   { title: 'Document Management', href: '/documents/document-management' },
@@ -14,9 +16,13 @@ const breadcrumbs: Breadcrumbs[] = [
 const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
 
 const DocumentView = () => {
-  const { documentId } = route.useParams()
   const data = route.useLoaderData()
   const document = data.data.document
+
+  usePrefetchRequest({
+    key: ['documentDetails', document.tracking_no],
+    url: `/api/document-actions/${document.doc_assignment_id}`,
+  })
 
   return (
     <>
