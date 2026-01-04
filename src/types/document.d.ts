@@ -1,5 +1,6 @@
 export interface Document {
     id: number
+    doc_assignment_id?: number
     tracking_no: string
     title: string
     instructions: string

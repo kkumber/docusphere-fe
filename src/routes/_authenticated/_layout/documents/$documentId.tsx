@@ -1,7 +1,6 @@
 import api from '@/lib/api'
 import DocumentView from '@/pages/document/document-view'
 import type { Document } from '@/types/document'
-import type { DataReseponse } from '@/types/response'
 import type { User } from '@/types/user'
 import { createFileRoute } from '@tanstack/react-router'
 

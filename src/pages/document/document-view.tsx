@@ -5,6 +5,30 @@ import { getRouteApi } from '@tanstack/react-router'
 import { PdfViewer } from '@/components/pdf-viewer'
 import { Button } from '@/components/ui/button'
 import { Check, CheckCircle2, Paperclip, Info } from 'lucide-react'
+import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
+import type { Document } from '@/types/document'
+import useGetRequest from '@/hooks/use-get'
+import DocumentInformation from '@/components/document-information'
+
+interface DocumentDetails {
+  data: {
+    document: {
+      tracking_no: string
+      title: string
+      category: string
+      originating_office: string
+      created_at: string
+      updated_at: string
+    }
+    assignment: {
+      assigned_by: string
+      request_type: string
+      due_date: string | null
+      instructions: string | null
+      status: string
+    }
+  }
+}
 
 const breadcrumbs: Breadcrumbs[] = [
   { title: 'Document Management', href: '/documents/document-management' },
@@ -14,9 +38,20 @@ const breadcrumbs: Breadcrumbs[] = [
 const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
 
 const DocumentView = () => {
-  const { documentId } = route.useParams()
   const data = route.useLoaderData()
-  const document = data.data.document
+  const document: Document = data.data.document
+
+  const {
+    isPending,
+    data: documentDetails,
+    error,
+    isError,
+  } = useGetRequest<DocumentDetails>({
+    url: `/api/document-actions/document/${document.id}/details`,
+    key: ['documentActions', document.id],
+  })
+
+  const errorDetailsMsg = isError ? error?.message : ''
 
   return (
     <>
@@ -53,13 +88,26 @@ const DocumentView = () => {
             >
               <Paperclip className="w-4 h-4" /> Attach File
             </Button>
-            <Button
-              variant="link"
-              size="sm"
-              className="flex items-center gap-1 p-0"
-            >
-              <Info className="w-4 h-4" /> More Details
-            </Button>
+            <ReusableAlertDialog
+              triggerButton={
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="flex items-center gap-1 p-0"
+                >
+                  <Info className="w-4 h-4" /> More Details
+                </Button>
+              }
+              title={document.title}
+              description="More information regarding the document"
+              additionalContent={
+                <DocumentInformation
+                  isPending={isPending}
+                  documentDetails={documentDetails?.data}
+                  error={errorDetailsMsg}
+                />
+              }
+            />
           </div>
         </div>
 

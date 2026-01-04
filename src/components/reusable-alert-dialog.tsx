@@ -31,6 +31,7 @@ interface ReusableAlertDialogProps {
   disableOutsideClick?: boolean
   /** Optional className for content customization */
   contentClassName?: string
+  additionalContent?: React.ReactNode
 }
 
 /**
@@ -46,6 +47,7 @@ export const ReusableAlertDialog: React.FC<ReusableAlertDialogProps> = ({
   triggerButton,
   disableOutsideClick = false,
   contentClassName = '',
+  additionalContent,
 }) => {
   const [open, setOpen] = React.useState(false)
 
@@ -75,6 +77,8 @@ export const ReusableAlertDialog: React.FC<ReusableAlertDialogProps> = ({
             <AlertDialogDescription>{description}</AlertDialogDescription>
           )}
         </AlertDialogHeader>
+
+        {additionalContent}
 
         <AlertDialogFooter className="flex justify-end gap-2">
           <AlertDialogCancel asChild>
