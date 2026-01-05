@@ -66,11 +66,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   documentTitle,
   documentId,
 }) => {
+  // get users
   const { isPending, data, isError, error } = useGetRequest<UserDataResponse>({
     key: ['usersByRole'],
     url: '/api/users/roles',
   })
 
+  // assign document request
   const mutation = useAssignDoc()
 
   const usersByRole = data?.data ?? {}
@@ -112,6 +114,8 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
 
   // submit function
   const handleAssign = () => {
+    mutation.reset()
+
     if (dueDate && !validateDueDate(dueDate))
       return setDueDateError('Due date cannot be in the past')
 
@@ -130,10 +134,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     setRequestType('')
     setDueDate(null)
     setDueDateError(null)
-    mutation.reset()
   }
 
-  const errorResponse = mutation.error?.response?.data
+  const errorResponse = mutation.error?.response?.data.message
 
   return (
     <AlertDialog>
@@ -160,7 +163,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
             type per assignment.
           </AlertDialogDescription>
           {mutation.isError && (
-            <p className="text-destructive">{errorResponse?.message}</p>
+            <p className="text-destructive">{errorResponse}</p>
           )}
         </AlertDialogHeader>
 
