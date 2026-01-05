@@ -57,7 +57,7 @@ interface AssignDocModalProps {
 type RequestType =
   | 'for_signature'
   | 'for_approval'
-  | 'for_information'
+  | 'for_acknowledgement'
   | 'for_review'
   | 'for_response'
 
@@ -188,7 +188,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
               <SelectContent>
                 <SelectItem value="for_signature">For Signature</SelectItem>
                 <SelectItem value="for_approval">For Approval</SelectItem>
-                <SelectItem value="for_information">For Information</SelectItem>
+                <SelectItem value="for_acknowledgement">
+                  For Acknowledgement
+                </SelectItem>
                 <SelectItem value="for_review">For Review</SelectItem>
                 <SelectItem value="for_response">For Response</SelectItem>
               </SelectContent>
