@@ -62,6 +62,7 @@ const DocumentView = () => {
 
   const errorDetailsMsg = isError ? error?.message : ''
 
+  // MUTATION HOOKS
   const acknowledgeTask = useAcknowledgeTask()
 
   const handleAcknowledgeTask = () => {
