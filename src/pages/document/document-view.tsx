@@ -16,6 +16,7 @@ import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import type { Document } from '@/types/document'
 import useGetRequest from '@/hooks/use-get'
 import DocumentInformation from '@/components/document-information'
+import useAcknowledgeTask from '@/hooks/use-acknowledge-task'
 
 interface DocumentDetails {
   data: {
@@ -47,6 +48,7 @@ const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
 const DocumentView = () => {
   const data = route.useLoaderData()
   const document: Document = data.data.document
+  const documentId = document.id.toString()
 
   const {
     isPending,
@@ -59,6 +61,12 @@ const DocumentView = () => {
   })
 
   const errorDetailsMsg = isError ? error?.message : ''
+
+  const acknowledgeTask = useAcknowledgeTask()
+
+  const handleAcknowledgeTask = () => {
+    acknowledgeTask.mutate(documentId)
+  }
 
   return (
     <>
@@ -75,49 +83,89 @@ const DocumentView = () => {
           </div>
 
           <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
-            {/* PRIMARY AUTHORITY */}
-            <Button
-              variant="default"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Check className="w-4 h-4" /> Approve
-            </Button>
+            {/* APPROVE */}
+            <ReusableAlertDialog
+              title="Approve document"
+              description="Approving this document finalizes the review process. This action cannot be undone."
+              confirmText="Approve"
+              onConfirm={() => {
+                // approve mutation here
+              }}
+              triggerButton={
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Check className="w-4 h-4" /> Approve
+                </Button>
+              }
+            />
 
-            {/* LOW-RISK CONFIRMATION */}
-            <Button
-              size="sm"
-              className="flex items-center gap-2 bg-emerald-500 text-white hover:bg-emerald-500/80"
-            >
-              <CheckCircle2 className="w-4 h-4" /> Acknowledge
-            </Button>
+            {/* ACKNOWLEDGE */}
+            <ReusableAlertDialog
+              title="Acknowledge document"
+              description="This will mark the document as acknowledged. You will not be able to undo this action."
+              confirmText="Yes, acknowledge"
+              cancelText="Cancel"
+              onConfirm={handleAcknowledgeTask}
+              triggerButton={
+                <Button
+                  size="sm"
+                  className="flex items-center gap-2 bg-emerald-500 text-white hover:bg-emerald-500/80"
+                >
+                  <CheckCircle2 className="w-4 h-4" /> Acknowledge
+                </Button>
+              }
+            />
 
-            {/* ANALYTICAL */}
+            {/* REVIEWED */}
+            <ReusableAlertDialog
+              title="Mark as reviewed"
+              description="This will mark the document as reviewed."
+              confirmText="Mark as reviewed"
+              onConfirm={() => {
+                // review mutation
+              }}
+              triggerButton={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <ClipboardCheck className="w-4 h-4" /> Review
+                </Button>
+              }
+            />
+
+            {/* ATTACH FILE */}
             <Button
               variant="outline"
               size="sm"
               className="flex items-center gap-2"
             >
-              <ClipboardCheck className="w-4 h-4" /> Review
-            </Button>
-
-            {/* UTILITY */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Paperclip className="w-4 h-4" /> Attach File
+              {' '}
+              <Paperclip className="w-4 h-4" /> Attach File{' '}
             </Button>
 
             {/* LEGAL / IRREVERSIBLE */}
-            <Button
-              variant="secondary"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <PenLine className="w-4 h-4" /> Sign
-            </Button>
+            <ReusableAlertDialog
+              title="Sign document"
+              description="Signing this document applies your official digital signature and cannot be undone."
+              confirmText="Sign document"
+              onConfirm={() => {
+                // sign mutation
+              }}
+              triggerButton={
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <PenLine className="w-4 h-4" /> Sign
+                </Button>
+              }
+            />
 
             {/* INFO */}
             <ReusableAlertDialog
