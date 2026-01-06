@@ -4,7 +4,14 @@ import type { Breadcrumbs } from '@/types/ui'
 import { getRouteApi } from '@tanstack/react-router'
 import { PdfViewer } from '@/components/pdf-viewer'
 import { Button } from '@/components/ui/button'
-import { Check, CheckCircle2, Paperclip, Info } from 'lucide-react'
+import {
+  Check,
+  CheckCircle2,
+  Paperclip,
+  Info,
+  PenLine,
+  ClipboardCheck,
+} from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import type { Document } from '@/types/document'
 import useGetRequest from '@/hooks/use-get'
@@ -59,8 +66,8 @@ const DocumentView = () => {
 
       <MainContainer>
         {/* Top info + actions */}
-        <div className="my-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-          <div>
+        <div className="my-4 block md:flex md:flex-col md:items-center md:justify-between gap-2 sm:gap-0">
+          <div className="mb-4 text-center">
             <h3 className="text-xl font-semibold">{document.title}</h3>
             <h5 className="text-sm text-muted-foreground">
               {document.tracking_no}
@@ -68,6 +75,7 @@ const DocumentView = () => {
           </div>
 
           <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
+            {/* PRIMARY AUTHORITY */}
             <Button
               variant="default"
               size="sm"
@@ -75,12 +83,25 @@ const DocumentView = () => {
             >
               <Check className="w-4 h-4" /> Approve
             </Button>
+
+            {/* LOW-RISK CONFIRMATION */}
             <Button
               size="sm"
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-500/60"
+              className="flex items-center gap-2 bg-emerald-500 text-white hover:bg-emerald-500/80"
             >
               <CheckCircle2 className="w-4 h-4" /> Acknowledge
             </Button>
+
+            {/* ANALYTICAL */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <ClipboardCheck className="w-4 h-4" /> Review
+            </Button>
+
+            {/* UTILITY */}
             <Button
               variant="outline"
               size="sm"
@@ -88,6 +109,17 @@ const DocumentView = () => {
             >
               <Paperclip className="w-4 h-4" /> Attach File
             </Button>
+
+            {/* LEGAL / IRREVERSIBLE */}
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <PenLine className="w-4 h-4" /> Sign
+            </Button>
+
+            {/* INFO */}
             <ReusableAlertDialog
               triggerButton={
                 <Button
@@ -112,7 +144,7 @@ const DocumentView = () => {
         </div>
 
         {/* PDF Viewer */}
-        <div className="bg-secondary p-8 rounded-md shadow-sm">
+        <div className="bg-secondary md:p-8 rounded-md shadow-sm">
           <PdfViewer pdfUrl={data.data.url} user={data.data.user} />
         </div>
       </MainContainer>

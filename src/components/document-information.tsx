@@ -41,7 +41,7 @@ const DocumentInformation = ({
   const { document, assignment } = documentDetails
 
   return (
-    <div className="space-y-6 text-sm">
+    <div className="space-y-6 text-sm overflow-y-scroll max-h-[60vh]">
       {/* Document Information */}
       <div className="space-y-3">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -67,7 +67,9 @@ const DocumentInformation = ({
                 <Tag className="h-4 w-4 text-muted-foreground" />
                 <p className="text-muted-foreground">Category</p>
               </div>
-              <p className="font-medium">{document.category}</p>
+              <p className="font-medium first-letter:uppercase">
+                {document.category}
+              </p>
             </div>
           </div>
 
