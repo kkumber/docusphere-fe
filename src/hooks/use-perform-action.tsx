@@ -23,13 +23,14 @@ const usePerformAction = () => {
       )
       return data.data
     },
-    onSuccess: (data) => {
-      console.log(data)
-      toast.success('Action performed successfully')
+    onSuccess: (_data, variables) => {
+      toast.success(
+        `Document ID:${variables.documentId} ${variables.action.toLowerCase()} successfully`,
+      )
     },
     onError: (error) => {
       if (error instanceof Error) {
-        toast.error('Task acknowledge failed: ' + error.response?.data.message)
+        toast.error('Document action failed: ' + error.response?.data.message)
       }
     },
   })

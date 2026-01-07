@@ -43,7 +43,7 @@ const statusMap: DocumentStatusMap = {
    */
 
   6: {
-    label: 'Assigned',
+    label: 'Pending',
     color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
   },
 
