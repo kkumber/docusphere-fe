@@ -11,6 +11,12 @@ export interface ApiError {
   }
 }
 
+export interface SuccessResponse<TData> {
+  message: string
+  data: TData
+  error: null
+}
+
 interface DashboardCardsData {
   title: string
   value: number

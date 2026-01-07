@@ -16,7 +16,10 @@ import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import type { Document } from '@/types/document'
 import useGetRequest from '@/hooks/use-get'
 import DocumentInformation from '@/components/document-information'
-import useAcknowledgeTask from '@/hooks/use-acknowledge-task'
+import useAcknowledgeTask, {
+  type ActionTypes,
+} from '@/hooks/use-perform-action'
+import usePerformAction from '@/hooks/use-perform-action'
 
 interface DocumentDetails {
   data: {
@@ -63,10 +66,12 @@ const DocumentView = () => {
   const errorDetailsMsg = isError ? error?.message : ''
 
   // MUTATION HOOKS
-  const acknowledgeTask = useAcknowledgeTask()
+  const performActionMutation = usePerformAction()
 
-  const handleAcknowledgeTask = () => {
-    acknowledgeTask.mutate(documentId)
+  const handlePerformActionTask = (action: ActionTypes) => {
+    performActionMutation.reset()
+
+    performActionMutation.mutate({ documentId, action })
   }
 
   return (
@@ -89,9 +94,7 @@ const DocumentView = () => {
               title="Approve document"
               description="Approving this document finalizes the review process. This action cannot be undone."
               confirmText="Approve"
-              onConfirm={() => {
-                // approve mutation here
-              }}
+              onConfirm={() => handlePerformActionTask('approve')}
               triggerButton={
                 <Button
                   variant="default"
@@ -109,7 +112,7 @@ const DocumentView = () => {
               description="This will mark the document as acknowledged. You will not be able to undo this action."
               confirmText="Yes, acknowledge"
               cancelText="Cancel"
-              onConfirm={handleAcknowledgeTask}
+              onConfirm={() => handlePerformActionTask('acknowledge')}
               triggerButton={
                 <Button
                   size="sm"
@@ -125,9 +128,7 @@ const DocumentView = () => {
               title="Mark as reviewed"
               description="This will mark the document as reviewed."
               confirmText="Mark as reviewed"
-              onConfirm={() => {
-                // review mutation
-              }}
+              onConfirm={() => handlePerformActionTask('review')}
               triggerButton={
                 <Button
                   variant="outline"
@@ -154,9 +155,7 @@ const DocumentView = () => {
               title="Sign document"
               description="Signing this document applies your official digital signature and cannot be undone."
               confirmText="Sign document"
-              onConfirm={() => {
-                // sign mutation
-              }}
+              onConfirm={() => handlePerformActionTask('sign')}
               triggerButton={
                 <Button
                   variant="secondary"
