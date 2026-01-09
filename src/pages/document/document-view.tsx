@@ -11,15 +11,22 @@ import {
   Info,
   PenLine,
   ClipboardCheck,
+  ChevronDown,
 } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import type { Document } from '@/types/document'
 import useGetRequest from '@/hooks/use-get'
 import DocumentInformation from '@/components/document-information'
-import useAcknowledgeTask, {
-  type ActionTypes,
-} from '@/hooks/use-perform-action'
+import { type ActionTypes } from '@/hooks/use-perform-action'
 import usePerformAction from '@/hooks/use-perform-action'
+
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu'
 
 interface DocumentDetails {
   data: {
@@ -65,12 +72,10 @@ const DocumentView = () => {
 
   const errorDetailsMsg = isError ? error?.message : ''
 
-  // MUTATION HOOKS
   const performActionMutation = usePerformAction()
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
-
     performActionMutation.mutate({ documentId, action })
   }
 
@@ -79,122 +84,126 @@ const DocumentView = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        {/* Top info + actions */}
-        <div className="my-4 block md:flex md:flex-col md:items-center md:justify-between gap-2 sm:gap-0">
-          <div className="mb-4 text-center">
-            <h3 className="text-xl font-semibold">{document.title}</h3>
-            <h5 className="text-sm text-muted-foreground">
-              {document.tracking_no}
-            </h5>
-          </div>
+        {/* Title + Actions */}
+        <div className="my-4 flex flex-col gap-3 z-20">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            {/* Title */}
+            <div>
+              <h3 className="text-xl font-semibold">{document.title}</h3>
+              <p className="text-sm text-muted-foreground">
+                {document.tracking_no}
+              </p>
+            </div>
 
-          <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
-            {/* APPROVE */}
-            <ReusableAlertDialog
-              title="Approve document"
-              description="Approving this document finalizes the review process. This action cannot be undone."
-              confirmText="Approve"
-              onConfirm={() => handlePerformActionTask('approve')}
-              triggerButton={
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <Check className="w-4 h-4" /> Approve
-                </Button>
-              }
-            />
+            {/* Actions + More Details */}
+            <div className="flex items-center gap-2">
+              {/* ACTIONS DROPDOWN (FIRST) */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="sm" variant="default" className="flex gap-1">
+                    Actions
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
 
-            {/* ACKNOWLEDGE */}
-            <ReusableAlertDialog
-              title="Acknowledge document"
-              description="This will mark the document as acknowledged. You will not be able to undo this action."
-              confirmText="Yes, acknowledge"
-              cancelText="Cancel"
-              onConfirm={() => handlePerformActionTask('acknowledge')}
-              triggerButton={
-                <Button
-                  size="sm"
-                  className="flex items-center gap-2 bg-emerald-500 text-white hover:bg-emerald-500/80"
-                >
-                  <CheckCircle2 className="w-4 h-4" /> Acknowledge
-                </Button>
-              }
-            />
+                <DropdownMenuContent align="end" className="w-56">
+                  {/* Review */}
+                  <ReusableAlertDialog
+                    title="Mark as reviewed"
+                    description="This will mark the document as reviewed."
+                    confirmText="Mark as reviewed"
+                    onConfirm={() => handlePerformActionTask('review')}
+                    triggerButton={
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <ClipboardCheck className="w-4 h-4 mr-2" />
+                        Mark as reviewed
+                      </DropdownMenuItem>
+                    }
+                  />
 
-            {/* REVIEWED */}
-            <ReusableAlertDialog
-              title="Mark as reviewed"
-              description="This will mark the document as reviewed."
-              confirmText="Mark as reviewed"
-              onConfirm={() => handlePerformActionTask('review')}
-              triggerButton={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <ClipboardCheck className="w-4 h-4" /> Review
-                </Button>
-              }
-            />
+                  {/* Acknowledge */}
+                  <ReusableAlertDialog
+                    title="Acknowledge document"
+                    description="This will mark the document as acknowledged. You will not be able to undo this action."
+                    confirmText="Yes, acknowledge"
+                    cancelText="Cancel"
+                    onConfirm={() => handlePerformActionTask('acknowledge')}
+                    triggerButton={
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <CheckCircle2 className="w-4 h-4 mr-2" />
+                        Acknowledge
+                      </DropdownMenuItem>
+                    }
+                  />
 
-            {/* ATTACH FILE */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              {' '}
-              <Paperclip className="w-4 h-4" /> Attach File{' '}
-            </Button>
+                  <DropdownMenuSeparator />
 
-            {/* LEGAL / IRREVERSIBLE */}
-            <ReusableAlertDialog
-              title="Sign document"
-              description="Signing this document applies your official digital signature and cannot be undone."
-              confirmText="Sign document"
-              onConfirm={() => handlePerformActionTask('sign')}
-              triggerButton={
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <PenLine className="w-4 h-4" /> Sign
-                </Button>
-              }
-            />
+                  {/* Approve */}
+                  <ReusableAlertDialog
+                    title="Approve document"
+                    description="Approving this document finalizes the review process. This action cannot be undone."
+                    confirmText="Approve"
+                    onConfirm={() => handlePerformActionTask('approve')}
+                    triggerButton={
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <Check className="w-4 h-4 mr-2" />
+                        Approve
+                      </DropdownMenuItem>
+                    }
+                  />
 
-            {/* INFO */}
-            <ReusableAlertDialog
-              triggerButton={
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="flex items-center gap-1 p-0"
-                >
-                  <Info className="w-4 h-4" /> More Details
-                </Button>
-              }
-              title={document.title}
-              description="More information regarding the document"
-              additionalContent={
-                <DocumentInformation
-                  isPending={isPending}
-                  documentDetails={documentDetails?.data}
-                  error={errorDetailsMsg}
-                />
-              }
-            />
+                  {/* Attach */}
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <Paperclip className="w-4 h-4 mr-2" />
+                    Attach file
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  {/* Sign */}
+                  <ReusableAlertDialog
+                    title="Sign document"
+                    description="Signing this document applies your official digital signature and cannot be undone."
+                    confirmText="Sign document"
+                    onConfirm={() => handlePerformActionTask('sign')}
+                    triggerButton={
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <PenLine className="w-4 h-4 mr-2" />
+                        Sign document
+                      </DropdownMenuItem>
+                    }
+                  />
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* MORE DETAILS (SECOND, PRIMARY USE) */}
+              <ReusableAlertDialog
+                triggerButton={
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <Info className="w-4 h-4" />
+                    More Details
+                  </Button>
+                }
+                title={document.title}
+                description="More information regarding the document"
+                additionalContent={
+                  <DocumentInformation
+                    isPending={isPending}
+                    documentDetails={documentDetails?.data}
+                    error={errorDetailsMsg}
+                  />
+                }
+              />
+            </div>
           </div>
         </div>
 
         {/* PDF Viewer */}
-        <div className="bg-secondary md:p-8 rounded-md shadow-sm">
-          <PdfViewer pdfUrl={data.data.url} user={data.data.user} />
-        </div>
+        <PdfViewer pdfUrl={data.data.url} user={data.data.user} />
       </MainContainer>
     </>
   )
