@@ -32,6 +32,7 @@ interface ReusableAlertDialogProps {
   /** Optional className for content customization */
   contentClassName?: string
   additionalContent?: React.ReactNode
+  closeOnConfirm?: boolean
 }
 
 /**

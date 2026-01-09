@@ -21,6 +21,11 @@ const useActivateUser = () => {
         refetchType: 'active',
       })
     },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error('User activation failed: ' + error.response?.data.message)
+      }
+    },
   })
   return mutation
 }

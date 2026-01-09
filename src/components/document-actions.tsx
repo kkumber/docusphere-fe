@@ -16,6 +16,8 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import usePerformAction, { type ActionTypes } from '@/hooks/use-perform-action'
+import useUploadAttachment from '@/hooks/use-upload-attachment'
+import { useState } from 'react'
 
 interface Props {
   documentId: string
@@ -23,10 +25,30 @@ interface Props {
 
 const DocumentActions = ({ documentId }: Props) => {
   const performActionMutation = usePerformAction()
+  const uploadAttachFile = useUploadAttachment()
+  const [file, setFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState('')
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
     performActionMutation.mutate({ documentId, action })
+  }
+
+  const handleAttachFile = () => {
+    uploadAttachFile.reset()
+    setFileError('')
+
+    if (file === null) {
+      return setFileError('Please select a file')
+    }
+
+    if (file?.type !== 'application/pdf') {
+      return setFileError('Please upload a PDF file.')
+    }
+
+    uploadAttachFile.mutate({ documentId, file })
+
+    setFile(null)
   }
 
   return (
@@ -106,13 +128,48 @@ const DocumentActions = ({ documentId }: Props) => {
 
         <DropdownMenuSeparator />
 
-        {/* ATTACH */}
-        <DropdownMenuItem
-          onSelect={(e) => e.preventDefault()}
-          className="flex items-center gap-2"
-        >
-          <Paperclip className="w-4 h-4" /> Attach file
-        </DropdownMenuItem>
+        {/* ATTACH FILE */}
+        <ReusableAlertDialog
+          title="Attach a file"
+          description="Select a file to attach to this document."
+          confirmText="Attach file"
+          cancelText="Cancel"
+          onConfirm={() => handleAttachFile()}
+          triggerButton={
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="flex items-center gap-2"
+            >
+              <Paperclip className="w-4 h-4" /> Attach file
+            </DropdownMenuItem>
+          }
+          additionalContent={
+            <div className="flex flex-col gap-2 mt-2">
+              <input
+                type="file"
+                className="block w-full text-sm text-gray-700 file:border file:border-gray-300 file:rounded-md
+                           file:px-3 file:py-2 file:text-sm file:font-medium
+                           file:bg-gray-100 hover:file:bg-gray-200
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setFile(e.target.files[0])
+                  } else {
+                    setFile(null)
+                  }
+                }}
+              />
+              {file && (
+                <span className="text-sm text-gray-500 truncate">
+                  {file.name}
+                </span>
+              )}
+              {fileError && (
+                <span className="text-sm text-destructive">{fileError}</span>
+              )}
+            </div>
+          }
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   )
