@@ -19,7 +19,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Switch } from '@/components/ui/switch'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouteContext } from '@tanstack/react-router'
+import { useUserContext } from '@/context/user-context'
 
 // This is sample data get user data from context here
 const data = {
@@ -135,10 +136,15 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
+
   const [activeItem, setActiveItem] = React.useState(data.navMain[0])
   const [mails, setMails] = React.useState(data.mails)
   const { setOpen } = useSidebar()
   const navigate = useNavigate()
+
+  const user = useUserContext().user
+
+  console.log(user)
 
   return (
     <Sidebar
@@ -162,8 +168,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Command className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">Acme Inc</span>
-                    <span className="truncate text-xs">Enterprise</span>
+                    <span className="truncate font-medium">Docusphere</span>
+                    <span className="truncate text-xs">
+                      Document Tracking System
+                    </span>
                   </div>
                 </a>
               </SidebarMenuButton>
@@ -199,7 +207,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={data.user} />
+          <NavUser user={user} />
         </SidebarFooter>
       </Sidebar>
 
