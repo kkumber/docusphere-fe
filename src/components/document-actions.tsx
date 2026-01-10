@@ -147,7 +147,8 @@ const DocumentActions = ({ documentId }: Props) => {
             <div className="flex flex-col gap-2 mt-2">
               <input
                 type="file"
-                className="block w-full text-sm text-gray-700 file:border file:border-gray-300 file:rounded-md
+                accept="application/pdf"
+                className="w-full text-sm text-gray-700 file:border file:border-gray-300 file:rounded-md
                            file:px-3 file:py-2 file:text-sm file:font-medium
                            file:bg-gray-100 hover:file:bg-gray-200
                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -159,11 +160,7 @@ const DocumentActions = ({ documentId }: Props) => {
                   }
                 }}
               />
-              {file && (
-                <span className="text-sm text-gray-500 truncate">
-                  {file.name}
-                </span>
-              )}
+
               {fileError && (
                 <span className="text-sm text-destructive">{fileError}</span>
               )}
