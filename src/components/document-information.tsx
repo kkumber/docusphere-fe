@@ -41,7 +41,7 @@ const DocumentInformation = ({
   const { document, assignment } = documentDetails
 
   return (
-    <div className="space-y-6 text-sm overflow-y-auto max-h-[60vh]">
+    <div className="space-y-6 text-sm overflow-y-auto max-h-[60vh] my-4">
       {/* Document Information */}
       <div className="space-y-3">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

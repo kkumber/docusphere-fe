@@ -69,7 +69,7 @@ export const ReusableAlertDialog: React.FC<ReusableAlertDialogProps> = ({
       )}
 
       <AlertDialogContent
-        className={contentClassName}
+        className={contentClassName + ' max-h-[90vh] overflow-y-auto'}
         onClick={(e) => disableOutsideClick && e.stopPropagation()}
       >
         <AlertDialogHeader>
