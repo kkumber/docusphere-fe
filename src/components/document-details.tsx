@@ -4,6 +4,8 @@ import { Info } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import DocumentInformation from '@/components/document-information'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import useGetRequest from '@/hooks/use-get'
+import { getRouteApi, Route } from '@tanstack/react-router'
 
 interface DocumentDetailsProps {
   title: string
@@ -13,13 +15,37 @@ interface DocumentDetailsProps {
   pdfUrl?: string
 }
 
+const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
+
 const DocumentDetails = ({
   title,
   isPending,
   documentDetails,
   error,
 }: DocumentDetailsProps) => {
+  const { documentId } = route.useParams()
   const [tabValue, setTabValue] = useState('information')
+
+  // Get the prefetch attachments
+  const {
+    data: attachments,
+    isPending: isAttachmentsPending,
+    error: attachmentsError,
+    isError: isAttachmentsError,
+  } = useGetRequest({
+    url: `/api/document/${documentId}/attachments`,
+    key: ['documentAttachments', documentId.toString()],
+  })
+
+  // Get prefetch actions or logs
+  const {
+    data: logs,
+    isPending: isLogsPending,
+    error: logsError,
+  } = useGetRequest({
+    url: `/api/document/${documentId}/actions`,
+    key: ['documentLogs', documentId.toString()],
+  })
 
   return (
     <ReusableAlertDialog

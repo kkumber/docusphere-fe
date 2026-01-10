@@ -8,6 +8,7 @@ import useGetRequest from '@/hooks/use-get'
 
 import DocumentActions from '@/components/document-actions'
 import DocumentDetails from '@/components/document-details'
+import usePrefetchRequest from '@/hooks/use-prefetch-request'
 
 interface DocumentDetailsResponse {
   data: {
@@ -51,6 +52,16 @@ const DocumentView = () => {
   })
 
   const errorDetailsMsg = isError ? error?.message : null
+
+  // prefetch document attachments and actions/logs
+  usePrefetchRequest({
+    key: ['documentAttachments', document.id.toString()],
+    url: `/api/document/${document.id}/attachments`,
+  })
+  usePrefetchRequest({
+    key: ['documentLogs', document.id.toString()],
+    url: `/api/document/${document.id}/actions`,
+  })
 
   return (
     <>
