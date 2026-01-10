@@ -19,7 +19,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Switch } from '@/components/ui/switch'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
 import type { Response } from '@/types/response'
@@ -196,8 +196,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {!isNotificationsPending &&
                 !isNotificationsError &&
                 mails.map((mail) => (
-                  <a
-                    href="#"
+                  <Link
+                    to="/documents/document-management"
                     key={mail.email}
                     className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
                   >
@@ -209,7 +209,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
                       {mail.teaser}
                     </span>
-                  </a>
+                  </Link>
                 ))}
             </SidebarGroupContent>
           </SidebarGroup>

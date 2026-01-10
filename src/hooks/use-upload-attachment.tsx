@@ -26,14 +26,13 @@ const useUploadAttachment = () => {
         },
       )
     },
-    onSuccess: () => {
+    onSuccess: (_data, { documentId }) => {
       toast.success('Attachment uploaded successfully')
-      // invalidate query key of attachments
-      //   queryClient.invalidateQueries({
-      //     queryKey: ['users'],
-      //     exact: true,
-      //     refetchType: 'active',
-      //   })
+      queryClient.invalidateQueries({
+        queryKey: ['documentAttachments', documentId.toString()],
+        exact: true,
+        refetchType: 'active',
+      })
     },
     onError: (error) => {
       if (error instanceof Error) {
