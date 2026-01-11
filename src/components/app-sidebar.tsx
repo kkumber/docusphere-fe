@@ -188,8 +188,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
               )}
 
+              {notifications?.data?.length === 0 && (
+                <div className="p-4 text-sm text-muted-foreground">
+                  No notifications
+                </div>
+              )}
+
               {!isNotificationsPending &&
                 !isNotificationsError &&
+                notifications!.data!.length > 0 &&
                 mails.map((mail) => (
                   <Link
                     to="/documents/document-management"

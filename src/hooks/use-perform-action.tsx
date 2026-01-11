@@ -1,6 +1,6 @@
 import api from '@/lib/api'
 import type { ApiError, SuccessResponse } from '@/types/response'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
@@ -12,6 +12,8 @@ export type ActionTypes =
   | 'respond'
 
 const usePerformAction = () => {
+  const queryClient = useQueryClient()
+
   const mutation = useMutation<
     SuccessResponse<null>,
     AxiosError<ApiError>,
@@ -27,6 +29,16 @@ const usePerformAction = () => {
       toast.success(
         `Document ID:${variables.documentId} ${variables.action.toLowerCase()} successfully`,
       )
+      queryClient.invalidateQueries({
+        queryKey: ['documentLogs', variables.documentId],
+        exact: true,
+        refetchType: 'active',
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['documentAttachments', variables.documentId],
+        exact: true,
+        refetchType: 'active',
+      })
     },
     onError: (error) => {
       if (error instanceof Error) {

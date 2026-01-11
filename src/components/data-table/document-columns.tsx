@@ -98,7 +98,7 @@ export const documentColumns: ColumnDef<Document>[] = [
     accessorKey: 'instructions',
     header: 'Instructions',
     cell: ({ row }) => (
-      <div className="w-48 truncate">{row.original.instructions}</div>
+      <div className="w-48 truncate">{row.original.instructions ?? 'None'}</div>
     ),
   },
   {
@@ -143,6 +143,9 @@ export const documentColumns: ColumnDef<Document>[] = [
     accessorKey: 'due_date',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Due Date" />
+    ),
+    cell: ({ row }) => (
+      <div className="">{row.original.due_date ?? 'None'}</div>
     ),
   },
   {
