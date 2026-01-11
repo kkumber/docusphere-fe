@@ -48,7 +48,7 @@ const DocumentView = () => {
     isError,
   } = useGetRequest<DocumentDetailsResponse>({
     url: `/api/document-actions/document/${document.id}/details`,
-    key: ['documentActions', document.id],
+    key: ['documentDetails', document.id],
   })
 
   const errorDetailsMsg = isError ? error?.message : null

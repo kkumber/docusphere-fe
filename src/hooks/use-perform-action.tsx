@@ -39,6 +39,11 @@ const usePerformAction = () => {
         exact: true,
         refetchType: 'active',
       })
+      queryClient.invalidateQueries({
+        queryKey: ['documentDetails', variables.documentId],
+        exact: true,
+        refetchType: 'active',
+      })
     },
     onError: (error) => {
       if (error instanceof Error) {
