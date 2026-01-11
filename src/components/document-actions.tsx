@@ -6,6 +6,7 @@ import {
   PenLine,
   ClipboardCheck,
   ChevronDown,
+  CheckCircle,
 } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import {
@@ -165,6 +166,25 @@ const DocumentActions = ({ documentId }: Props) => {
                 <span className="text-sm text-destructive">{fileError}</span>
               )}
             </div>
+          }
+        />
+
+        <DropdownMenuSeparator />
+
+        {/* MARK AS COMPLETED */}
+        <ReusableAlertDialog
+          title="Mark document as completed"
+          description="This will mark the document as completed. Make sure all required actions have been performed. You will not be able to undo this action."
+          confirmText="Yes, mark as completed"
+          cancelText="Cancel"
+          onConfirm={() => handlePerformActionTask('complete')}
+          triggerButton={
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="flex items-center gap-2"
+            >
+              <CheckCircle className="w-4 h-4" /> Mark as Completed
+            </DropdownMenuItem>
           }
         />
       </DropdownMenuContent>

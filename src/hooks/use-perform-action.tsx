@@ -10,6 +10,7 @@ export type ActionTypes =
   | 'review'
   | 'sign'
   | 'respond'
+  | 'completed'
 
 const usePerformAction = () => {
   const queryClient = useQueryClient()
