@@ -35,11 +35,6 @@ const usePerformAction = () => {
         refetchType: 'active',
       })
       queryClient.invalidateQueries({
-        queryKey: ['documentAttachments', variables.documentId],
-        exact: true,
-        refetchType: 'active',
-      })
-      queryClient.invalidateQueries({
         queryKey: ['documentDetails', variables.documentId],
         exact: true,
         refetchType: 'active',
