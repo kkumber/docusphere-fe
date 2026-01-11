@@ -11,7 +11,7 @@ import { ChartAreaInteractive } from '@/components/ui/chart-area'
 import useGetRequest from '@/hooks/use-get'
 import DashboardSkeleton from '@/components/dashboard-skeleton'
 import { useEffect, useState } from 'react'
-import type { DashboardValues } from '@/types/response'
+import type { DashboardValues, DataReseponse } from '@/types/response'
 
 const breadcrumbList: Breadcrumbs[] = [
   {
@@ -21,7 +21,9 @@ const breadcrumbList: Breadcrumbs[] = [
 ]
 
 const DashboardPage = () => {
-  const { isPending, data, isError, error } = useGetRequest({
+  const { isPending, data, isError, error } = useGetRequest<
+    DataReseponse<DashboardValues>
+  >({
     url: '/api/dashboard',
     key: ['dashboard'],
   })

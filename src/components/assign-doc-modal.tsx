@@ -57,7 +57,7 @@ interface AssignDocModalProps {
 type RequestType =
   | 'for_signature'
   | 'for_approval'
-  | 'for_information'
+  | 'for_acknowledgement'
   | 'for_review'
   | 'for_response'
 
@@ -66,11 +66,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   documentTitle,
   documentId,
 }) => {
+  // get users
   const { isPending, data, isError, error } = useGetRequest<UserDataResponse>({
     key: ['usersByRole'],
     url: '/api/users/roles',
   })
 
+  // assign document request
   const mutation = useAssignDoc()
 
   const usersByRole = data?.data ?? {}
@@ -112,6 +114,8 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
 
   // submit function
   const handleAssign = () => {
+    mutation.reset()
+
     if (dueDate && !validateDueDate(dueDate))
       return setDueDateError('Due date cannot be in the past')
 
@@ -130,10 +134,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
     setRequestType('')
     setDueDate(null)
     setDueDateError(null)
-    mutation.reset()
   }
 
-  const errorResponse = mutation.error?.response?.data
+  const errorResponse = mutation.error?.response?.data.message
 
   return (
     <AlertDialog>
@@ -160,7 +163,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
             type per assignment.
           </AlertDialogDescription>
           {mutation.isError && (
-            <p className="text-destructive">{errorResponse?.message}</p>
+            <p className="text-destructive">{errorResponse}</p>
           )}
         </AlertDialogHeader>
 
@@ -185,7 +188,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
               <SelectContent>
                 <SelectItem value="for_signature">For Signature</SelectItem>
                 <SelectItem value="for_approval">For Approval</SelectItem>
-                <SelectItem value="for_information">For Information</SelectItem>
+                <SelectItem value="for_acknowledgement">
+                  For Acknowledgement
+                </SelectItem>
                 <SelectItem value="for_review">For Review</SelectItem>
                 <SelectItem value="for_response">For Response</SelectItem>
               </SelectContent>

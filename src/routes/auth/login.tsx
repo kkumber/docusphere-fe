@@ -12,7 +12,6 @@ export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
 })
 
-
 function LoginPage() {
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()

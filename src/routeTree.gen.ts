@@ -15,6 +15,7 @@ import { Route as AuthenticatedLayoutIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedLayoutRecordsUploadDocumentRouteImport } from './routes/_authenticated/_layout/records/upload-document'
 import { Route as AuthenticatedLayoutDocumentsTrackingRouteImport } from './routes/_authenticated/_layout/documents/tracking'
 import { Route as AuthenticatedLayoutDocumentsDocumentManagementRouteImport } from './routes/_authenticated/_layout/documents/document-management'
+import { Route as AuthenticatedLayoutDocumentsDocumentIdRouteImport } from './routes/_authenticated/_layout/documents/$documentId'
 import { Route as AuthenticatedLayoutAdminUserManagementRouteImport } from './routes/_authenticated/_layout/admin/user-management'
 import { Route as AuthenticatedLayoutAdminRegisterUserRouteImport } from './routes/_authenticated/_layout/admin/register-user'
 import { Route as AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport } from './routes/_authenticated/_layout/admin/users/$userId/update'
@@ -52,6 +53,12 @@ const AuthenticatedLayoutDocumentsDocumentManagementRoute =
     path: '/documents/document-management',
     getParentRoute: () => AuthenticatedLayoutRoute,
   } as any)
+const AuthenticatedLayoutDocumentsDocumentIdRoute =
+  AuthenticatedLayoutDocumentsDocumentIdRouteImport.update({
+    id: '/documents/$documentId',
+    path: '/documents/$documentId',
+    getParentRoute: () => AuthenticatedLayoutRoute,
+  } as any)
 const AuthenticatedLayoutAdminUserManagementRoute =
   AuthenticatedLayoutAdminUserManagementRouteImport.update({
     id: '/admin/user-management',
@@ -76,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedLayoutIndexRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
+  '/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   '/documents/document-management': typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   '/documents/tracking': typeof AuthenticatedLayoutDocumentsTrackingRoute
   '/records/upload-document': typeof AuthenticatedLayoutRecordsUploadDocumentRoute
@@ -86,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedLayoutIndexRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
+  '/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   '/documents/document-management': typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   '/documents/tracking': typeof AuthenticatedLayoutDocumentsTrackingRoute
   '/records/upload-document': typeof AuthenticatedLayoutRecordsUploadDocumentRoute
@@ -98,6 +107,7 @@ export interface FileRoutesById {
   '/_authenticated/_layout/': typeof AuthenticatedLayoutIndexRoute
   '/_authenticated/_layout/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/_authenticated/_layout/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
+  '/_authenticated/_layout/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   '/_authenticated/_layout/documents/document-management': typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   '/_authenticated/_layout/documents/tracking': typeof AuthenticatedLayoutDocumentsTrackingRoute
   '/_authenticated/_layout/records/upload-document': typeof AuthenticatedLayoutRecordsUploadDocumentRoute
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/register-user'
     | '/admin/user-management'
+    | '/documents/$documentId'
     | '/documents/document-management'
     | '/documents/tracking'
     | '/records/upload-document'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/register-user'
     | '/admin/user-management'
+    | '/documents/$documentId'
     | '/documents/document-management'
     | '/documents/tracking'
     | '/records/upload-document'
@@ -131,6 +143,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_layout/'
     | '/_authenticated/_layout/admin/register-user'
     | '/_authenticated/_layout/admin/user-management'
+    | '/_authenticated/_layout/documents/$documentId'
     | '/_authenticated/_layout/documents/document-management'
     | '/_authenticated/_layout/documents/tracking'
     | '/_authenticated/_layout/records/upload-document'
@@ -186,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLayoutDocumentsDocumentManagementRouteImport
       parentRoute: typeof AuthenticatedLayoutRoute
     }
+    '/_authenticated/_layout/documents/$documentId': {
+      id: '/_authenticated/_layout/documents/$documentId'
+      path: '/documents/$documentId'
+      fullPath: '/documents/$documentId'
+      preLoaderRoute: typeof AuthenticatedLayoutDocumentsDocumentIdRouteImport
+      parentRoute: typeof AuthenticatedLayoutRoute
+    }
     '/_authenticated/_layout/admin/user-management': {
       id: '/_authenticated/_layout/admin/user-management'
       path: '/admin/user-management'
@@ -214,6 +234,7 @@ interface AuthenticatedLayoutRouteChildren {
   AuthenticatedLayoutIndexRoute: typeof AuthenticatedLayoutIndexRoute
   AuthenticatedLayoutAdminRegisterUserRoute: typeof AuthenticatedLayoutAdminRegisterUserRoute
   AuthenticatedLayoutAdminUserManagementRoute: typeof AuthenticatedLayoutAdminUserManagementRoute
+  AuthenticatedLayoutDocumentsDocumentIdRoute: typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   AuthenticatedLayoutDocumentsDocumentManagementRoute: typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   AuthenticatedLayoutDocumentsTrackingRoute: typeof AuthenticatedLayoutDocumentsTrackingRoute
   AuthenticatedLayoutRecordsUploadDocumentRoute: typeof AuthenticatedLayoutRecordsUploadDocumentRoute
@@ -226,6 +247,8 @@ const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
     AuthenticatedLayoutAdminRegisterUserRoute,
   AuthenticatedLayoutAdminUserManagementRoute:
     AuthenticatedLayoutAdminUserManagementRoute,
+  AuthenticatedLayoutDocumentsDocumentIdRoute:
+    AuthenticatedLayoutDocumentsDocumentIdRoute,
   AuthenticatedLayoutDocumentsDocumentManagementRoute:
     AuthenticatedLayoutDocumentsDocumentManagementRoute,
   AuthenticatedLayoutDocumentsTrackingRoute:

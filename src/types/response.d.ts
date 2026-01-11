@@ -11,6 +11,12 @@ export interface ApiError {
   }
 }
 
+export interface SuccessResponse<TData> {
+  message: string
+  data: TData
+  error: null
+}
+
 interface DashboardCardsData {
   title: string
   value: number
@@ -31,4 +37,8 @@ export interface DashboardAreaChartData {
 export interface DashboardValues {
   cards: DashboardCardsData[]
   area_chart: DashboardAreaChartData
+}
+
+export interface DataReseponse<TData> {
+  data: TData
 }

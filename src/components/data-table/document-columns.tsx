@@ -5,38 +5,81 @@ import type { DocumentStatusMap } from '@/types/ui'
 import DocumentActions from './document-actions'
 
 const statusMap: DocumentStatusMap = {
+  /**
+   * =========================
+   * DOCUMENT (GLOBAL STATUS)
+   * =========================
+   */
+
   1: {
     label: 'Pending',
     color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
   },
+
   2: {
     label: 'Archived',
     color: 'bg-gray-100 text-gray-700 border-gray-300',
   },
+
   3: {
     label: 'Completed',
     color: 'bg-green-100 text-green-800 border-green-300',
   },
+
   4: {
     label: 'Delayed',
-    color: 'bg-red-100 text-red-800 border-red-300',
+    color: 'bg-orange-100 text-orange-800 border-orange-300',
   },
+
   5: {
     label: 'Released',
     color: 'bg-blue-100 text-blue-800 border-blue-300',
   },
-  // New Document Assignment statuses for assign documents
+
+  /**
+   * ==============================
+   * DOCUMENT ASSIGNMENT (TASK)
+   * ==============================
+   */
+
   6: {
     label: 'Pending',
     color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
   },
+
   7: {
-    label: 'Completed',
+    label: 'Acknowledged',
     color: 'bg-green-100 text-green-800 border-green-300',
   },
+
   8: {
-    label: 'Delayed',
-    color: 'bg-red-100 text-red-800 border-red-300',
+    label: 'Approved',
+    color: 'bg-blue-100 text-blue-800 border-blue-300 ',
+  },
+
+  9: {
+    label: 'Signed',
+    color: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  },
+
+  10: {
+    label: 'Reviewed',
+    color: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+  },
+
+  11: {
+    label: 'Responded',
+    color: 'bg-cyan-100 text-cyan-800 border-cyan-300',
+  },
+
+  12: {
+    label: 'Task Completed',
+    color: 'bg-green-100 text-green-800 border-green-300',
+  },
+
+  13: {
+    label: 'Task Delayed',
+    color: 'bg-orange-100 text-orange-800 border-orange-300',
   },
 }
 
