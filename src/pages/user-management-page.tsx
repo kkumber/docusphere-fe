@@ -12,6 +12,8 @@ import type {
 import { Button } from '@/components/ui/button'
 import { UserPlus } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
+import type { User } from '@/types/user'
+import type { Response } from '@/types/response'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -21,7 +23,7 @@ const breadcrumbs: Breadcrumbs[] = [
 ]
 
 const UserManagementPage = () => {
-  const { isPending, data, isError, error } = useGetRequest({
+  const { isPending, data, isError, error } = useGetRequest<Response<User[]>>({
     url: '/api/users',
     key: ['users'],
   })
