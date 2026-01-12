@@ -4,9 +4,9 @@ import {
   CheckCircle2,
   Paperclip,
   PenLine,
-  ClipboardCheck,
   ChevronDown,
   CheckCircle,
+  Edit,
 } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import {
@@ -19,6 +19,7 @@ import {
 import usePerformAction, { type ActionTypes } from '@/hooks/use-perform-action'
 import useUploadAttachment from '@/hooks/use-upload-attachment'
 import { useState } from 'react'
+import useUploadReview from '@/hooks/use-upload-review'
 
 interface Props {
   documentId: string
@@ -27,12 +28,20 @@ interface Props {
 const DocumentActions = ({ documentId }: Props) => {
   const performActionMutation = usePerformAction()
   const uploadAttachFile = useUploadAttachment()
+  const uploadReview = useUploadReview()
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
+  const [remarks, setRemarks] = useState<string>('')
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
     performActionMutation.mutate({ documentId, action })
+  }
+
+  const handleUploadReview = () => {
+    uploadReview.reset()
+    uploadReview.mutate({ documentId, remarks })
+    setRemarks('')
   }
 
   const handleAttachFile = () => {
@@ -47,9 +56,15 @@ const DocumentActions = ({ documentId }: Props) => {
       return setFileError('Please upload a PDF file.')
     }
 
-    uploadAttachFile.mutate({ documentId, file })
+    const payload = {
+      file: file,
+      remarks: remarks,
+    }
+
+    uploadAttachFile.mutate({ documentId, payload })
 
     setFile(null)
+    setRemarks('')
   }
 
   return (
@@ -62,19 +77,37 @@ const DocumentActions = ({ documentId }: Props) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56">
-        {/* REVIEW */}
+        {/* REVIEW / WRITE A REVIEW */}
         <ReusableAlertDialog
-          title="Mark as reviewed"
-          description="This will mark the document as reviewed."
-          confirmText="Mark as reviewed"
-          onConfirm={() => handlePerformActionTask('review')}
+          title="Write a Review"
+          description="Add your remarks or comments about this document before marking it as reviewed."
+          confirmText="Submit Review"
+          cancelText="Cancel"
+          onConfirm={() => handleUploadReview()}
           triggerButton={
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2"
             >
-              <ClipboardCheck className="w-4 h-4" /> Mark as reviewed
+              <Edit className="w-4 h-4" /> Write a Review
             </DropdownMenuItem>
+          }
+          additionalContent={
+            <div className="flex flex-col gap-2 mt-2">
+              <label className="text-sm font-medium text-gray-800">
+                Remarks / Comments
+              </label>
+
+              <textarea
+                rows={3}
+                placeholder="e.g. The document is accurate. Suggested edits on section 2."
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setRemarks(e.target.value)}
+                required
+                minLength={20}
+              />
+            </div>
           }
         />
 
@@ -132,7 +165,7 @@ const DocumentActions = ({ documentId }: Props) => {
         {/* ATTACH FILE */}
         <ReusableAlertDialog
           title="Attach a file"
-          description="Select a file to attach to this document."
+          description="Attach a supporting file and provide remarks or instructions related to it."
           confirmText="Attach file"
           cancelText="Cancel"
           onConfirm={() => handleAttachFile()}
@@ -141,26 +174,52 @@ const DocumentActions = ({ documentId }: Props) => {
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2"
             >
-              <Paperclip className="w-4 h-4" /> Attach file
+              <Paperclip className="w-4 h-4" />
+              Attach file
             </DropdownMenuItem>
           }
           additionalContent={
-            <div className="flex flex-col gap-2 mt-2">
-              <input
-                type="file"
-                accept="application/pdf"
-                className="w-full text-sm text-gray-700 file:border file:border-gray-300 file:rounded-md
-                           file:px-3 file:py-2 file:text-sm file:font-medium
-                           file:bg-gray-100 hover:file:bg-gray-200
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setFile(e.target.files[0])
-                  } else {
-                    setFile(null)
-                  }
-                }}
-              />
+            <div className="flex flex-col gap-8 mt-3">
+              {/* File input */}
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-800">
+                  File to attach
+                </label>
+
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  className="w-full text-sm text-gray-700
+                     file:border file:border-gray-300 file:rounded-md
+                     file:px-3 file:py-2 file:text-sm file:font-medium
+                     file:bg-gray-100 hover:file:bg-gray-200
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={(e) => {
+                    const selectedFile = e.target.files?.[0] ?? null
+                    setFile(selectedFile)
+                  }}
+                />
+
+                <p className="text-xs text-muted-foreground">
+                  PDF files only. This file will be linked to the document.
+                </p>
+              </div>
+
+              {/* Remarks / Instructions */}
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-800">
+                  Remarks / Instructions
+                </label>
+
+                <textarea
+                  rows={3}
+                  placeholder="e.g. Please review page 3 and provide feedback on the highlighted section."
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
+                  onChange={(e) => setRemarks(e.target.value)}
+                  required
+                />
+              </div>
 
               {fileError && (
                 <span className="text-sm text-destructive">{fileError}</span>

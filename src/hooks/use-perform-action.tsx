@@ -10,7 +10,7 @@ export type ActionTypes =
   | 'review'
   | 'sign'
   | 'respond'
-  | 'completed'
+  | 'complete'
 
 const usePerformAction = () => {
   const queryClient = useQueryClient()
@@ -28,7 +28,7 @@ const usePerformAction = () => {
     },
     onSuccess: (_data, variables) => {
       toast.success(
-        `Document ID:${variables.documentId} ${variables.action.toLowerCase()} successfully`,
+        `Document ID:${variables.documentId} ${variables.action.toLowerCase()} successful`,
       )
       queryClient.invalidateQueries({
         queryKey: ['documentLogs', variables.documentId],
