@@ -9,18 +9,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import {
-  Eye,
-  CheckCircle,
-  Send,
-  Archive,
-  Clock,
-  MoreHorizontal,
-} from 'lucide-react'
+import { Eye, Send, Archive, Clock, MoreHorizontal } from 'lucide-react'
 import { AssignDocModal } from '../assign-doc-modal'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import TrackingModal from '../tracking-modal'
+import { Route } from '@/routes/__root'
 
 type Props = {
   row: Row<Document>
@@ -29,6 +23,8 @@ type Props = {
 const DocumentActions = ({ row }: Props) => {
   const [showModal, setShowModal] = useState(false)
   const [showTrackingModal, setShowTrackingModal] = useState(false)
+  const { authentication } = Route.useRouteContext()
+  const userRole = authentication.userRole()
 
   return (
     <>
@@ -50,7 +46,7 @@ const DocumentActions = ({ row }: Props) => {
               params={{ documentId: row.original.id.toString() }}
             >
               <Eye className="mr-2 h-4 w-4" />
-              View document
+              Process Document
             </Link>
           </DropdownMenuItem>
 
@@ -78,18 +74,19 @@ const DocumentActions = ({ row }: Props) => {
             View routing history
           </DropdownMenuItem>
 
-          <DropdownMenuItem>
-            <CheckCircle className="mr-2 h-4 w-4" />
-            Approve / Authorize
-          </DropdownMenuItem>
+          {/* Records actions */}
+          {userRole === 'records' ||
+            (userRole === 'admin' && (
+              <>
+                <DropdownMenuSeparator />
 
-          <DropdownMenuSeparator />
-
-          {/* Final / admin actions */}
-          <DropdownMenuItem>
-            <Archive className="mr-2 h-4 w-4" />
-            Archive document
-          </DropdownMenuItem>
+                {/* Final / record or admin actions */}
+                <DropdownMenuItem>
+                  <Archive className="mr-2 h-4 w-4" />
+                  Archive document
+                </DropdownMenuItem>
+              </>
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
 

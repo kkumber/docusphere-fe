@@ -94,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       date: new Date(notification.created_at).toLocaleString(),
       teaser:
         notification.data?.instructions ??
-        `Request type: ${notification.data?.request_type}`,
+        `Request type: ${notification.data?.request_type ?? 'N/A'}`,
     }))
   }, [notifications])
 

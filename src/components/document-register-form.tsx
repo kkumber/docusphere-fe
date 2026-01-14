@@ -70,12 +70,11 @@ export default function DocumentRegistrationForm() {
     setFileError('')
     setDueDateError('')
     const file = formData.file
-    const due_date = formData.due_date
+    const due_date = formData.due_date ?? null
 
     if (!file) return setFileError('Please upload a file.')
-    if (!due_date) return setDueDateError('Please select a due date.')
 
-    if (!validateDueDate(due_date)) {
+    if (due_date && !validateDueDate(due_date)) {
       return setDueDateError('Due date cannot be in the past.')
     }
 
@@ -175,7 +174,6 @@ export default function DocumentRegistrationForm() {
               id="instructions"
               placeholder="Detailed instructions..."
               rows={3}
-              required
               onChange={handleInputChange}
             />
           </Field>
