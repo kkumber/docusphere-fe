@@ -73,12 +73,12 @@ const statusMap: DocumentStatusMap = {
   },
 
   12: {
-    label: 'Task Completed',
+    label: 'Completed',
     color: 'bg-green-100 text-green-800 border-green-300',
   },
 
   13: {
-    label: 'Task Delayed',
+    label: 'Delayed',
     color: 'bg-orange-100 text-orange-800 border-orange-300',
   },
 }
@@ -98,7 +98,7 @@ export const documentColumns: ColumnDef<Document>[] = [
     accessorKey: 'instructions',
     header: 'Instructions',
     cell: ({ row }) => (
-      <div className="w-48 truncate">{row.original.instructions}</div>
+      <div className="w-48 truncate">{row.original.instructions ?? 'None'}</div>
     ),
   },
   {
@@ -143,6 +143,9 @@ export const documentColumns: ColumnDef<Document>[] = [
     accessorKey: 'due_date',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Due Date" />
+    ),
+    cell: ({ row }) => (
+      <div className="">{row.original.due_date ?? 'None'}</div>
     ),
   },
   {

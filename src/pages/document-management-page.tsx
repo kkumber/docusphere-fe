@@ -55,8 +55,8 @@ const DocumentManagementPage = () => {
       ]
     : [
         { value: '6', label: 'Pending' },
-        { value: '7', label: 'Completed' },
-        { value: '8', label: 'Delayed' },
+        { value: '12', label: 'Completed' },
+        { value: '13', label: 'Delayed' },
       ]
 
   const searchFilterInputValues: FilterSearchInput = {

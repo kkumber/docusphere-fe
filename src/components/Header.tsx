@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import type { Breadcrumbs } from '@/types/ui'
+import { Link } from '@tanstack/react-router'
 
 interface BreadcrumbItems {
   breadcrumbs: Breadcrumbs[]
@@ -33,8 +34,8 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
               ) : (
                 <>
                   <BreadcrumbItem className="block" key={index}>
-                    <BreadcrumbLink href={breadcrumb.href}>
-                      {breadcrumb.title}
+                    <BreadcrumbLink asChild>
+                      <Link to={breadcrumb.href}>{breadcrumb.title}</Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="block" />

@@ -6,19 +6,20 @@ import { toast } from 'sonner'
 
 type FileUpload = {
   documentId: string
-  file: File
+  payload: {
+    file: File
+    remarks: string | null
+  }
 }
 
 const useUploadAttachment = () => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation<void, AxiosError<ApiError>, FileUpload>({
-    mutationFn: async ({ documentId, file }) => {
+    mutationFn: async ({ documentId, payload }) => {
       await api.post(
         `/api/document-actions/document/${documentId}/respond`,
-        {
-          file: file,
-        },
+        payload,
         {
           headers: {
             'Content-Type': 'multipart/form-data',

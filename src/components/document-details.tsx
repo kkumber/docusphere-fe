@@ -23,6 +23,7 @@ interface AttachmentResponse {
   url: string
   created_at: string
   user: User
+  remarks: string
 }
 
 interface LogResponse {
@@ -30,6 +31,7 @@ interface LogResponse {
   action: string
   performed_by: User & { role?: string }
   created_at: string
+  remarks?: string
 }
 
 const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
@@ -98,8 +100,8 @@ const DocumentDetails = ({
                   </p>
                 )}
 
-                {attachments.map((attachment) => {
-                  const uploader = `${attachment?.user?.first_name} ${attachment?.user?.last_name}`
+                {attachments.map((attachment, index) => {
+                  const uploader = `${attachment!.user!.first_name} ${attachment!.user!.last_name}`
                   const uploadedAt = new Date(
                     attachment.created_at,
                   ).toLocaleString()
@@ -107,24 +109,30 @@ const DocumentDetails = ({
                   return (
                     <div
                       key={attachment.id}
-                      className="flex items-center justify-between rounded-md border px-3 py-2"
+                      className="space-y-2 rounded-lg border bg-card px-3 py-3"
                     >
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">Attachment</span>
-                        <span className="text-xs text-muted-foreground">
-                          Uploaded by {uploader} • {uploadedAt}
-                        </span>
-                      </div>
+                      {/* Top row */}
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {attachment.file_name ??
+                              `Attachment No.${index + 1}`}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Uploaded by {uploader} • {uploadedAt}
+                          </p>
+                        </div>
 
-                      <Button size="sm" variant="outline" asChild>
-                        <a
-                          href={attachment.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Open
-                        </a>
-                      </Button>
+                        <Button size="sm" variant="outline" asChild>
+                          <a
+                            href={attachment.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Open
+                          </a>
+                        </Button>
+                      </div>
                     </div>
                   )
                 })}
@@ -174,17 +182,28 @@ const DocumentDetails = ({
                                 <p className="text-sm font-semibold leading-tight">
                                   {log.action}
                                 </p>
+
                                 <p className="text-xs text-muted-foreground">
                                   <span className="font-medium text-foreground">
-                                    {user?.first_name} {user?.last_name}
+                                    {user.first_name} {user.last_name}
                                   </span>
-                                  {(user?.role || user?.office) && (
+                                  {user.role && (
                                     <span className="text-muted-foreground">
                                       {' · '}
-                                      {user?.office} ({user?.role})
+                                      {user.role.toUpperCase()}
                                     </span>
                                   )}
                                 </p>
+
+                                {/* Remarks — ONLY for review (and only if present) */}
+                                {log.remarks && (
+                                  <div className="mt-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
+                                    <span className="font-medium text-foreground">
+                                      Review notes:
+                                    </span>{' '}
+                                    {log.remarks}
+                                  </div>
+                                )}
                               </div>
 
                               <div className="shrink-0 text-right">
