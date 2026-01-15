@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils'
 import useUploadDocument from '@/hooks/use-upload-document'
 import { validateDueDate } from '@/utils/validate-due-date'
 import { Route } from '@/routes/__root'
+import useUploadDraft from '@/hooks/use-upload-draft'
 
 export interface DocumentFormState {
   tracking_no: string
@@ -44,6 +45,7 @@ export interface DocumentFormState {
 
 export default function DocumentRegistrationForm() {
   const mutation = useUploadDocument()
+  const uploadDraft = useUploadDraft()
   const { authentication } = Route.useRouteContext()
   const isUserRecords = authentication.userRole() === 'records'
 
@@ -51,7 +53,7 @@ export default function DocumentRegistrationForm() {
     tracking_no: '',
     title: '',
     instructions: '',
-    category: '',
+    category: !isUserRecords ? 'unnumbered_memorandum' : '',
     originating_office: '',
     request_type: '',
     due_date: null,
@@ -72,6 +74,9 @@ export default function DocumentRegistrationForm() {
     // clear previous errors
     setFileError('')
     setDueDateError('')
+    mutation.reset()
+    uploadDraft.reset()
+
     const file = formData.file
     const due_date = formData.due_date ?? null
 
@@ -88,16 +93,22 @@ export default function DocumentRegistrationForm() {
         return setFileError('File size must be less than 10MB.')
       }
     }
-    mutation.mutate(formData)
+
+    if (formData.category === 'unnumbered_memorandum') {
+      uploadDraft.mutate(formData)
+    } else {
+      mutation.mutate(formData)
+    }
   }
 
-  const errorResponse = mutation.error?.response?.data
+  const errorResponse =
+    mutation.error?.response?.data || uploadDraft.error?.response?.data
 
   return (
     <Card className="max-w-3xl mx-auto shadow-xl border-muted">
       <CardHeader className="space-y-1">
         <CardTitle className="flex items-center gap-2 text-xl">
-          <FileText className="h-5 w-5" /> Document Registration
+          <FileText className="h-5 w-5" /> Upload Document
         </CardTitle>
         <CardDescription>
           All fields are required. Please ensure details are accurate.
@@ -272,7 +283,7 @@ export default function DocumentRegistrationForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || uploadDraft.isPending}
           >
             {mutation.isPending ? 'Uploading...' : 'Upload Document'}
           </Button>

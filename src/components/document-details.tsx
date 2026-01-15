@@ -139,7 +139,7 @@ const DocumentDetails = ({
               </div>
             </TabsContent>
 
-            {/* LOGS TAB — TIMELINE STYLE */}
+            {/* LOGS TAB */}
             <TabsContent value="logs">
               <div className="my-4">
                 {logs.length === 0 && (
@@ -199,7 +199,7 @@ const DocumentDetails = ({
                                 {log.remarks && (
                                   <div className="mt-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
                                     <span className="font-medium text-foreground">
-                                      Review notes:
+                                      Remarks:
                                     </span>{' '}
                                     {log.remarks}
                                   </div>
