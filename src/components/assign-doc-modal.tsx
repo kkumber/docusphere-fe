@@ -148,14 +148,6 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
         overflow-y-auto
         flex flex-col gap-4"
       >
-        {isPending && <Spinner className="size-8 mx-auto text-primary-blue" />}
-
-        {isError && (
-          <p className="text-destructive">
-            Error fetching users: {error?.message}
-          </p>
-        )}
-
         <AlertDialogHeader>
           <AlertDialogTitle>Assign {documentTitle}</AlertDialogTitle>
           <AlertDialogDescription>
@@ -242,6 +234,14 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
 
         {/* ---------------- Roles & Users ---------------- */}
         <label className="block mt-3 font-medium">Available Users</label>
+
+        {isPending && <Spinner className="size-8 mx-auto text-primary-blue" />}
+
+        {isError && (
+          <p className="text-destructive">
+            Error fetching users: {error?.message}
+          </p>
+        )}
         <div className="space-y-3 mt-2">
           {Object.entries(usersByRole).map(([role, users]) => {
             const roleUserIds = users.map((u) => u!.id)

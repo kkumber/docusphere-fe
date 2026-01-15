@@ -29,6 +29,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import useUploadDocument from '@/hooks/use-upload-document'
 import { validateDueDate } from '@/utils/validate-due-date'
+import { Route } from '@/routes/__root'
 
 export interface DocumentFormState {
   tracking_no: string
@@ -43,6 +44,8 @@ export interface DocumentFormState {
 
 export default function DocumentRegistrationForm() {
   const mutation = useUploadDocument()
+  const { authentication } = Route.useRouteContext()
+  const isUserRecords = authentication.userRole() === 'records'
 
   const [formData, setFormData] = useState<DocumentFormState>({
     tracking_no: '',
@@ -184,10 +187,13 @@ export default function DocumentRegistrationForm() {
               <FieldLabel>Category</FieldLabel>
               <Select
                 required
-                value={formData.category}
+                value={
+                  !isUserRecords ? 'unnumbered_memorandum' : formData.category
+                }
                 onValueChange={(value) =>
                   setFormData((prev) => ({ ...prev, category: value }))
                 }
+                disabled={!isUserRecords}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
@@ -268,7 +274,7 @@ export default function DocumentRegistrationForm() {
             className="w-full"
             disabled={mutation.isPending}
           >
-            {mutation.isPending ? 'Uploading...' : 'Register Document'}
+            {mutation.isPending ? 'Uploading...' : 'Upload Document'}
           </Button>
         </form>
       </CardContent>

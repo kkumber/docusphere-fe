@@ -1,4 +1,3 @@
-import { X } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -80,6 +79,7 @@ const TrackingModal = ({ isOpen, onClose, documentId }: Props) => {
   } = useGetRequest<Response<RoutingHistory[]>>({
     key: ['document-routing-history', documentId],
     url: `/api/document/${documentId}/track`,
+    enabled: !!isOpen,
   })
 
   return (
