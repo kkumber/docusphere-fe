@@ -153,7 +153,7 @@ const DocumentActions = ({ documentId }: Props) => {
         {/* SIGN */}
         <ReusableAlertDialog
           title="Sign document"
-          description="Signing this document applies your official digital signature and cannot be undone."
+          description="Signing this document attaches your official digital signature when the document is downloaded and cannot be undone."
           confirmText="Sign document"
           onConfirm={() => handlePerformActionTask('sign')}
           triggerButton={

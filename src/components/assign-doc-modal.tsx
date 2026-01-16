@@ -124,6 +124,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
       request_type: requestType,
       assigned_to: selectedUsers,
       instructions,
+      due_date: dueDate ? dueDate.toISOString() : null,
     }
 
     mutation.mutate(payload)

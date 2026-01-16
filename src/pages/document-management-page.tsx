@@ -70,7 +70,6 @@ const DocumentManagementPage = () => {
         <Button size="sm" asChild>
           <Link to="/records/upload-document">
             <Upload />
-            Upload Draft
           </Link>
         </Button>
       )
@@ -79,7 +78,6 @@ const DocumentManagementPage = () => {
       <Button size="sm" asChild>
         <Link to="/records/upload-document">
           <Upload />
-          Upload
         </Link>
       </Button>
     )
