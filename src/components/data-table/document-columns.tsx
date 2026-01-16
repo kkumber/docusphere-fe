@@ -81,6 +81,24 @@ const statusMap: DocumentStatusMap = {
     label: 'Delayed',
     color: 'bg-orange-100 text-orange-800 border-orange-300',
   },
+
+  /**
+   * ==============================
+   * DOCUMENT DRAFTS
+   * ==============================
+   */
+  18: {
+    label: 'Draft',
+    color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  },
+  19: {
+    label: 'Draft In Review',
+    color: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+  },
+  20: {
+    label: 'Draft Approved',
+    color: 'bg-blue-100 text-blue-800 border-blue-300',
+  },
 }
 
 export const documentColumns: ColumnDef<Document>[] = [

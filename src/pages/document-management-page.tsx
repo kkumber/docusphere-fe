@@ -65,7 +65,16 @@ const DocumentManagementPage = () => {
   }
 
   const btnActions = () => {
-    if (!isRecordsLevel) return
+    if (!isRecordsLevel) {
+      return (
+        <Button size="sm" asChild>
+          <Link to="/records/upload-document">
+            <Upload />
+            Upload Draft
+          </Link>
+        </Button>
+      )
+    }
     return (
       <Button size="sm" asChild>
         <Link to="/records/upload-document">
