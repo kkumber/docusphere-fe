@@ -12,58 +12,45 @@ import {
   Lock,
   AlertCircle,
   Check,
-  X,
 } from 'lucide-react'
+import { toast } from 'sonner'
+import useChangePassword from '@/hooks/use-change-password'
 
 const AccountDetails: React.FC = () => {
   const { user } = useUserContext()
+  const changePasswordMutation = useChangePassword()
+
   const [isChangingPassword, setIsChangingPassword] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [passwordForm, setPasswordForm] = useState({
     current_password: '',
-    new_password: '',
-    confirm_password: '',
+    password: '',
+    password_confirmation: '',
   })
-  const [passwordError, setPasswordError] = useState('')
-  const [passwordSuccess, setPasswordSuccess] = useState('')
 
   const breadcrumbs: Breadcrumbs[] = [{ title: 'Account', href: '#' }]
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setPasswordError('')
-    setPasswordSuccess('')
 
-    if (passwordForm.new_password !== passwordForm.confirm_password) {
-      setPasswordError('Passwords do not match')
+    if (passwordForm.password !== passwordForm.password_confirmation) {
+      toast.error('Passwords do not match')
       return
     }
 
-    if (passwordForm.new_password.length < 8) {
-      setPasswordError('Password must be at least 8 characters')
+    if (passwordForm.password.length < 8) {
+      toast.error('Password must be at least 8 characters')
       return
     }
 
-    setIsSubmitting(true)
-
-    try {
-      // TODO: API call here
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      setPasswordSuccess('Password updated successfully')
-      setPasswordForm({
-        current_password: '',
-        new_password: '',
-        confirm_password: '',
-      })
-      setTimeout(() => {
-        setIsChangingPassword(false)
-        setPasswordSuccess('')
-      }, 2000)
-    } catch (err) {
-      setPasswordError('Failed to update password. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
+    changePasswordMutation.mutate(passwordForm, {
+      onSuccess: () => {
+        setPasswordForm({
+          current_password: '',
+          password: '',
+          password_confirmation: '',
+        })
+      },
+    })
   }
 
   const formatDate = (dateString?: string) => {
@@ -130,30 +117,30 @@ const AccountDetails: React.FC = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div>
           {/* Profile Header */}
           <div className="mb-12">
-            <div className="flex items-start gap-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
               <div className="shrink-0">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
-                  <span className="text-2xl font-semibold text-white">
+                <div className="w-24 h-24 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+                  <span className="text-3xl sm:text-2xl font-semibold text-white">
                     {user.first_name.charAt(0)}
                     {user.last_name.charAt(0)}
                   </span>
                 </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              <div className="flex-1 min-w-0 text-center sm:text-left">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
                   {user.first_name} {user.last_name}
                 </h1>
-                <div className="flex flex-wrap items-center gap-3 mb-3">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-3">
                   <span className="text-sm text-slate-600 capitalize">
                     {user.role}
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="text-sm text-slate-600">{user.office}</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2">
                   {getStatusBadge(user.status)}
                   {getVerificationBadge(user.email_verified_at)}
                 </div>
@@ -177,7 +164,7 @@ const AccountDetails: React.FC = () => {
                       Full Name
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium">
+                  <span className="text-sm text-slate-900 font-medium text-right">
                     {user.first_name} {user.last_name}
                   </span>
                 </div>
@@ -191,7 +178,7 @@ const AccountDetails: React.FC = () => {
                       Email Address
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium">
+                  <span className="text-sm text-slate-900 font-medium break-all text-right max-w-[50%]">
                     {user.email || '—'}
                   </span>
                 </div>
@@ -205,7 +192,7 @@ const AccountDetails: React.FC = () => {
                       Office Location
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium">
+                  <span className="text-sm text-slate-900 font-medium text-right">
                     {user.office}
                   </span>
                 </div>
@@ -219,7 +206,7 @@ const AccountDetails: React.FC = () => {
                       Account Role
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium capitalize">
+                  <span className="text-sm text-slate-900 font-medium capitalize text-right">
                     {user.role}
                   </span>
                 </div>
@@ -233,7 +220,7 @@ const AccountDetails: React.FC = () => {
                       Member Since
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium">
+                  <span className="text-sm text-slate-900 font-medium text-right">
                     {formatDate(user.created_at)}
                   </span>
                 </div>
@@ -270,22 +257,6 @@ const AccountDetails: React.FC = () => {
                   </div>
                 ) : (
                   <form onSubmit={handlePasswordSubmit} className="p-6">
-                    {passwordError && (
-                      <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                        <X className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                        <p className="text-sm text-red-700">{passwordError}</p>
-                      </div>
-                    )}
-
-                    {passwordSuccess && (
-                      <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-2">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <p className="text-sm text-emerald-700">
-                          {passwordSuccess}
-                        </p>
-                      </div>
-                    )}
-
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -302,7 +273,7 @@ const AccountDetails: React.FC = () => {
                           }
                           className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                           required
-                          disabled={isSubmitting}
+                          disabled={changePasswordMutation.isPending}
                         />
                       </div>
 
@@ -312,16 +283,16 @@ const AccountDetails: React.FC = () => {
                         </label>
                         <input
                           type="password"
-                          value={passwordForm.new_password}
+                          value={passwordForm.password}
                           onChange={(e) =>
                             setPasswordForm({
                               ...passwordForm,
-                              new_password: e.target.value,
+                              password: e.target.value,
                             })
                           }
                           className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                           required
-                          disabled={isSubmitting}
+                          disabled={changePasswordMutation.isPending}
                         />
                         <p className="text-xs text-slate-500 mt-1.5">
                           Must be at least 8 characters
@@ -334,16 +305,16 @@ const AccountDetails: React.FC = () => {
                         </label>
                         <input
                           type="password"
-                          value={passwordForm.confirm_password}
+                          value={passwordForm.password_confirmation}
                           onChange={(e) =>
                             setPasswordForm({
                               ...passwordForm,
-                              confirm_password: e.target.value,
+                              password_confirmation: e.target.value,
                             })
                           }
                           className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                           required
-                          disabled={isSubmitting}
+                          disabled={changePasswordMutation.isPending}
                         />
                       </div>
                     </div>
@@ -351,10 +322,12 @@ const AccountDetails: React.FC = () => {
                     <div className="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100">
                       <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={changePasswordMutation.isPending}
                         className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isSubmitting ? 'Updating...' : 'Update Password'}
+                        {changePasswordMutation.isPending
+                          ? 'Updating...'
+                          : 'Update Password'}
                       </button>
                       <button
                         type="button"
@@ -362,13 +335,11 @@ const AccountDetails: React.FC = () => {
                           setIsChangingPassword(false)
                           setPasswordForm({
                             current_password: '',
-                            new_password: '',
-                            confirm_password: '',
+                            password: '',
+                            password_confirmation: '',
                           })
-                          setPasswordError('')
-                          setPasswordSuccess('')
                         }}
-                        disabled={isSubmitting}
+                        disabled={changePasswordMutation.isPending}
                         className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Cancel
