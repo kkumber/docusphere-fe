@@ -1,4 +1,5 @@
 import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -19,6 +20,7 @@ import {
 import useLogoutUser from '@/hooks/use-logout'
 import ErrorDialog from './error-dialog'
 import type { User } from '@/types/user'
+import { useAuth } from '@/hooks/use-auth'
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar()
@@ -78,9 +80,14 @@ export function NavUser({ user }: { user: User }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem asChild>
+                <Link
+                  to="/account/$userId/details"
+                  params={{ userId: user.id.toString() }}
+                >
+                  <BadgeCheck />
+                  Account
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />

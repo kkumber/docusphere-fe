@@ -17,6 +17,7 @@ import { Route as AuthenticatedLayoutDocumentsDocumentManagementRouteImport } fr
 import { Route as AuthenticatedLayoutDocumentsDocumentIdRouteImport } from './routes/_authenticated/_layout/documents/$documentId'
 import { Route as AuthenticatedLayoutAdminUserManagementRouteImport } from './routes/_authenticated/_layout/admin/user-management'
 import { Route as AuthenticatedLayoutAdminRegisterUserRouteImport } from './routes/_authenticated/_layout/admin/register-user'
+import { Route as AuthenticatedLayoutAccountUserIdDetailsRouteImport } from './routes/_authenticated/_layout/account/$userId/details'
 import { Route as AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport } from './routes/_authenticated/_layout/admin/users/$userId/update'
 
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -64,6 +65,12 @@ const AuthenticatedLayoutAdminRegisterUserRoute =
     path: '/admin/register-user',
     getParentRoute: () => AuthenticatedLayoutRoute,
   } as any)
+const AuthenticatedLayoutAccountUserIdDetailsRoute =
+  AuthenticatedLayoutAccountUserIdDetailsRouteImport.update({
+    id: '/account/$userId/details',
+    path: '/account/$userId/details',
+    getParentRoute: () => AuthenticatedLayoutRoute,
+  } as any)
 const AuthenticatedLayoutAdminUsersUserIdUpdateRoute =
   AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport.update({
     id: '/admin/users/$userId/update',
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   '/documents/document-management': typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   '/records/upload-document': typeof AuthenticatedLayoutRecordsUploadDocumentRoute
+  '/account/$userId/details': typeof AuthenticatedLayoutAccountUserIdDetailsRoute
   '/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRoutesByTo {
@@ -89,6 +97,7 @@ export interface FileRoutesByTo {
   '/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   '/documents/document-management': typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   '/records/upload-document': typeof AuthenticatedLayoutRecordsUploadDocumentRoute
+  '/account/$userId/details': typeof AuthenticatedLayoutAccountUserIdDetailsRoute
   '/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRoutesById {
@@ -101,6 +110,7 @@ export interface FileRoutesById {
   '/_authenticated/_layout/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   '/_authenticated/_layout/documents/document-management': typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   '/_authenticated/_layout/records/upload-document': typeof AuthenticatedLayoutRecordsUploadDocumentRoute
+  '/_authenticated/_layout/account/$userId/details': typeof AuthenticatedLayoutAccountUserIdDetailsRoute
   '/_authenticated/_layout/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRouteTypes {
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/documents/$documentId'
     | '/documents/document-management'
     | '/records/upload-document'
+    | '/account/$userId/details'
     | '/admin/users/$userId/update'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/documents/$documentId'
     | '/documents/document-management'
     | '/records/upload-document'
+    | '/account/$userId/details'
     | '/admin/users/$userId/update'
   id:
     | '__root__'
@@ -134,6 +146,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_layout/documents/$documentId'
     | '/_authenticated/_layout/documents/document-management'
     | '/_authenticated/_layout/records/upload-document'
+    | '/_authenticated/_layout/account/$userId/details'
     | '/_authenticated/_layout/admin/users/$userId/update'
   fileRoutesById: FileRoutesById
 }
@@ -200,6 +213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLayoutAdminRegisterUserRouteImport
       parentRoute: typeof AuthenticatedLayoutRoute
     }
+    '/_authenticated/_layout/account/$userId/details': {
+      id: '/_authenticated/_layout/account/$userId/details'
+      path: '/account/$userId/details'
+      fullPath: '/account/$userId/details'
+      preLoaderRoute: typeof AuthenticatedLayoutAccountUserIdDetailsRouteImport
+      parentRoute: typeof AuthenticatedLayoutRoute
+    }
     '/_authenticated/_layout/admin/users/$userId/update': {
       id: '/_authenticated/_layout/admin/users/$userId/update'
       path: '/admin/users/$userId/update'
@@ -217,6 +237,7 @@ interface AuthenticatedLayoutRouteChildren {
   AuthenticatedLayoutDocumentsDocumentIdRoute: typeof AuthenticatedLayoutDocumentsDocumentIdRoute
   AuthenticatedLayoutDocumentsDocumentManagementRoute: typeof AuthenticatedLayoutDocumentsDocumentManagementRoute
   AuthenticatedLayoutRecordsUploadDocumentRoute: typeof AuthenticatedLayoutRecordsUploadDocumentRoute
+  AuthenticatedLayoutAccountUserIdDetailsRoute: typeof AuthenticatedLayoutAccountUserIdDetailsRoute
   AuthenticatedLayoutAdminUsersUserIdUpdateRoute: typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 
@@ -232,6 +253,8 @@ const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
     AuthenticatedLayoutDocumentsDocumentManagementRoute,
   AuthenticatedLayoutRecordsUploadDocumentRoute:
     AuthenticatedLayoutRecordsUploadDocumentRoute,
+  AuthenticatedLayoutAccountUserIdDetailsRoute:
+    AuthenticatedLayoutAccountUserIdDetailsRoute,
   AuthenticatedLayoutAdminUsersUserIdUpdateRoute:
     AuthenticatedLayoutAdminUsersUserIdUpdateRoute,
 }

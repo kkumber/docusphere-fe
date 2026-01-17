@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Command, Files, LayoutDashboard, UserCog } from 'lucide-react'
 
 import { NavUser } from '@/components/nav-user'
-import { Label } from '@/components/ui/label'
 import {
   Sidebar,
   SidebarContent,
@@ -12,13 +11,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Switch } from '@/components/ui/switch'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
