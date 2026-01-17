@@ -2,13 +2,12 @@ import api from '@/lib/api'
 
 export const downloadSignedPdf = async (
   cloudPdfUrl: string,
-  assignmentId: number,
+  documentId: number,
   documentTitle: string,
 ) => {
-  const response = await api.get('/api/download-signed-official', {
+  const response = await api.get(`/api/download-logs/${documentId}`, {
     params: {
       cloud_pdf_url: cloudPdfUrl,
-      assignment_id: assignmentId,
     },
     responseType: 'blob', // important!
   })

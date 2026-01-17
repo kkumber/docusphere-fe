@@ -12,6 +12,7 @@ import usePrefetchRequest from '@/hooks/use-prefetch-request'
 
 import { Download } from 'lucide-react'
 import { downloadSignedPdf } from '@/lib/download-signed-pdf'
+import { Route } from '@/routes/__root'
 
 interface DocumentDetailsResponse {
   data: {
@@ -43,6 +44,9 @@ const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
 const DocumentView = () => {
   const data = route.useLoaderData()
   const document: Document = data.data.document
+  const { authentication } = Route.useRouteContext()
+  const userRole = authentication.userRole()
+  const allowedRoleForDownload = ['admin', 'records', 'sds']
 
   const {
     isPending,
@@ -97,15 +101,21 @@ const DocumentView = () => {
               />
 
               {/* Download Signed PDF */}
-              <button
-                onClick={() =>
-                  downloadSignedPdf(data.data.url, document.id, document.title)
-                }
-                className="p-2 rounded hover:bg-gray-100 transition-colors"
-                title="Download Signed PDF"
-              >
-                <Download className="h-5 w-5" />
-              </button>
+              {allowedRoleForDownload.includes(userRole) && (
+                <button
+                  onClick={() =>
+                    downloadSignedPdf(
+                      data.data.url,
+                      document.id,
+                      document.title,
+                    )
+                  }
+                  className="p-2 rounded hover:bg-gray-100 transition-colors"
+                  title="Download Signed PDF"
+                >
+                  <Download className="h-5 w-5" />
+                </button>
+              )}
             </div>
           </div>
         </div>
