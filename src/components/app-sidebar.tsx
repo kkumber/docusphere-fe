@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Command, Files, LayoutDashboard, UserCog } from 'lucide-react'
 
 import { NavUser } from '@/components/nav-user'
-import { Label } from '@/components/ui/label'
 import {
   Sidebar,
   SidebarContent,
@@ -12,13 +11,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Switch } from '@/components/ui/switch'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
@@ -77,8 +74,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isPending: isNotificationsPending,
     isError: isNotificationsError,
   } = useGetRequest<Response<Notification[]>>({
-    url: '/api/notifications',
-    key: ['notifications'],
+    url: '/api/notifications/limit',
+    key: ['sidebarNotifications'],
   })
 
   /**
@@ -165,10 +162,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* NOTIFICATIONS SIDEBAR */}
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        <SidebarHeader className="gap-3.5 border-b p-4">
+        <SidebarHeader className="gap-3.5 border-b p-4 pb-5">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-medium">
-              {activeItem?.title}
+              Docusphere DTS
             </div>
           </div>
         </SidebarHeader>
@@ -201,7 +198,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link
                     to="/documents/document-management"
                     key={mail.email}
-                    className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
+                    className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight last:border-b-0"
                   >
                     <div className="flex w-full items-center gap-2">
                       <span>{mail.name}</span>

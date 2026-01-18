@@ -48,7 +48,7 @@ const DocumentStatusWarningModal: React.FC<Props> = ({ documentId }) => {
   return (
     <ReusableAlertDialog
       title="Pending Assignments Warning"
-      description="Some assignments related to this document are still not completed. Are you sure you want to continue?"
+      description="This action will mark the document as Completed and notify the Records Office. Some related assignments are not yet completed and will remain unresolved. Do you wish to continue?"
       confirmText="Confirm"
       cancelText="Cancel"
       onConfirm={() => handlePerformActionTask('complete')}

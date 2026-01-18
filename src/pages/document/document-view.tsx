@@ -10,6 +10,10 @@ import DocumentActions from '@/components/document-actions'
 import DocumentDetails from '@/components/document-details'
 import usePrefetchRequest from '@/hooks/use-prefetch-request'
 
+import { Download } from 'lucide-react'
+import { downloadSignedPdf } from '@/lib/download-signed-pdf'
+import { Route } from '@/routes/__root'
+
 interface DocumentDetailsResponse {
   data: {
     document: {
@@ -40,6 +44,9 @@ const route = getRouteApi('/_authenticated/_layout/documents/$documentId')
 const DocumentView = () => {
   const data = route.useLoaderData()
   const document: Document = data.data.document
+  const { authentication } = Route.useRouteContext()
+  const userRole = authentication.userRole()
+  const allowedRoleForDownload = ['admin', 'records', 'sds']
 
   const {
     isPending,
@@ -53,7 +60,7 @@ const DocumentView = () => {
 
   const errorDetailsMsg = isError ? error?.message : null
 
-  // prefetch document attachments and actions/logs
+  // prefetch attachments and actions/logs
   usePrefetchRequest({
     key: ['documentAttachments', document.id.toString()],
     url: `/api/document/${document.id}/attachments`,
@@ -81,10 +88,10 @@ const DocumentView = () => {
 
             {/* Actions + Details */}
             <div className="flex items-center gap-2">
-              {/* Document Actions (workflow, approval, etc.) */}
+              {/* Document Actions */}
               <DocumentActions documentId={document.id.toString()} />
 
-              {/* Document Details (modal w/ tabs) */}
+              {/* Document Details Modal */}
               <DocumentDetails
                 title={document.title}
                 isPending={isPending}
@@ -92,6 +99,23 @@ const DocumentView = () => {
                 error={errorDetailsMsg!}
                 pdfUrl={data.data.url}
               />
+
+              {/* Download Signed PDF */}
+              {allowedRoleForDownload.includes(userRole) && (
+                <button
+                  onClick={() =>
+                    downloadSignedPdf(
+                      data.data.url,
+                      document.id,
+                      document.title,
+                    )
+                  }
+                  className="p-2 rounded hover:bg-gray-100 transition-colors"
+                  title="Download Signed PDF"
+                >
+                  <Download className="h-5 w-5" />
+                </button>
+              )}
             </div>
           </div>
         </div>
