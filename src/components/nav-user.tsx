@@ -89,9 +89,11 @@ export function NavUser({ user }: { user: User }) {
                   Account
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link to="/notifications">
+                  <Bell />
+                  Notifications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

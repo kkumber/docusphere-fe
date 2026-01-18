@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthenticatedLayoutRouteImport } from './routes/_authenticated/_layout'
 import { Route as AuthenticatedLayoutIndexRouteImport } from './routes/_authenticated/_layout/index'
+import { Route as AuthenticatedLayoutNotificationsRouteImport } from './routes/_authenticated/_layout/notifications'
 import { Route as AuthenticatedLayoutRecordsUploadDocumentRouteImport } from './routes/_authenticated/_layout/records/upload-document'
 import { Route as AuthenticatedLayoutDocumentsDocumentManagementRouteImport } from './routes/_authenticated/_layout/documents/document-management'
 import { Route as AuthenticatedLayoutDocumentsDocumentIdRouteImport } from './routes/_authenticated/_layout/documents/$documentId'
@@ -33,6 +34,12 @@ const AuthenticatedLayoutIndexRoute =
   AuthenticatedLayoutIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedLayoutRoute,
+  } as any)
+const AuthenticatedLayoutNotificationsRoute =
+  AuthenticatedLayoutNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
     getParentRoute: () => AuthenticatedLayoutRoute,
   } as any)
 const AuthenticatedLayoutRecordsUploadDocumentRoute =
@@ -80,6 +87,7 @@ const AuthenticatedLayoutAdminUsersUserIdUpdateRoute =
 
 export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
+  '/notifications': typeof AuthenticatedLayoutNotificationsRoute
   '/': typeof AuthenticatedLayoutIndexRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
@@ -91,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
+  '/notifications': typeof AuthenticatedLayoutNotificationsRoute
   '/': typeof AuthenticatedLayoutIndexRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated/_layout': typeof AuthenticatedLayoutRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
+  '/_authenticated/_layout/notifications': typeof AuthenticatedLayoutNotificationsRoute
   '/_authenticated/_layout/': typeof AuthenticatedLayoutIndexRoute
   '/_authenticated/_layout/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/_authenticated/_layout/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/auth/login'
+    | '/notifications'
     | '/'
     | '/admin/register-user'
     | '/admin/user-management'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/login'
+    | '/notifications'
     | '/'
     | '/admin/register-user'
     | '/admin/user-management'
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated/_layout'
     | '/auth/login'
+    | '/_authenticated/_layout/notifications'
     | '/_authenticated/_layout/'
     | '/_authenticated/_layout/admin/register-user'
     | '/_authenticated/_layout/admin/user-management'
@@ -176,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedLayoutIndexRouteImport
+      parentRoute: typeof AuthenticatedLayoutRoute
+    }
+    '/_authenticated/_layout/notifications': {
+      id: '/_authenticated/_layout/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedLayoutNotificationsRouteImport
       parentRoute: typeof AuthenticatedLayoutRoute
     }
     '/_authenticated/_layout/records/upload-document': {
@@ -231,6 +251,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedLayoutRouteChildren {
+  AuthenticatedLayoutNotificationsRoute: typeof AuthenticatedLayoutNotificationsRoute
   AuthenticatedLayoutIndexRoute: typeof AuthenticatedLayoutIndexRoute
   AuthenticatedLayoutAdminRegisterUserRoute: typeof AuthenticatedLayoutAdminRegisterUserRoute
   AuthenticatedLayoutAdminUserManagementRoute: typeof AuthenticatedLayoutAdminUserManagementRoute
@@ -242,6 +263,7 @@ interface AuthenticatedLayoutRouteChildren {
 }
 
 const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
+  AuthenticatedLayoutNotificationsRoute: AuthenticatedLayoutNotificationsRoute,
   AuthenticatedLayoutIndexRoute: AuthenticatedLayoutIndexRoute,
   AuthenticatedLayoutAdminRegisterUserRoute:
     AuthenticatedLayoutAdminRegisterUserRoute,

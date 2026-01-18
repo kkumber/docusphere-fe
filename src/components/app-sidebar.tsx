@@ -74,8 +74,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isPending: isNotificationsPending,
     isError: isNotificationsError,
   } = useGetRequest<Response<Notification[]>>({
-    url: '/api/notifications',
-    key: ['notifications'],
+    url: '/api/notifications/limit',
+    key: ['sidebarNotifications'],
   })
 
   /**
