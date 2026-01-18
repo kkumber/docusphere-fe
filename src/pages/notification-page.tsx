@@ -40,13 +40,12 @@ const NotificationPage = () => {
 
   const notifications = response?.data ?? []
 
-  const readNotification = useMutation({
-    mutationFn: (id: number) => {
-      return api.patch(`/api/notifications/${id}`)
+  const markNotification = useMutation({
+    mutationFn: ({ ids, markAs }: { ids: number[]; markAs: string }) => {
+      return api.post(`/api/notifications/${markAs}`, { notifications: ids })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      queryClient.invalidateQueries({ queryKey: ['sidebarNotifications'] })
     },
   })
 
@@ -95,19 +94,18 @@ const NotificationPage = () => {
   }
 
   const markAsRead = (ids: number[]) => {
-    ids.forEach((id) => {
-      readNotification.mutate(id)
+    markNotification.mutate({
+      ids,
+      markAs: 'read',
     })
     setSelectedIds([])
   }
 
   const markAsUnread = (ids: number[]) => {
-    // You can add markAsUnread mutation here if API supports it
-    setSelectedIds([])
-  }
-
-  const deleteNotifications = (ids: number[]) => {
-    // You can add delete mutation here if API supports it
+    markNotification.mutate({
+      ids,
+      markAs: 'unread',
+    })
     setSelectedIds([])
   }
 
@@ -145,15 +143,6 @@ const NotificationPage = () => {
                 title="Mark as unread"
               >
                 <Mail className="w-4 h-4 text-gray-700" />
-              </button>
-
-              <button
-                onClick={() => deleteNotifications(selectedIds)}
-                disabled={selectedIds.length === 0}
-                className="p-2 rounded hover:bg-red-50 disabled:opacity-40"
-                title="Delete"
-              >
-                <Trash2 className="w-4 h-4 text-red-600" />
               </button>
             </div>
 
@@ -273,14 +262,6 @@ const NotificationPage = () => {
                             Unread
                           </button>
                         )}
-
-                        <button
-                          onClick={() => deleteNotifications([notification.id])}
-                          className="text-xs text-red-600 hover:underline flex items-center gap-1"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                          Delete
-                        </button>
                       </div>
                     </div>
                   </div>
