@@ -185,13 +185,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
               )}
 
-              {notifications?.data?.length === 0 && (
+              {notifications?.data?.length === 0 ? (
                 <div className="p-4 text-sm text-muted-foreground">
                   No notifications
                 </div>
-              )}
-
-              {!isNotificationsPending &&
+              ) : (
+                !isNotificationsPending &&
                 !isNotificationsError &&
                 notifications!.data!.length > 0 &&
                 mails.map((mail) => (
@@ -209,7 +208,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       {mail.teaser}
                     </span>
                   </Link>
-                ))}
+                ))
+              )}
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>

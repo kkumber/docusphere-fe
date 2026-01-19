@@ -222,22 +222,24 @@ const NotificationPage = () => {
                           {notification.subject}
                         </h3>
                         <span className="text-xs text-gray-500 whitespace-nowrap">
-                          {formatDate(notification.created_at)}
+                          {formatDate(notification.created_at) ?? 'N/A'}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
-                          {notification.data.request_type}
-                        </span>
+                        {notification.data && (
+                          <span className="text-xs text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
+                            {notification.data.request_type ?? 'N/A'}
+                          </span>
+                        )}
                         {notification.document_id && (
                           <span className="text-xs text-gray-500">
-                            Doc #{notification.document_id}
+                            Doc #{notification.document_id ?? 'N/A'}
                           </span>
                         )}
                       </div>
 
-                      {notification.data.instructions && (
+                      {notification.data && notification.data.instructions && (
                         <p className="text-sm text-gray-600 line-clamp-2 mt-1">
                           {notification.data.instructions}
                         </p>

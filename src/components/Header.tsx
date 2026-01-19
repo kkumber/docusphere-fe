@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import type { Breadcrumbs } from '@/types/ui'
 import { Link } from '@tanstack/react-router'
+import { Fragment } from 'react/jsx-runtime'
 
 interface BreadcrumbItems {
   breadcrumbs: Breadcrumbs[]
@@ -26,14 +27,14 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
       <Breadcrumb>
         <BreadcrumbList>
           {breadcrumbs.map((breadcrumb, index) => (
-            <>
+            <Fragment key={breadcrumb.href ?? index}>
               {breadcrumbs.length - 1 === index ? (
-                <BreadcrumbItem className="block" key={index}>
+                <BreadcrumbItem className="block">
                   <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
                 </BreadcrumbItem>
               ) : (
                 <>
-                  <BreadcrumbItem className="block" key={index}>
+                  <BreadcrumbItem className="block">
                     <BreadcrumbLink asChild>
                       <Link to={breadcrumb.href}>{breadcrumb.title}</Link>
                     </BreadcrumbLink>
@@ -41,7 +42,7 @@ export default function Header({ breadcrumbs }: BreadcrumbItems) {
                   <BreadcrumbSeparator className="block" />
                 </>
               )}
-            </>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
