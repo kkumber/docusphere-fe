@@ -36,8 +36,13 @@ export const useAuth = () => {
   }
 
   const userRole = () => {
-    const user = localStorage.getItem('userRole')
-    return user ? JSON.parse(user) : null
+    try {
+      const user = localStorage.getItem('userRole')
+      if (!user || user === 'undefined') return null
+      return JSON.parse(user)
+    } catch {
+      return null
+    }
   }
 
   return {
