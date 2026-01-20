@@ -47,7 +47,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({}) // state for visibility of columns
 
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -62,6 +62,8 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   })
+
+  const rows = table.getRowModel().rows || []
 
   return (
     <div>
@@ -94,8 +96,8 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows && table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
+            {rows.length > 0 ? (
+              rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
