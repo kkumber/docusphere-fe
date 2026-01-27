@@ -17,7 +17,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { useUserContext } from '@/context/user-context'
 import useGetRequest from '@/hooks/use-get'
 import type { Response } from '@/types/response'
 
@@ -65,8 +64,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [activeItem, setActiveItem] = React.useState(data.navMain[0])
   const { setOpen } = useSidebar()
   const navigate = useNavigate()
-
-  const user = useUserContext().user
 
   // Fetch notifications
   const {
@@ -156,7 +153,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarContent>
 
         <SidebarFooter>
-          <NavUser user={user} />
+          <NavUser />
         </SidebarFooter>
       </Sidebar>
 

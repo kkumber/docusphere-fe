@@ -20,10 +20,12 @@ import {
 import useLogoutUser from '@/hooks/use-logout'
 import ErrorDialog from './error-dialog'
 import type { User } from '@/types/user'
+import { useUserContext } from '@/context/user-context'
 
-export function NavUser({ user }: { user: User }) {
+export function NavUser() {
   const { isMobile } = useSidebar()
   const mutation = useLogoutUser()
+  const user: User = useUserContext().user
 
   const handleLogout = () => {
     mutation.mutate()
