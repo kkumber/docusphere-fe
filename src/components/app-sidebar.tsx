@@ -16,9 +16,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import useGetRequest from '@/hooks/use-get'
 import type { Response } from '@/types/response'
+import { UserContext, useUserContext } from '@/context/user-context'
+import { is } from 'date-fns/locale'
+import { useRouteContext } from '@tanstack/react-router'
+import { Route } from '@/routes/__root'
 
 export type NotificationPayload = {
   request_type: string
@@ -37,33 +41,41 @@ export type Notification = {
   updated_at: string
 }
 
-const data = {
-  navMain: [
-    {
-      title: 'Dashboard',
-      url: '/',
-      icon: LayoutDashboard,
-      isActive: true,
-    },
-    {
-      title: 'Documents',
-      url: '/documents/document-management',
-      icon: Files,
-      isActive: false,
-    },
-    {
-      title: 'User Management',
-      url: '/admin/user-management',
-      icon: UserCog,
-      isActive: false,
-    },
-  ],
-}
+const navigationSidebar = [
+  {
+    title: 'Dashboard',
+    url: '/',
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: 'Documents',
+    url: '/documents/document-management',
+    icon: Files,
+    isActive: false,
+  },
+  {
+    title: 'Users',
+    url: '/admin/user-management',
+    icon: UserCog,
+    isActive: false,
+  },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0])
+  const currentLocation = useLocation().pathname
   const { setOpen } = useSidebar()
   const navigate = useNavigate()
+  const { authentication } = Route.useRouteContext()
+
+  // Use directly instead of state
+  const userRole = authentication.userRole()
+
+  const [navMain, setNavMain] = React.useState(
+    userRole === 'admin'
+      ? navigationSidebar
+      : navigationSidebar.filter((nav) => nav.title !== 'Users'),
+  )
 
   // Fetch notifications
   const {
@@ -127,7 +139,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroup>
             <SidebarGroupContent className="px-1.5 md:px-0">
               <SidebarMenu>
-                {data.navMain.map((item) => (
+                {navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       tooltip={{
@@ -135,11 +147,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         hidden: false,
                       }}
                       onClick={() => {
-                        setActiveItem(item)
                         setOpen(true)
                         navigate({ to: item.url })
                       }}
-                      isActive={activeItem?.title === item.title}
+                      isActive={currentLocation === item.url}
                       className="px-2.5 md:px-2"
                     >
                       <item.icon />
