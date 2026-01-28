@@ -1,10 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
 import UpdateUserPage from '@/pages/auth/update-user-page'
 import api from '@/lib/api'
 
 export const Route = createFileRoute(
   '/_authenticated/_layout/admin/users/$userId/update',
 )({
+  beforeLoad: ({ context }) => {
+    if (context.authentication.userRole() !== 'admin') {
+      throw notFound()
+    }
+  },
   component: UserUpdateRoute,
   loader: async ({
     params,
