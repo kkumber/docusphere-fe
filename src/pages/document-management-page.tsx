@@ -45,6 +45,7 @@ const DocumentManagementPage = () => {
     enabled: !!userRole,
   })
 
+  // Map column values for filter must corresponds to the status ID in the database
   const columnValuesForFilter: ColumnValuesForFilterStatus[] = isRecordsLevel
     ? [
         { value: '1', label: 'Pending' },
