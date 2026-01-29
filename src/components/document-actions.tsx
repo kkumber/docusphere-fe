@@ -38,6 +38,8 @@ const DocumentActions = ({ documentId }: Props) => {
   const { authentication } = Route.useRouteContext()
 
   const userRole = authentication.userRole()
+  const canCompleteDocument =
+    userRole === 'admin' || userRole === 'records' || userRole === 'sds'
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
@@ -234,32 +236,31 @@ const DocumentActions = ({ documentId }: Props) => {
           }
         />
 
-        {userRole !== 'records' &&
-          (userRole === 'sds' ? (
-            <>
-              <DropdownMenuSeparator />
-              <DocumentStatusWarningModal documentId={documentId} />
-            </>
-          ) : (
-            <>
-              <DropdownMenuSeparator />
-              <ReusableAlertDialog
-                title="Mark document as completed"
-                description="This will mark the document as completed. Make sure all required actions have been performed. You will not be able to undo this action."
-                confirmText="Yes, mark as completed"
-                cancelText="Cancel"
-                onConfirm={() => handlePerformActionTask('complete')}
-                triggerButton={
-                  <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
-                    className="flex items-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Mark as Completed
-                  </DropdownMenuItem>
-                }
-              />
-            </>
-          ))}
+        {!canCompleteDocument ? (
+          <>
+            <DropdownMenuSeparator />
+            <DocumentStatusWarningModal documentId={documentId} />
+          </>
+        ) : (
+          <>
+            <DropdownMenuSeparator />
+            <ReusableAlertDialog
+              title="Mark document as completed"
+              description="This will mark the document as completed. Make sure all required actions have been performed. You will not be able to undo this action."
+              confirmText="Yes, mark as completed"
+              cancelText="Cancel"
+              onConfirm={() => handlePerformActionTask('complete')}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <CheckCircle className="w-4 h-4" /> Mark as Completed
+                </DropdownMenuItem>
+              }
+            />
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

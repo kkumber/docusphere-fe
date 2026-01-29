@@ -23,6 +23,7 @@ type Props = {
 const UserActions = ({ row }: Props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [errorDialogOpen, setErrorDialogOpen] = useState(false)
+  const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false)
 
   const user = row.original
   const activate = useActivateUser()
@@ -71,6 +72,8 @@ const UserActions = ({ row }: Props) => {
 
             {user!.status === 1 ? (
               <DialogConfirmation
+                open={deactivateDialogOpen}
+                onOpenChange={setDeactivateDialogOpen}
                 trigger={
                   <DropdownMenuItem onSelect={handleDropdownSelect}>
                     <UserX className="mr-2 h-4 w-4" />
