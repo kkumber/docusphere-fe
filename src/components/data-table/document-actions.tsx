@@ -16,10 +16,8 @@ import { Link } from '@tanstack/react-router'
 import TrackingModal from '../tracking-modal'
 import { Route } from '@/routes/__root'
 import { DialogConfirmation } from '../dialog-confirmation'
-import api from '@/lib/api'
-import { toast } from 'sonner'
-import { useQueryClient } from '@tanstack/react-query'
-import { set } from 'date-fns'
+import useArchiveDocument from '@/hooks/use-archive-document'
+import useDeleteDocument from '@/hooks/use-delete-document'
 
 type Props = {
   row: Row<Document>
@@ -32,36 +30,23 @@ const DocumentActions = ({ row }: Props) => {
   const [showArchiveModal, setShowArchiveModal] = useState(false)
   const { authentication } = Route.useRouteContext()
   const userRole = authentication.userRole()
-  const queryClient = useQueryClient()
+  const documentId = row.original.id.toString()
 
-  const handleArchiveDocument = () => {
-    api
-      .patch(`/api/record/documents/${row.original.id}/archive`)
-      .then(() => {
-        toast.success('Document is now in archives')
-        queryClient.invalidateQueries({
-          queryKey: ['documents', userRole],
-          exact: true,
-          refetchType: 'active',
-        })
-      })
-      .catch((error) => toast.error(error.response?.data.message))
+  // Mutations
+  const archiveDocument = useArchiveDocument()
+  const deleteDocument = useDeleteDocument()
+
+  const handleArchiveDocument = async () => {
+    await archiveDocument.mutateAsync(documentId)
+    setShowArchiveModal(false)
   }
 
-  const handleDeleteDocument = () => {
-    api
-      .delete(`/api/record/documents/${row.original.id}`)
-      .then(() => {
-        toast.success('Document deleted successfully')
-        queryClient.invalidateQueries({
-          queryKey: ['documents', userRole],
-          exact: true,
-          refetchType: 'active',
-        })
-        setShowDeleteModal(false)
-      })
-      .catch((error) => toast.error(error.response?.data.message))
+  const handleDeleteDocument = async () => {
+    await deleteDocument.mutateAsync(documentId)
+    setShowDeleteModal(false)
   }
+
+  const canUpdateDocument = userRole === 'admin' || userRole === 'records'
 
   return (
     <>
@@ -112,47 +97,53 @@ const DocumentActions = ({ row }: Props) => {
           </DropdownMenuItem>
 
           {/* Records actions */}
-          {userRole === 'records' ||
-            (userRole === 'admin' && (
-              <>
-                <DropdownMenuSeparator />
+          {canUpdateDocument && (
+            <>
+              <DropdownMenuSeparator />
 
-                {/* Final / record or admin actions */}
-                <DialogConfirmation
-                  trigger={
-                    <DropdownMenuItem
-                      onSelect={(e) => {
-                        e.preventDefault()
-                        setShowArchiveModal(true)
-                      }}
-                    >
-                      <Archive className="mr-2 h-4 w-4" />
-                      Archive document
-                    </DropdownMenuItem>
-                  }
-                  title="Archive Document"
-                  description="Are you sure you want to archive this document?"
-                  submitFn={handleArchiveDocument}
-                />
+              {/* Final / record or admin actions */}
+              <DialogConfirmation
+                open={showArchiveModal}
+                onOpenChange={setShowArchiveModal}
+                trigger={
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      setShowArchiveModal(true)
+                    }}
+                  >
+                    <Archive className="mr-2 h-4 w-4" />
+                    Archive document
+                  </DropdownMenuItem>
+                }
+                title="Archive Document"
+                description="Are you sure you want to archive this document?"
+                submitFn={handleArchiveDocument}
+                loading={archiveDocument.isPending}
+              />
 
-                <DialogConfirmation
-                  trigger={
-                    <DropdownMenuItem
-                      onSelect={(e) => {
-                        e.preventDefault()
-                        setShowDeleteModal(true)
-                      }}
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  }
-                  title="Delete Document"
-                  description="Are you sure you want to delete this document?"
-                  submitFn={handleDeleteDocument}
-                />
-              </>
-            ))}
+              <DialogConfirmation
+                open={showDeleteModal}
+                onOpenChange={setShowDeleteModal}
+                trigger={
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      setShowDeleteModal(true)
+                    }}
+                    className="text-destructive"
+                  >
+                    <Trash className="mr-2 h-4 w-4 text-destructive" />
+                    Delete
+                  </DropdownMenuItem>
+                }
+                title="Delete Document"
+                description="Are you sure you want to delete this document?"
+                submitFn={handleDeleteDocument}
+                loading={deleteDocument.isPending}
+              />
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

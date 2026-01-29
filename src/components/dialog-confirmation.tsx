@@ -9,37 +9,42 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useState } from 'react'
 
 interface DialogConfirmationProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   trigger: React.ReactNode
   title: string
   description: string
   infoSection?: React.ReactNode
   submitFn: () => void
+  loading?: boolean
 }
 
 export function DialogConfirmation({
+  open,
+  onOpenChange,
   trigger,
   title,
   description,
-  infoSection,
   submitFn,
+  loading,
 }: DialogConfirmationProps) {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        {infoSection}
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit" onClick={submitFn}>
-            Confirm
+          <Button onClick={submitFn} disabled={loading}>
+            {loading ? 'Confirming...' : 'Confirm'}
           </Button>
         </DialogFooter>
       </DialogContent>

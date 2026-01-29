@@ -47,7 +47,9 @@ export default function DocumentRegistrationForm() {
   const mutation = useUploadDocument()
   const uploadDraft = useUploadDraft()
   const { authentication } = Route.useRouteContext()
-  const isUserRecords = authentication.userRole() === 'records'
+  const isUserRecords =
+    authentication.userRole() === 'records' ||
+    authentication.userRole() === 'admin'
 
   const [formData, setFormData] = useState<DocumentFormState>({
     tracking_no: '',
@@ -134,7 +136,7 @@ export default function DocumentRegistrationForm() {
             </Field>
 
             <Field>
-              <FieldLabel>Due Date</FieldLabel>
+              <FieldLabel>Due Date (optional)</FieldLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -180,7 +182,9 @@ export default function DocumentRegistrationForm() {
 
           {/* Instructions */}
           <Field>
-            <FieldLabel htmlFor="instructions">Instructions</FieldLabel>
+            <FieldLabel htmlFor="instructions">
+              Instructions (optional)
+            </FieldLabel>
             <FieldDescription>
               Include any special instructions or notes for routing.
             </FieldDescription>
