@@ -19,9 +19,6 @@ import {
 import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import useGetRequest from '@/hooks/use-get'
 import type { Response } from '@/types/response'
-import { UserContext, useUserContext } from '@/context/user-context'
-import { is } from 'date-fns/locale'
-import { useRouteContext } from '@tanstack/react-router'
 import { Route } from '@/routes/__root'
 
 export type NotificationPayload = {
