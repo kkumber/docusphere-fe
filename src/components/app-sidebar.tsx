@@ -206,10 +206,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   >
                     <div className="flex w-full items-center gap-2">
                       <span>{mail.name}</span>
-                      <span className="ml-auto text-xs">{mail.date}</span>
+                      <span className="text-xs ml-auto">{mail.date}</span>
                     </div>
-                    <span className="font-medium">{mail.subject}</span>
-                    <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
+                    <span className="font-medium line-clamp-2">
+                      {mail.subject}
+                    </span>
+                    <span className="line-clamp-2 w-full text-xs whitespace-break-spaces">
                       {mail.teaser}
                     </span>
                   </Link>

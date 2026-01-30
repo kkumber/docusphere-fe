@@ -25,7 +25,7 @@ function LayoutComponent() {
       <SidebarProvider
         style={
           {
-            '--sidebar-width': '250px',
+            '--sidebar-width': '300px',
           } as React.CSSProperties
         }
       >
