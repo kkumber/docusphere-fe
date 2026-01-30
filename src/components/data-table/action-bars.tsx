@@ -19,7 +19,7 @@ export default function ActionBars<TData>({
   return (
     <div className="w-full flex flex-col gap-4 mb-4">
       {/* MOBILE VERSION */}
-      <div className="md:hidden space-x-4 space-y-4 w-full">
+      <div className="md:hidden space-x-4 space-y-6 w-full">
         {/* Search */}
         <div className="flex items-center justify-between w-full">
           <Input
@@ -38,12 +38,13 @@ export default function ActionBars<TData>({
           />
         </div>
         {/* Actions Dropdown */}
-        <div className="flex item flex-col gap-1">
+        <div className="flex flex-wrap gap-2">
           <TableColumnFilter
             table={table}
             columnValuesForFilter={columnValuesForFilter}
           />
           <DataTableViewOptions table={table} />
+          {/* Additional button actions (optional) */}
           {btnActions}
         </div>
       </div>

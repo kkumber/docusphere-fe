@@ -19,9 +19,9 @@ export function DataTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 lg:flex">
+        <Button variant="outline" size="sm" className="h-8 lg:flex max-w-min">
           <Settings2 />
-          Show/Hide Columns
+          Columns
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">

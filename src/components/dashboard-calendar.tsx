@@ -18,7 +18,7 @@ export function DashboardCalendar() {
     <Card className="shadow-sm h-full w-full overflow-auto">
       <CardHeader>
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-blue/10">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-blue/10 p-2">
             <CalendarIcon className="h-5 w-5 text-primary-blue" />
           </div>
 

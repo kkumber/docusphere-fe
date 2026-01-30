@@ -75,7 +75,7 @@ export function DataTable<TData, TValue>({
       />
 
       {/* Table */}
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md border mt-6">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
