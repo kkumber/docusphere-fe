@@ -38,7 +38,7 @@ export function ChartAreaInteractive({ areaChart }: AreaChartData) {
     <Card>
       <CardHeader className="flex flex-col gap-2 border-b">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary-blue/10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary-blue/10 p-2">
             <TrendingUp className="h-5 w-5 text-primary-blue" />
           </div>
 

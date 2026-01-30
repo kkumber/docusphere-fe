@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Command, Files, LayoutDashboard, UserCog } from 'lucide-react'
+import { Command, Files, Home, LayoutDashboard, UserCog } from 'lucide-react'
 
 import { NavUser } from '@/components/nav-user'
 import {
@@ -116,17 +116,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-                <a href="#">
-                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <Command className="size-4" />
-                  </div>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">Docusphere</span>
-                    <span className="truncate text-xs">
-                      Document Tracking System
-                    </span>
-                  </div>
-                </a>
+                <Link to="/">
+                  <img
+                    src="/docusphere-icon.png"
+                    alt="Icon"
+                    className="w-full"
+                  />
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -148,7 +144,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         navigate({ to: item.url })
                       }}
                       isActive={currentLocation === item.url}
-                      className="px-2.5 md:px-2"
+                      className={`px-2.5 md:px-2 data-[active=true]:bg-primary-blue data-[active=true]:text-primary-foreground`}
                     >
                       <item.icon />
                       <span>{item.title}</span>
