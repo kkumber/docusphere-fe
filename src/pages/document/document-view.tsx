@@ -10,7 +10,7 @@ import DocumentActions from '@/components/document-actions'
 import DocumentDetails from '@/components/document-details'
 import usePrefetchRequest from '@/hooks/use-prefetch-request'
 
-import { Download } from 'lucide-react'
+import { Download, Files, Info } from 'lucide-react'
 import { downloadSignedPdf } from '@/lib/download-signed-pdf'
 import { Route } from '@/routes/__root'
 
@@ -75,20 +75,28 @@ const DocumentView = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        {/* Title + Controls */}
-        <div className="my-4 flex flex-col gap-3 z-20">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-            {/* Title */}
-            <div>
-              <h3 className="text-xl font-semibold">{document.title}</h3>
-              <p className="text-sm text-muted-foreground">
-                {document.tracking_no}
-              </p>
+        {/* DOCUMENT CONTEXT HEADER */}
+        <div className="space-y-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {/* Icon + Document Info */}
+            <div className="flex items-start gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-blue/10 p-2">
+                <Files className="h-6 w-6 text-primary-blue" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {document.title}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Tracking No: {document.tracking_no} • Category:{' '}
+                  {document.category}
+                </p>
+              </div>
             </div>
 
-            {/* Actions + Details */}
-            <div className="flex items-center gap-2">
-              {/* Document Actions */}
+            {/* Actions + Download */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Document Actions Dropdown */}
               <DocumentActions documentId={document.id.toString()} />
 
               {/* Document Details Modal */}
@@ -96,7 +104,7 @@ const DocumentView = () => {
                 title={document.title}
                 isPending={isPending}
                 documentDetails={documentDetails?.data}
-                error={errorDetailsMsg!}
+                error={isError ? error?.message! : ''}
                 pdfUrl={data.data.url}
               />
 
@@ -113,10 +121,20 @@ const DocumentView = () => {
                   className="p-2 rounded hover:bg-gray-100 transition-colors"
                   title="Download Signed PDF"
                 >
-                  <Download className="h-5 w-5" />
+                  <Download className="h-5 w-5 text-primary-blue" />
                 </button>
               )}
             </div>
+          </div>
+
+          {/* Assignment & Workflow Info Banner */}
+          <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50/50 px-4 py-3">
+            <Info className="mt-0.5 h-5 w-5 text-blue-600" />
+            <p className="text-sm text-blue-900">
+              Review and act on this document. You can approve, reject,
+              acknowledge, sign, review, attach files or check attachments and
+              logs. All workflow details are displayed for your reference.
+            </p>
           </div>
         </div>
 

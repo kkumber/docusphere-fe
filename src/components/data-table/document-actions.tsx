@@ -9,12 +9,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Eye, Send, Archive, Clock, MoreHorizontal } from 'lucide-react'
+import { Eye, Send, Archive, Clock, MoreHorizontal, Trash } from 'lucide-react'
 import { AssignDocModal } from '../assign-doc-modal'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import TrackingModal from '../tracking-modal'
 import { Route } from '@/routes/__root'
+import { DialogConfirmation } from '../dialog-confirmation'
+import useArchiveDocument from '@/hooks/use-archive-document'
+import useDeleteDocument from '@/hooks/use-delete-document'
+import { useUserContext } from '@/context/user-context'
 
 type Props = {
   row: Row<Document>
@@ -23,8 +27,32 @@ type Props = {
 const DocumentActions = ({ row }: Props) => {
   const [showModal, setShowModal] = useState(false)
   const [showTrackingModal, setShowTrackingModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showArchiveModal, setShowArchiveModal] = useState(false)
   const { authentication } = Route.useRouteContext()
   const userRole = authentication.userRole()
+  const documentId = row.original.id.toString()
+  const { user } = useUserContext()
+
+  // Mutations
+  const archiveDocument = useArchiveDocument()
+  const deleteDocument = useDeleteDocument()
+
+  const handleArchiveDocument = async () => {
+    await archiveDocument.mutateAsync(documentId)
+    setShowArchiveModal(false)
+  }
+
+  const handleDeleteDocument = async () => {
+    await deleteDocument.mutateAsync(documentId)
+    setShowDeleteModal(false)
+  }
+
+  const canArchiveDocument = userRole === 'admin' || userRole === 'records'
+  const canDeleteDocument =
+    userRole === 'admin' ||
+    userRole === 'records' ||
+    row.original.uploaded_by === user?.id
 
   return (
     <>
@@ -75,18 +103,58 @@ const DocumentActions = ({ row }: Props) => {
           </DropdownMenuItem>
 
           {/* Records actions */}
-          {userRole === 'records' ||
-            (userRole === 'admin' && (
-              <>
-                <DropdownMenuSeparator />
+          {canArchiveDocument && (
+            <>
+              <DropdownMenuSeparator />
 
-                {/* Final / record or admin actions */}
-                <DropdownMenuItem>
-                  <Archive className="mr-2 h-4 w-4" />
-                  Archive document
-                </DropdownMenuItem>
-              </>
-            ))}
+              {/* Final / record or admin actions */}
+              <DialogConfirmation
+                open={showArchiveModal}
+                onOpenChange={setShowArchiveModal}
+                trigger={
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      setShowArchiveModal(true)
+                    }}
+                  >
+                    <Archive className="mr-2 h-4 w-4" />
+                    Archive document
+                  </DropdownMenuItem>
+                }
+                title="Archive Document"
+                description="Are you sure you want to archive this document?"
+                submitFn={handleArchiveDocument}
+                loading={archiveDocument.isPending}
+              />
+            </>
+          )}
+          {canDeleteDocument && (
+            <>
+              <DropdownMenuSeparator />
+
+              <DialogConfirmation
+                open={showDeleteModal}
+                onOpenChange={setShowDeleteModal}
+                trigger={
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      setShowDeleteModal(true)
+                    }}
+                    className="text-destructive"
+                  >
+                    <Trash className="mr-2 h-4 w-4 text-destructive" />
+                    Delete
+                  </DropdownMenuItem>
+                }
+                title="Delete Document"
+                description="Are you sure you want to delete this document?"
+                submitFn={handleDeleteDocument}
+                loading={deleteDocument.isPending}
+              />
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

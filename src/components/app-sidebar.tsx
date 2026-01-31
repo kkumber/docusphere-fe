@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Command, Files, LayoutDashboard, UserCog } from 'lucide-react'
+import { Command, Files, Home, LayoutDashboard, UserCog } from 'lucide-react'
 
 import { NavUser } from '@/components/nav-user'
 import {
@@ -16,10 +16,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { useUserContext } from '@/context/user-context'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import useGetRequest from '@/hooks/use-get'
 import type { Response } from '@/types/response'
+import { Route } from '@/routes/__root'
 
 export type NotificationPayload = {
   request_type: string
@@ -38,35 +38,41 @@ export type Notification = {
   updated_at: string
 }
 
-const data = {
-  navMain: [
-    {
-      title: 'Dashboard',
-      url: '/',
-      icon: LayoutDashboard,
-      isActive: true,
-    },
-    {
-      title: 'Documents',
-      url: '/documents/document-management',
-      icon: Files,
-      isActive: false,
-    },
-    {
-      title: 'User Management',
-      url: '/admin/user-management',
-      icon: UserCog,
-      isActive: false,
-    },
-  ],
-}
+const navigationSidebar = [
+  {
+    title: 'Dashboard',
+    url: '/',
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: 'Documents',
+    url: '/documents/document-management',
+    icon: Files,
+    isActive: false,
+  },
+  {
+    title: 'Users',
+    url: '/admin/user-management',
+    icon: UserCog,
+    isActive: false,
+  },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0])
+  const currentLocation = useLocation().pathname
   const { setOpen } = useSidebar()
   const navigate = useNavigate()
+  const { authentication } = Route.useRouteContext()
 
-  const user = useUserContext().user
+  // Use directly instead of state
+  const userRole = authentication.userRole()
+
+  const [navMain, setNavMain] = React.useState(
+    userRole === 'admin'
+      ? navigationSidebar
+      : navigationSidebar.filter((nav) => nav.title !== 'Users'),
+  )
 
   // Fetch notifications
   const {
@@ -110,17 +116,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-                <a href="#">
-                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <Command className="size-4" />
-                  </div>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">Docusphere</span>
-                    <span className="truncate text-xs">
-                      Document Tracking System
-                    </span>
-                  </div>
-                </a>
+                <Link to="/">
+                  <img
+                    src="/docusphere-icon.png"
+                    alt="Icon"
+                    className="w-full"
+                  />
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -130,7 +132,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroup>
             <SidebarGroupContent className="px-1.5 md:px-0">
               <SidebarMenu>
-                {data.navMain.map((item) => (
+                {navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       tooltip={{
@@ -138,12 +140,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         hidden: false,
                       }}
                       onClick={() => {
-                        setActiveItem(item)
                         setOpen(true)
                         navigate({ to: item.url })
                       }}
-                      isActive={activeItem?.title === item.title}
-                      className="px-2.5 md:px-2"
+                      isActive={currentLocation === item.url}
+                      className={`px-2.5 md:px-2 data-[active=true]:bg-primary-blue data-[active=true]:text-primary-foreground`}
                     >
                       <item.icon />
                       <span>{item.title}</span>
@@ -156,7 +157,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarContent>
 
         <SidebarFooter>
-          <NavUser user={user} />
+          <NavUser />
         </SidebarFooter>
       </Sidebar>
 
@@ -201,10 +202,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   >
                     <div className="flex w-full items-center gap-2">
                       <span>{mail.name}</span>
-                      <span className="ml-auto text-xs">{mail.date}</span>
+                      <span className="text-xs ml-auto">{mail.date}</span>
                     </div>
-                    <span className="font-medium">{mail.subject}</span>
-                    <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
+                    <span className="font-medium line-clamp-2">
+                      {mail.subject}
+                    </span>
+                    <span className="line-clamp-2 w-full text-xs whitespace-break-spaces">
                       {mail.teaser}
                     </span>
                   </Link>

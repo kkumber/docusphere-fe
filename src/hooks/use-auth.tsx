@@ -1,22 +1,8 @@
 import type { User } from '@/types/user'
-import { useEffect, useState } from 'react'
-import api from '@/lib/api'
+import { useState } from 'react'
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    api
-      .get('/api/user')
-      .then((res) => {
-        signIn(res.data.data)
-      })
-      .catch((error) => {
-        if (error.response) {
-          signOut()
-        }
-      })
-  }, [])
 
   const isAuthenticated = () => {
     const loggedIn = localStorage.getItem('isAuthenticated')

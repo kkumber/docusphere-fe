@@ -20,14 +20,13 @@ import {
 } from '@/components/ui/chart'
 
 import type { DashboardAreaChartData } from '@/types/response'
+import { TrendingUp } from 'lucide-react'
 
 type AreaChartData = {
   areaChart: DashboardAreaChartData
 }
 
 export function ChartAreaInteractive({ areaChart }: AreaChartData) {
-  const [timeRange, setTimeRange] = React.useState('90d')
-
   const chartConfig = {
     total: {
       label: areaChart.label,
@@ -35,34 +34,27 @@ export function ChartAreaInteractive({ areaChart }: AreaChartData) {
     },
   } satisfies ChartConfig
 
-  const filteredData = areaChart.value.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date('2024-06-30')
-    let daysToSubtract = 90
-    if (timeRange === '30d') {
-      daysToSubtract = 30
-    } else if (timeRange === '7d') {
-      daysToSubtract = 7
-    }
-    const startDate = new Date(referenceDate)
-    startDate.setDate(startDate.getDate() - daysToSubtract)
-    return date >= startDate
-  })
-
   return (
-    <Card className="pt-0">
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1">
-          <CardTitle>{areaChart.title}</CardTitle>
-          <CardDescription>{areaChart.description}</CardDescription>
+    <Card>
+      <CardHeader className="flex flex-col gap-2 border-b">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary-blue/10 p-2">
+            <TrendingUp className="h-5 w-5 text-primary-blue" />
+          </div>
+
+          <div className="space-y-1">
+            <CardTitle>{areaChart.title}</CardTitle>
+            <CardDescription>{areaChart.description}</CardDescription>
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+
+      <CardContent className="pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto h-[280px] w-full"
         >
-          <AreaChart data={filteredData}>
+          <AreaChart data={areaChart.value}>
             <defs>
               <linearGradient id="fillTotal" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -77,42 +69,46 @@ export function ChartAreaInteractive({ areaChart }: AreaChartData) {
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+
+            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString('en-US', {
+              tickMargin={10}
+              minTickGap={24}
+              tickFormatter={(value) =>
+                new Date(value).toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
                 })
-              }}
+              }
             />
+
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString('en-US', {
+                  labelFormatter={(value) =>
+                    new Date(value).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                     })
-                  }}
+                  }
                   indicator="dot"
                 />
               }
             />
+
             <Area
               dataKey="total"
-              type="natural"
+              type="monotone"
               fill="url(#fillTotal)"
               stroke="var(--primary-color)"
-              stackId="a"
+              strokeWidth={2}
             />
+
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>

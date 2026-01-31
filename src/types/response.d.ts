@@ -39,6 +39,6 @@ export interface DashboardValues {
   area_chart: DashboardAreaChartData
 }
 
-export interface DataReseponse<TData> {
+export interface DataResponse<TData> {
   data: TData
 }

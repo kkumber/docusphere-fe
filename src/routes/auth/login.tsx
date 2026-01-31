@@ -7,6 +7,7 @@ import api from '@/lib/api'
 import { AxiosError } from 'axios'
 import type { User } from '@/types/user'
 import type { ApiError } from '@/types/response'
+import { useUserContext } from '@/context/user-context'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
@@ -17,6 +18,7 @@ function LoginPage() {
   const [password, setPassword] = useState<string>()
   const { authentication } = Route.useRouteContext()
   const navigate = useNavigate()
+  const { user, setUser } = useUserContext()
 
   const mutation = useMutation<User, AxiosError<ApiError>>({
     mutationFn: async () => {
@@ -31,6 +33,7 @@ function LoginPage() {
     },
     onSuccess: (data) => {
       authentication.signIn(data)
+      setUser(data)
       navigate({ to: '/' })
     },
     onError: (error) => {

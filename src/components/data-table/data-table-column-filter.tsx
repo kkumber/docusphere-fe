@@ -34,8 +34,8 @@ export function TableColumnFilter<TData>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant="secondary"
-          className="flex justify-center items-center border-2 border-dashed"
+          variant="outline"
+          className="flex justify-center items-center max-w-min"
           size="sm"
         >
           <Filter />
