@@ -236,7 +236,7 @@ const DocumentActions = ({ documentId }: Props) => {
           }
         />
 
-        {!canCompleteDocument ? (
+        {canCompleteDocument ? (
           <>
             <DropdownMenuSeparator />
             <DocumentStatusWarningModal documentId={documentId} />
@@ -245,8 +245,8 @@ const DocumentActions = ({ documentId }: Props) => {
           <>
             <DropdownMenuSeparator />
             <ReusableAlertDialog
-              title="Mark document as completed"
-              description="This will mark the document as completed. Make sure all required actions have been performed. You will not be able to undo this action."
+              title="Mark assignment as completed"
+              description="This will mark the assignment as completed. Make sure all required actions have been performed. You will not be able to undo this action."
               confirmText="Yes, mark as completed"
               cancelText="Cancel"
               onConfirm={() => handlePerformActionTask('complete')}

@@ -11,7 +11,7 @@ import { type AuthContext } from '@/hooks/use-auth'
 import { UserContext } from '@/context/user-context'
 import { Toaster } from 'sonner'
 import api from '@/lib/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const queryClient = new QueryClient()
 
@@ -26,7 +26,7 @@ function App() {
   const navigate = useNavigate()
   const [user, setUser] = useState(authentication.user)
 
-  if (!user) {
+  useEffect(() => {
     api
       .get('/api/user')
       .then((res) => {
@@ -39,15 +39,13 @@ function App() {
           navigate({ to: '/auth/login' })
         }
       })
-  }
+  }, [])
 
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <Toaster position="bottom-right" richColors closeButton />
-        <UserContext.Provider
-          value={{ user: user, setUser: authentication.setUser }}
-        >
+        <UserContext.Provider value={{ user: user, setUser: setUser }}>
           <Outlet />
         </UserContext.Provider>
         <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />

@@ -25,10 +25,12 @@ import { useUserContext } from '@/context/user-context'
 export function NavUser() {
   const { isMobile } = useSidebar()
   const mutation = useLogoutUser()
-  const user: User = useUserContext().user
+  const { user, setUser } = useUserContext()
 
   const handleLogout = () => {
     mutation.mutate()
+    mutation.reset()
+    setUser(null)
   }
 
   return (
