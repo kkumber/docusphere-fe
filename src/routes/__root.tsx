@@ -26,7 +26,7 @@ function App() {
   const navigate = useNavigate()
   const [user, setUser] = useState(authentication.user)
 
-  useEffect(() => {
+  if (!user) {
     api
       .get('/api/user')
       .then((res) => {
@@ -39,7 +39,7 @@ function App() {
           navigate({ to: '/auth/login' })
         }
       })
-  }, [])
+  }
 
   return (
     <>

@@ -18,6 +18,7 @@ import { Route } from '@/routes/__root'
 import { DialogConfirmation } from '../dialog-confirmation'
 import useArchiveDocument from '@/hooks/use-archive-document'
 import useDeleteDocument from '@/hooks/use-delete-document'
+import { useUserContext } from '@/context/user-context'
 
 type Props = {
   row: Row<Document>
@@ -31,6 +32,7 @@ const DocumentActions = ({ row }: Props) => {
   const { authentication } = Route.useRouteContext()
   const userRole = authentication.userRole()
   const documentId = row.original.id.toString()
+  const { user } = useUserContext()
 
   // Mutations
   const archiveDocument = useArchiveDocument()
@@ -46,7 +48,11 @@ const DocumentActions = ({ row }: Props) => {
     setShowDeleteModal(false)
   }
 
-  const canUpdateDocument = userRole === 'admin' || userRole === 'records'
+  const canArchiveDocument = userRole === 'admin' || userRole === 'records'
+  const canDeleteDocument =
+    userRole === 'admin' ||
+    userRole === 'records' ||
+    row.original.uploaded_by === user?.id
 
   return (
     <>
@@ -97,7 +103,7 @@ const DocumentActions = ({ row }: Props) => {
           </DropdownMenuItem>
 
           {/* Records actions */}
-          {canUpdateDocument && (
+          {canArchiveDocument && (
             <>
               <DropdownMenuSeparator />
 
@@ -121,6 +127,11 @@ const DocumentActions = ({ row }: Props) => {
                 submitFn={handleArchiveDocument}
                 loading={archiveDocument.isPending}
               />
+            </>
+          )}
+          {canDeleteDocument && (
+            <>
+              <DropdownMenuSeparator />
 
               <DialogConfirmation
                 open={showDeleteModal}
