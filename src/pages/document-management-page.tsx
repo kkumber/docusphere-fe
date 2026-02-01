@@ -55,6 +55,7 @@ const DocumentManagementPage = () => {
         { value: '5', label: 'Released' },
       ]
     : [
+        { value: '2', label: 'Archived' },
         { value: '6', label: 'Pending' },
         { value: '12', label: 'Completed' },
         { value: '13', label: 'Delayed' },
