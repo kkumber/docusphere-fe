@@ -44,7 +44,12 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Toaster position="bottom-right" richColors closeButton />
+        <Toaster
+          position="bottom-right"
+          richColors
+          closeButton
+          duration={6000}
+        />
         <UserContext.Provider value={{ user: user, setUser: setUser }}>
           <Outlet />
         </UserContext.Provider>
