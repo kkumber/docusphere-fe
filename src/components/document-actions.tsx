@@ -7,6 +7,7 @@ import {
   ChevronDown,
   CheckCircle,
   Edit,
+  XCircle,
 } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import {
@@ -22,6 +23,7 @@ import { useState } from 'react'
 import useUploadReview from '@/hooks/use-upload-review'
 import DocumentStatusWarningModal from './document-status-warning-modal'
 import { Route } from '@/routes/__root'
+import useRejectDocument from '@/hooks/use-reject-document'
 
 interface Props {
   documentId: string
@@ -31,6 +33,8 @@ const DocumentActions = ({ documentId }: Props) => {
   const performActionMutation = usePerformAction()
   const uploadAttachFile = useUploadAttachment()
   const uploadReview = useUploadReview()
+  const rejectDocument = useRejectDocument()
+
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
   const [remarks, setRemarks] = useState<string>('')
@@ -40,6 +44,7 @@ const DocumentActions = ({ documentId }: Props) => {
   const userRole = authentication.userRole()
   const canCompleteDocument =
     userRole === 'admin' || userRole === 'records' || userRole === 'sds'
+  const canRejectDocument = userRole === 'sds'
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
@@ -52,16 +57,22 @@ const DocumentActions = ({ documentId }: Props) => {
     setRemarks('')
   }
 
+  const handleRejectDocument = () => {
+    rejectDocument.reset()
+    rejectDocument.mutate({ documentId, remarks })
+    setRemarks('')
+  }
+
   const handleAttachFile = () => {
     uploadAttachFile.reset()
     setFileError('')
 
     if (file === null) {
-      return setFileError('Please select a file')
+      return setFileError('Please select a file.')
     }
 
     if (file?.type !== 'application/pdf') {
-      return setFileError('Please upload a PDF file.')
+      return setFileError('Only PDF files are allowed.')
     }
 
     const payload = {
@@ -85,11 +96,11 @@ const DocumentActions = ({ documentId }: Props) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56">
-        {/* REVIEW / WRITE A REVIEW */}
+        {/* REVIEW */}
         <ReusableAlertDialog
-          title="Write a Review"
-          description="Add your remarks or comments about this document before marking it as reviewed."
-          confirmText="Submit Review"
+          title="Add review or comments"
+          description="Provide internal remarks, observations, or recommendations regarding this document. These comments will be recorded as part of the review history."
+          confirmText="Submit review"
           cancelText="Cancel"
           onConfirm={() => handleUploadReview()}
           triggerButton={
@@ -97,20 +108,20 @@ const DocumentActions = ({ documentId }: Props) => {
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2"
             >
-              <Edit className="w-4 h-4" /> Write a Review
+              <Edit className="w-4 h-4" /> Add review
             </DropdownMenuItem>
           }
           additionalContent={
-            <div className="flex flex-col gap-2 mt-2">
+            <div className="flex flex-col gap-3 mt-3">
               <label className="text-sm font-medium text-gray-800">
-                Remarks / Comments
+                Review remarks
               </label>
 
               <textarea
-                rows={3}
-                placeholder="e.g. The document is accurate. Suggested edits on section 2."
+                rows={4}
+                placeholder="State your findings, suggested revisions, or comments relevant to this document."
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 onChange={(e) => setRemarks(e.target.value)}
                 required
                 minLength={20}
@@ -122,8 +133,8 @@ const DocumentActions = ({ documentId }: Props) => {
         {/* ACKNOWLEDGE */}
         <ReusableAlertDialog
           title="Acknowledge document"
-          description="This will mark the document as acknowledged. You will not be able to undo this action."
-          confirmText="Yes, acknowledge"
+          description="This confirms that you have received and reviewed the document. No further action will be required from you after acknowledgment."
+          confirmText="Acknowledge"
           cancelText="Cancel"
           onConfirm={() => handlePerformActionTask('acknowledge')}
           triggerButton={
@@ -139,8 +150,8 @@ const DocumentActions = ({ documentId }: Props) => {
         {/* APPROVE */}
         <ReusableAlertDialog
           title="Approve document"
-          description="Approving this document finalizes the review process. This action cannot be undone."
-          confirmText="Approve"
+          description="Approving this document signifies that it meets all requirements and is cleared to proceed. This action is final and cannot be reversed."
+          confirmText="Approve document"
           onConfirm={() => handlePerformActionTask('approve')}
           triggerButton={
             <DropdownMenuItem
@@ -155,7 +166,7 @@ const DocumentActions = ({ documentId }: Props) => {
         {/* SIGN */}
         <ReusableAlertDialog
           title="Sign document"
-          description="Signing this document attaches your official digital signature when the document is downloaded and cannot be undone."
+          description="Signing will apply your official digital signature when the document is downloaded or finalized. This action is permanent."
           confirmText="Sign document"
           onConfirm={() => handlePerformActionTask('sign')}
           triggerButton={
@@ -163,7 +174,7 @@ const DocumentActions = ({ documentId }: Props) => {
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2"
             >
-              <PenLine className="w-4 h-4" /> Sign document
+              <PenLine className="w-4 h-4" /> Sign
             </DropdownMenuItem>
           }
         />
@@ -172,8 +183,8 @@ const DocumentActions = ({ documentId }: Props) => {
 
         {/* ATTACH FILE */}
         <ReusableAlertDialog
-          title="Attach a file"
-          description="Attach a supporting file and provide remarks or instructions related to it."
+          title="Attach supporting document"
+          description="Upload a related or supporting PDF file and provide context or instructions associated with the attachment."
           confirmText="Attach file"
           cancelText="Cancel"
           onConfirm={() => handleAttachFile()}
@@ -182,26 +193,23 @@ const DocumentActions = ({ documentId }: Props) => {
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2"
             >
-              <Paperclip className="w-4 h-4" />
-              Attach file
+              <Paperclip className="w-4 h-4" /> Attach file
             </DropdownMenuItem>
           }
           additionalContent={
-            <div className="flex flex-col gap-8 mt-3">
-              {/* File input */}
-              <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-6 mt-3">
+              <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-gray-800">
-                  File to attach
+                  Supporting PDF file
                 </label>
 
                 <input
                   type="file"
                   accept="application/pdf"
                   className="w-full text-sm text-gray-700
-                     file:border file:border-gray-300 file:rounded-md
-                     file:px-3 file:py-2 file:text-sm file:font-medium
-                     file:bg-gray-100 hover:file:bg-gray-200
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  file:border file:border-gray-300 file:rounded-md
+                  file:px-3 file:py-2 file:text-sm file:font-medium
+                  file:bg-gray-100 hover:file:bg-gray-200"
                   onChange={(e) => {
                     const selectedFile = e.target.files?.[0] ?? null
                     setFile(selectedFile)
@@ -209,21 +217,20 @@ const DocumentActions = ({ documentId }: Props) => {
                 />
 
                 <p className="text-xs text-muted-foreground">
-                  PDF files only. This file will be linked to the document.
+                  Only PDF files are accepted.
                 </p>
               </div>
 
-              {/* Remarks / Instructions */}
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-gray-800">
-                  Remarks / Instructions
+                  Remarks / instructions
                 </label>
 
                 <textarea
                   rows={3}
-                  placeholder="e.g. Please review page 3 and provide feedback on the highlighted section."
+                  placeholder="Describe the purpose of this attachment or provide instructions for review."
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   onChange={(e) => setRemarks(e.target.value)}
                   required
                 />
@@ -236,27 +243,62 @@ const DocumentActions = ({ documentId }: Props) => {
           }
         />
 
+        <DropdownMenuSeparator />
+
         {canCompleteDocument ? (
-          <>
-            <DropdownMenuSeparator />
-            <DocumentStatusWarningModal documentId={documentId} />
-          </>
+          <DocumentStatusWarningModal documentId={documentId} />
         ) : (
+          <ReusableAlertDialog
+            title="Mark assignment as completed"
+            description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
+            confirmText="Mark as completed"
+            cancelText="Cancel"
+            onConfirm={() => handlePerformActionTask('complete')}
+            triggerButton={
+              <DropdownMenuItem
+                onSelect={(e) => e.preventDefault()}
+                className="flex items-center gap-2"
+              >
+                <CheckCircle className="w-4 h-4" /> Mark as completed
+              </DropdownMenuItem>
+            }
+          />
+        )}
+
+        {/* REJECT */}
+        {canRejectDocument && (
           <>
             <DropdownMenuSeparator />
             <ReusableAlertDialog
-              title="Mark assignment as completed"
-              description="This will mark the assignment as completed. Make sure all required actions have been performed. You will not be able to undo this action."
-              confirmText="Yes, mark as completed"
+              title="Reject document"
+              description="Rejecting this document will permanently terminate its workflow. The document will no longer be routed, reviewed, or acted upon. This action is irreversible."
+              confirmText="Reject document"
               cancelText="Cancel"
-              onConfirm={() => handlePerformActionTask('complete')}
+              onConfirm={() => handleRejectDocument()}
               triggerButton={
                 <DropdownMenuItem
                   onSelect={(e) => e.preventDefault()}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-destructive"
                 >
-                  <CheckCircle className="w-4 h-4" /> Mark as Completed
+                  <XCircle className="w-4 h-4 text-destructive" /> Reject
                 </DropdownMenuItem>
+              }
+              additionalContent={
+                <div className="flex flex-col gap-3 mt-3">
+                  <label className="text-sm font-medium text-gray-800">
+                    Reason for rejection
+                  </label>
+
+                  <textarea
+                    rows={4}
+                    placeholder="Clearly state the reason for rejection and any required corrective action."
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    onChange={(e) => setRemarks(e.target.value)}
+                    required
+                    minLength={20}
+                  />
+                </div>
               }
             />
           </>
