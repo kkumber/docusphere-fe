@@ -37,7 +37,7 @@ import { Calendar1Icon, CalendarIcon } from 'lucide-react'
 import { Calendar } from './ui/calendar'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
-import { validateDueDate } from '@/utils/validate-due-date'
+import { formatLocalDate, validateDueDate } from '@/utils/validate-due-date'
 import useAssignDoc from '@/hooks/use-assign-doc'
 
 interface UsersByRole {
@@ -60,6 +60,7 @@ type RequestType =
   | 'for_acknowledgement'
   | 'for_review'
   | 'for_response'
+  | 'for_issuance'
 
 export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   trigger,
@@ -116,15 +117,16 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   const handleAssign = () => {
     mutation.reset()
 
-    if (dueDate && !validateDueDate(dueDate))
+    if (dueDate && !validateDueDate(formatLocalDate(dueDate))) {
       return setDueDateError('Due date cannot be in the past')
+    }
 
     const payload = {
       document_id: documentId,
       request_type: requestType,
       assigned_to: selectedUsers,
       instructions,
-      due_date: dueDate ? dueDate.toISOString() : null,
+      due_date: dueDate ? formatLocalDate(dueDate) : null,
     }
 
     mutation.mutate(payload)
@@ -186,6 +188,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                 </SelectItem>
                 <SelectItem value="for_review">For Review</SelectItem>
                 <SelectItem value="for_response">For Response</SelectItem>
+                <SelectItem value="for_issuance">For Issuance</SelectItem>
               </SelectContent>
             </Select>
           </div>

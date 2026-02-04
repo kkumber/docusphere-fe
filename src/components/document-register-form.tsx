@@ -35,7 +35,7 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import useUploadDocument from '@/hooks/use-upload-document'
-import { validateDueDate } from '@/utils/validate-due-date'
+import { formatLocalDate, validateDueDate } from '@/utils/validate-due-date'
 import { Route } from '@/routes/__root'
 import useUploadDraft from '@/hooks/use-upload-draft'
 
@@ -59,10 +59,10 @@ export default function DocumentRegistrationForm() {
     authentication.userRole() === 'admin'
 
   const [formData, setFormData] = useState<DocumentFormState>({
-    tracking_no: '',
+    tracking_no: !isUserRecords ? `DRAFT-${Math.random().toString(10)}` : '',
     title: '',
     instructions: '',
-    category: !isUserRecords ? 'unnumbered_memorandum' : '',
+    category: '',
     originating_office: '',
     request_type: '',
     due_date: null,
@@ -86,7 +86,10 @@ export default function DocumentRegistrationForm() {
     uploadDraft.reset()
 
     const file = formData.file
-    const due_date = formData.due_date ?? null
+    const due_date = formData.due_date
+      ? formatLocalDate(formData.due_date)
+      : null
+    console.log(due_date)
 
     if (!file) return setFileError('Please upload a file.')
 
@@ -102,7 +105,7 @@ export default function DocumentRegistrationForm() {
       }
     }
 
-    if (formData.category === 'unnumbered_memorandum') {
+    if (!isUserRecords) {
       uploadDraft.mutate(formData)
     } else {
       mutation.mutate(formData)
@@ -146,9 +149,10 @@ export default function DocumentRegistrationForm() {
                 <FieldLabel htmlFor="tracking_no">Tracking Number</FieldLabel>
                 <Input
                   id="tracking_no"
-                  placeholder="DOC-2025-001"
+                  placeholder={!isUserRecords ? 'DRAFT-' : 'DOC-2023-0001'}
                   required
                   onChange={handleInputChange}
+                  disabled={!isUserRecords}
                 />
               </Field>
 
@@ -173,12 +177,12 @@ export default function DocumentRegistrationForm() {
                     <Calendar
                       mode="single"
                       selected={formData.due_date ?? undefined}
-                      onSelect={(date) =>
+                      onSelect={(date) => {
                         setFormData((prev) => ({
                           ...prev,
                           due_date: date ?? null,
                         }))
-                      }
+                      }}
                       initialFocus
                     />
                   </PopoverContent>
@@ -232,13 +236,10 @@ export default function DocumentRegistrationForm() {
                 <FieldLabel>Category</FieldLabel>
                 <Select
                   required
-                  value={
-                    !isUserRecords ? 'unnumbered_memorandum' : formData.category
-                  }
+                  value={formData.category}
                   onValueChange={(value) =>
                     setFormData((prev) => ({ ...prev, category: value }))
                   }
-                  disabled={!isUserRecords}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -277,6 +278,7 @@ export default function DocumentRegistrationForm() {
                     </SelectItem>
                     <SelectItem value="for_review">For Review</SelectItem>
                     <SelectItem value="for_response">For Response</SelectItem>
+                    <SelectItem value="for_issuance">For Issuance</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
