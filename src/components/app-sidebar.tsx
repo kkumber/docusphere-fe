@@ -196,7 +196,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 notifications.data.length > 0 &&
                 mails.map((mail) => (
                   <Link
-                    to="/documents/document-management"
+                    to="/notifications"
                     key={mail.email}
                     className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight last:border-b-0"
                   >
