@@ -53,12 +53,20 @@ const DocumentManagementPage = () => {
         { value: '3', label: 'Completed' },
         { value: '4', label: 'Delayed' },
         { value: '5', label: 'Released' },
+        { value: '20', label: 'Draft Approved' },
+        { value: '21', label: 'For Issuance' },
+        { value: '22', label: 'Rejected' },
       ]
     : [
         { value: '2', label: 'Archived' },
         { value: '6', label: 'Pending' },
         { value: '12', label: 'Completed' },
         { value: '13', label: 'Delayed' },
+        { value: '18', label: 'Draft' },
+        { value: '19', label: 'Draft In Review' },
+        { value: '20', label: 'Draft Approved' },
+        { value: '21', label: 'For Issuance' },
+        { value: '22', label: 'Rejected' },
       ]
 
   const searchFilterInputValues: FilterSearchInput = {
