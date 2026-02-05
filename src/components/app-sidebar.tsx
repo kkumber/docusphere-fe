@@ -188,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
               {notifications?.data && notifications.data.length === 0 && (
                 <div className="p-4 text-sm text-muted-foreground">
-                  No notifications
+                  No unread notifications
                 </div>
               )}
 

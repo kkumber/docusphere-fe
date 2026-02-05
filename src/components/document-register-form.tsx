@@ -35,7 +35,11 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import useUploadDocument from '@/hooks/use-upload-document'
-import { formatLocalDate, validateDueDate } from '@/utils/validate-due-date'
+import {
+  formatLocalDate,
+  parseLocalDate,
+  validateDueDate,
+} from '@/utils/validate-due-date'
 import { Route } from '@/routes/__root'
 import useUploadDraft from '@/hooks/use-upload-draft'
 
@@ -46,7 +50,7 @@ export interface DocumentFormState {
   category: string
   originating_office: string
   request_type: string
-  due_date: Date | null
+  due_date: any
   file: File | null
 }
 
@@ -89,7 +93,6 @@ export default function DocumentRegistrationForm() {
     const due_date = formData.due_date
       ? formatLocalDate(formData.due_date)
       : null
-    console.log(due_date)
 
     if (!file) return setFileError('Please upload a file.')
 
@@ -105,10 +108,15 @@ export default function DocumentRegistrationForm() {
       }
     }
 
+    const payload = {
+      ...formData,
+      due_date: due_date,
+    }
+
     if (!isUserRecords) {
-      uploadDraft.mutate(formData)
+      uploadDraft.mutate(payload)
     } else {
-      mutation.mutate(formData)
+      mutation.mutate(payload)
     }
   }
 
