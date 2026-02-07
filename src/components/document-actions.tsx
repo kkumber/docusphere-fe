@@ -24,6 +24,8 @@ import useUploadReview from '@/hooks/use-upload-review'
 import DocumentStatusWarningModal from './document-status-warning-modal'
 import { Route } from '@/routes/__root'
 import useRejectDocument from '@/hooks/use-reject-document'
+import { Input } from './ui/input'
+import useSignDocument from '@/hooks/use-sign-document'
 
 interface Props {
   documentId: string
@@ -34,10 +36,12 @@ const DocumentActions = ({ documentId }: Props) => {
   const uploadAttachFile = useUploadAttachment()
   const uploadReview = useUploadReview()
   const rejectDocument = useRejectDocument()
+  const signDocument = useSignDocument()
 
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
   const [remarks, setRemarks] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
 
   const { authentication } = Route.useRouteContext()
 
@@ -61,6 +65,12 @@ const DocumentActions = ({ documentId }: Props) => {
     rejectDocument.reset()
     rejectDocument.mutate({ documentId, remarks })
     setRemarks('')
+  }
+
+  const handleSignDocument = () => {
+    signDocument.reset()
+    signDocument.mutate({ documentId, password })
+    setPassword('')
   }
 
   const handleAttachFile = () => {
@@ -168,7 +178,23 @@ const DocumentActions = ({ documentId }: Props) => {
           title="Sign document"
           description="Signing will apply your official digital signature when the document is downloaded or finalized. This action is permanent."
           confirmText="Sign document"
-          onConfirm={() => handlePerformActionTask('sign')}
+          onConfirm={() => handleSignDocument()}
+          additionalContent={
+            <div className="flex flex-col gap-3 mt-3">
+              <label className="text-sm font-medium text-gray-800">
+                Password
+              </label>
+
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          }
           triggerButton={
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
