@@ -1,7 +1,7 @@
 import api from '@/lib/api'
+import { Route } from '@/routes/__root'
 import type { ApiError } from '@/types/response'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouteContext } from '@tanstack/react-router'
 import type { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
@@ -14,9 +14,7 @@ interface Payload {
 
 const useAssignDoc = () => {
   const queryClient = useQueryClient()
-  const { authentication } = useRouteContext({
-    from: '/_authenticated/_layout/documents/document-management',
-  })
+  const { authentication } = Route.useRouteContext()
   const userRole = authentication.userRole()
 
   const mutation = useMutation<void, AxiosError<ApiError>, Payload>({

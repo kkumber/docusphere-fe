@@ -162,9 +162,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
           )}
         </AlertDialogHeader>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="grid gap-4">
           {/* ---------------- Request Type ---------------- */}
-          <div className="rounded-md p-3 mt-2 border">
+          <div className="rounded-md mt-2">
             <label className="flex items-center gap-2 mb-2 font-medium">
               <FileText className="size-4 text-muted-foreground" />
               Request Type{' '}
@@ -194,7 +194,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
           </div>
 
           {/* ---------------- Due Date ---------------- */}
-          <div className="rounded-md p-3 mt-2 border">
+          <div className="rounded-md mt-2">
             <label className="flex items-center gap-2 mb-2 font-medium">
               <Calendar1Icon className="size-4 text-muted-foreground" />
               Due Date{' '}
@@ -208,7 +208,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                 <Button
                   variant="outline"
                   className={cn(
-                    'w-full justify-start text-left font-normal',
+                    'justify-start text-left font-normal',
                     !dueDate && 'text-muted-foreground',
                   )}
                 >
