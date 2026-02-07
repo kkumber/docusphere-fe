@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 
 import { LoginForm } from '@/components/login-form'
 import { useState } from 'react'
@@ -10,6 +10,11 @@ import type { ApiError } from '@/types/response'
 import { useUserContext } from '@/context/user-context'
 
 export const Route = createFileRoute('/auth/login')({
+  beforeLoad: ({ context }) => {
+    if (context.authentication.isAuthenticated()) {
+      throw redirect({ to: '/' })
+    }
+  },
   component: LoginPage,
 })
 

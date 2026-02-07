@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,6 +24,9 @@ import {
   ClipboardList,
   Building2,
   UploadCloud,
+  Eye,
+  RotateCcw,
+  Send,
 } from 'lucide-react'
 import {
   Popover,
@@ -35,9 +36,17 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import useUploadDocument from '@/hooks/use-upload-document'
-import { validateDueDate } from '@/utils/validate-due-date'
+import { formatLocalDate, validateDueDate } from '@/utils/validate-due-date'
 import { Route } from '@/routes/__root'
 import useUploadDraft from '@/hooks/use-upload-draft'
+import { Link } from '@tanstack/react-router'
+import { AssignDocModal } from '@/components/assign-doc-modal'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip'
 
 export interface DocumentFormState {
   tracking_no: string
@@ -46,7 +55,7 @@ export interface DocumentFormState {
   category: string
   originating_office: string
   request_type: string
-  due_date: Date | null
+  due_date: any
   file: File | null
 }
 
@@ -59,10 +68,10 @@ export default function DocumentRegistrationForm() {
     authentication.userRole() === 'admin'
 
   const [formData, setFormData] = useState<DocumentFormState>({
-    tracking_no: '',
+    tracking_no: !isUserRecords ? `DRAFT-${Math.random().toString(10)}` : '',
     title: '',
     instructions: '',
-    category: !isUserRecords ? 'unnumbered_memorandum' : '',
+    category: '',
     originating_office: '',
     request_type: '',
     due_date: null,
@@ -86,7 +95,9 @@ export default function DocumentRegistrationForm() {
     uploadDraft.reset()
 
     const file = formData.file
-    const due_date = formData.due_date ?? null
+    const due_date = formData.due_date
+      ? formatLocalDate(formData.due_date)
+      : null
 
     if (!file) return setFileError('Please upload a file.')
 
@@ -102,27 +113,130 @@ export default function DocumentRegistrationForm() {
       }
     }
 
-    if (formData.category === 'unnumbered_memorandum') {
-      uploadDraft.mutate(formData)
-    } else {
-      mutation.mutate(formData)
+    const payload = {
+      ...formData,
+      due_date: due_date,
     }
+
+    if (!isUserRecords) {
+      uploadDraft.mutate(payload)
+    } else {
+      mutation.mutate(payload)
+    }
+  }
+
+  const handleResetForm = () => {
+    setFormData({
+      tracking_no: !isUserRecords ? `DRAFT-${Math.random().toString(10)}` : '',
+      title: '',
+      instructions: '',
+      category: '',
+      originating_office: '',
+      request_type: '',
+      due_date: null,
+      file: null,
+    })
+    setFileError('')
+    setDueDateError('')
+    mutation.reset()
+    uploadDraft.reset()
   }
 
   const errorResponse =
     mutation.error?.response?.data || uploadDraft.error?.response?.data
 
+  const uploadedData = mutation.data || uploadDraft.data
+  const showActions =
+    (mutation.isSuccess || uploadDraft.isSuccess) && uploadedData
+
   return (
     <Card className="max-w-3xl mx-auto border border-muted shadow-sm">
       {/* Header */}
-      <CardHeader className="space-y-2 border-b">
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <FileText className="h-5 w-5 text-primary-blue" />
-          Upload Document
-        </CardTitle>
-        <CardDescription className="text-sm">
-          Register and route official documents for processing and tracking.
-        </CardDescription>
+      <CardHeader className="border-b space-y-2 relative">
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <FileText className="h-5 w-5 text-primary-blue" />
+              Upload Document
+            </CardTitle>
+            <CardDescription>
+              Register and route official documents for processing and tracking.
+            </CardDescription>
+          </div>
+
+          {/* 🔹 ACTION ICONS WITH TOOLTIPS */}
+          {showActions && (
+            <TooltipProvider>
+              <div className="flex items-center gap-2">
+                {/* View */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      aria-label="View Document"
+                      asChild
+                      disabled={!showActions}
+                    >
+                      <Link
+                        to="/documents/$documentId"
+                        params={{
+                          documentId: uploadedData.document.id?.toString(),
+                        }}
+                      >
+                        <Eye className="h-4 w-4 text-primary-blue" />
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Document</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                {/* Assign */}
+                <AssignDocModal
+                  documentId={uploadedData.document.id}
+                  documentTitle={formData.title}
+                  trigger={
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Assign Document"
+                          disabled={!showActions}
+                        >
+                          <Send className="h-4 w-4 text-primary-blue" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Assign to Users</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  }
+                />
+
+                {/* Reset */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={handleResetForm}
+                      aria-label="Reset Form"
+                      disabled={!showActions}
+                    >
+                      <RotateCcw className="h-4 w-4 text-primary-blue" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Reset Form</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
+          )}
+        </div>
 
         {errorResponse && (
           <p className="text-sm text-destructive">{errorResponse.message}</p>
@@ -146,9 +260,11 @@ export default function DocumentRegistrationForm() {
                 <FieldLabel htmlFor="tracking_no">Tracking Number</FieldLabel>
                 <Input
                   id="tracking_no"
-                  placeholder="DOC-2025-001"
+                  placeholder={!isUserRecords ? 'DRAFT-' : 'DOC-2023-0001'}
+                  value={formData.tracking_no}
                   required
                   onChange={handleInputChange}
+                  disabled={!isUserRecords}
                 />
               </Field>
 
@@ -173,12 +289,12 @@ export default function DocumentRegistrationForm() {
                     <Calendar
                       mode="single"
                       selected={formData.due_date ?? undefined}
-                      onSelect={(date) =>
+                      onSelect={(date) => {
                         setFormData((prev) => ({
                           ...prev,
                           due_date: date ?? null,
                         }))
-                      }
+                      }}
                       initialFocus
                     />
                   </PopoverContent>
@@ -191,6 +307,7 @@ export default function DocumentRegistrationForm() {
               <Input
                 id="title"
                 placeholder="Brief document title"
+                value={formData.title}
                 required
                 onChange={handleInputChange}
               />
@@ -215,6 +332,7 @@ export default function DocumentRegistrationForm() {
                 id="instructions"
                 placeholder="Detailed instructions..."
                 rows={3}
+                value={formData.instructions}
                 onChange={handleInputChange}
               />
             </Field>
@@ -232,13 +350,10 @@ export default function DocumentRegistrationForm() {
                 <FieldLabel>Category</FieldLabel>
                 <Select
                   required
-                  value={
-                    !isUserRecords ? 'unnumbered_memorandum' : formData.category
-                  }
+                  value={formData.category}
                   onValueChange={(value) =>
                     setFormData((prev) => ({ ...prev, category: value }))
                   }
-                  disabled={!isUserRecords}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -277,6 +392,7 @@ export default function DocumentRegistrationForm() {
                     </SelectItem>
                     <SelectItem value="for_review">For Review</SelectItem>
                     <SelectItem value="for_response">For Response</SelectItem>
+                    <SelectItem value="for_issuance">For Issuance</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -289,6 +405,7 @@ export default function DocumentRegistrationForm() {
               <Input
                 id="originating_office"
                 placeholder="e.g. HR, Accounting, Curriculum"
+                value={formData.originating_office}
                 required
                 onChange={handleInputChange}
               />
@@ -333,9 +450,58 @@ export default function DocumentRegistrationForm() {
             className="w-full"
             disabled={mutation.isPending || uploadDraft.isPending}
           >
-            {mutation.isPending ? 'Uploading...' : 'Upload Document'}
+            {mutation.isPending || uploadDraft.isPending
+              ? 'Uploading...'
+              : 'Upload Document'}
           </Button>
         </form>
+
+        {/* ACTION ICONS only after success */}
+        {/* {showActions && (
+          <div className="flex items-center gap-2 mt-4">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
+              asChild
+            >
+              <Link
+                to="/documents/$documentId"
+                params={{
+                  documentId: uploadedData.document.id?.toString(),
+                }}
+              >
+                <Eye className="h-4 w-4 mr-1.5" />
+                View
+              </Link>
+            </Button>
+
+            <AssignDocModal
+              documentId={uploadedData.document.id}
+              documentTitle={formData.title}
+              trigger={
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
+                >
+                  <Send className="h-4 w-4 mr-1.5" />
+                  Assign
+                </Button>
+              }
+            />
+
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
+              onClick={handleResetForm}
+            >
+              <RotateCcw className="h-4 w-4 mr-1.5" />
+              Reset
+            </Button>
+          </div>
+        )} */}
       </CardContent>
     </Card>
   )

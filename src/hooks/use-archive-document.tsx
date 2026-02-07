@@ -16,7 +16,7 @@ const useArchiveDocument = () => {
     mutationFn: (documentId) =>
       api.patch(`/api/record/documents/${documentId}/archive`),
     onSuccess: () => {
-      toast.success('Document is now in archives')
+      toast.success('Document is now archived')
       queryClient.invalidateQueries({
         queryKey: ['documents', userRole],
         exact: true,

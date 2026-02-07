@@ -13,10 +13,9 @@ const useDeleteDocument = () => {
   const userRole = authentication.userRole()
 
   const mutation = useMutation<void, AxiosError<ApiError>, string>({
-    mutationFn: (documentId) =>
-      api.delete(`/api/record/documents/${documentId}`),
+    mutationFn: (documentId) => api.delete(`/api/documents/${documentId}`),
     onSuccess: () => {
-      toast.success('Document is now in Deleted')
+      toast.success('Document is now deleted')
       queryClient.invalidateQueries({
         queryKey: ['documents', userRole],
         exact: true,

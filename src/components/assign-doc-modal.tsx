@@ -37,7 +37,7 @@ import { Calendar1Icon, CalendarIcon } from 'lucide-react'
 import { Calendar } from './ui/calendar'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
-import { validateDueDate } from '@/utils/validate-due-date'
+import { formatLocalDate, validateDueDate } from '@/utils/validate-due-date'
 import useAssignDoc from '@/hooks/use-assign-doc'
 
 interface UsersByRole {
@@ -60,6 +60,7 @@ type RequestType =
   | 'for_acknowledgement'
   | 'for_review'
   | 'for_response'
+  | 'for_issuance'
 
 export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   trigger,
@@ -116,15 +117,16 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
   const handleAssign = () => {
     mutation.reset()
 
-    if (dueDate && !validateDueDate(dueDate))
+    if (dueDate && !validateDueDate(formatLocalDate(dueDate))) {
       return setDueDateError('Due date cannot be in the past')
+    }
 
     const payload = {
       document_id: documentId,
       request_type: requestType,
       assigned_to: selectedUsers,
       instructions,
-      due_date: dueDate ? dueDate.toISOString() : null,
+      due_date: dueDate ? formatLocalDate(dueDate) : null,
     }
 
     mutation.mutate(payload)
@@ -160,9 +162,9 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
           )}
         </AlertDialogHeader>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="grid gap-4">
           {/* ---------------- Request Type ---------------- */}
-          <div className="rounded-md p-3 mt-2 border">
+          <div className="rounded-md mt-2">
             <label className="flex items-center gap-2 mb-2 font-medium">
               <FileText className="size-4 text-muted-foreground" />
               Request Type{' '}
@@ -186,12 +188,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                 </SelectItem>
                 <SelectItem value="for_review">For Review</SelectItem>
                 <SelectItem value="for_response">For Response</SelectItem>
+                <SelectItem value="for_issuance">For Issuance</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* ---------------- Due Date ---------------- */}
-          <div className="rounded-md p-3 mt-2 border">
+          <div className="rounded-md mt-2">
             <label className="flex items-center gap-2 mb-2 font-medium">
               <Calendar1Icon className="size-4 text-muted-foreground" />
               Due Date{' '}
@@ -205,7 +208,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                 <Button
                   variant="outline"
                   className={cn(
-                    'w-full justify-start text-left font-normal',
+                    'justify-start text-left font-normal',
                     !dueDate && 'text-muted-foreground',
                   )}
                 >
