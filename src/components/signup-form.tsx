@@ -33,9 +33,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './ui/tooltip'
+import { useUserContext } from '@/context/user-context'
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const mutation = useRegisterUser()
+  const { user } = useUserContext()
+  const isSuperAdmin = user?.email === import.meta.env.VITE_SUPER_ADMIN
+
   const [userInfo, setUserInfo] = useState<UserRegister>({
     first_name: '',
     last_name: '',
@@ -197,6 +201,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   <SelectValue placeholder="Assign a role" />
                 </SelectTrigger>
                 <SelectContent>
+                  {isSuperAdmin && <SelectItem value="admin">Admin</SelectItem>}
                   <SelectItem value="records">Records</SelectItem>
                   <SelectItem value="sds">
                     Schools Division Superintendent
