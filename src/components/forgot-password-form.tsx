@@ -4,23 +4,23 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Link } from '@tanstack/react-router'
 
-type LoginFormProps = {
+type ForgotPasswordFormProps = {
   handleEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
   isPending: boolean
   errorMessage: string | null | undefined
+  successMessage: string | null
 }
 
-type Props = React.ComponentProps<'form'> & LoginFormProps
+type Props = React.ComponentProps<'form'> & ForgotPasswordFormProps
 
-export function LoginForm({
+export function ForgotPasswordForm({
   className,
   handleEmailChange,
-  handlePasswordChange,
   handleSubmit,
   isPending,
   errorMessage,
+  successMessage,
   ...props
 }: Props) {
   return (
@@ -30,17 +30,21 @@ export function LoginForm({
       onSubmit={handleSubmit}
     >
       <FieldGroup>
-        <div className="flex flex-col items-start gap-1 text-center">
-          <h1 className="text-2xl font-bold ">Login to your account</h1>
+        <div className="flex flex-col items-start gap-1r text-center md:text-start">
+          <h1 className="text-2xl font-bold mb-2">Forgot your password?</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+            Enter your email address and we'll send you a link to reset your
+            password
           </p>
         </div>
         {errorMessage && <p className="text-destructive">{errorMessage}</p>}
+        {successMessage && (
+          <p className="text-green-600 bg-green-50 p-3 rounded-md">
+            {successMessage}
+          </p>
+        )}
         <Field>
-          <FieldLabel htmlFor="email" className="">
-            Email
-          </FieldLabel>
+          <FieldLabel htmlFor="email">Email</FieldLabel>
           <Input
             id="email"
             type="email"
@@ -50,35 +54,19 @@ export function LoginForm({
           />
         </Field>
         <Field>
-          <div className="flex items-center">
-            <FieldLabel htmlFor="password" className="">
-              Password
-            </FieldLabel>
-          </div>
-          <Input
-            id="password"
-            type="password"
-            onChange={handlePasswordChange}
-            required
-          />
-        </Field>
-        <Link
-          to="/auth/forgot-password"
-          className="flex items-center justify-end"
-        >
-          <Button type="button" variant={'link'} className="p-0 m-0 ">
-            Forgot Password
-          </Button>
-        </Link>
-        <Field>
           <Button
             type="submit"
             className="bg-primary-blue hover:bg-primary-blue/80"
             disabled={isPending}
           >
-            {isPending ? 'Logging in...' : 'Login'}
+            {isPending ? 'Sending...' : 'Send Reset Link'}
           </Button>
         </Field>
+        <Link to="/auth/login" className="flex items-center justify-center">
+          <Button variant={'link'} className="p-0 m-0">
+            Back to Login
+          </Button>
+        </Link>
       </FieldGroup>
     </form>
   )
