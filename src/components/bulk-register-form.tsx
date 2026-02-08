@@ -35,8 +35,9 @@ import {
 import { Alert, AlertDescription } from './ui/alert'
 import { useUserContext } from '@/context/user-context'
 import { toast } from 'sonner'
+import useBulkRegister from '@/hooks/use-bulk-register'
 
-type CSVUser = {
+export type CSVUser = {
   first_name: string
   last_name: string
   email: string
@@ -58,6 +59,7 @@ export function BulkUploadForm({
 }: React.ComponentProps<typeof Card>) {
   const { user } = useUserContext()
   const isSuperAdmin = user?.email === import.meta.env.VITE_SUPER_ADMIN
+  const bulkRegister = useBulkRegister()
 
   const [file, setFile] = useState<File | null>(null)
   const [parsedData, setParsedData] = useState<CSVUser[]>([])
@@ -105,7 +107,7 @@ export function BulkUploadForm({
     if (!selectedFile) return
 
     if (!selectedFile.name.endsWith('.csv')) {
-      alert('Please upload a CSV file')
+      toast.error('Please upload a CSV file')
       return
     }
 
@@ -120,15 +122,15 @@ export function BulkUploadForm({
 
         results.data.forEach((row: any, index: number) => {
           const rowNumber = index + 2 // +2 because index starts at 0 and row 1 is header
-          const rowErrors = validateRow(row, rowNumber)
+          const rowErrors = validateRow(row, rowNumber) // validate row
 
           users.push({
             first_name: row.first_name?.trim() || '',
             last_name: row.last_name?.trim() || '',
-            email: row.email?.trim() || '',
-            password: row.password?.trim() || '',
             role: row.role?.trim().toLowerCase() || '',
             office: row.office?.trim() || '',
+            email: row.email?.trim() || '',
+            password: row.password?.trim() || '',
             rowNumber,
             errors: rowErrors,
           })
@@ -182,13 +184,12 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
     event.preventDefault()
 
     if (!isValid) {
-      alert('Please fix validation errors before submitting')
+      toast.error('Please fix validation errors before submitting')
       return
     }
 
-    // TODO: Implement bulk user registration API call
-    console.log('Submitting users:', parsedData)
-    alert(`Ready to register ${parsedData.length} users`)
+    bulkRegister.reset()
+    await bulkRegister.mutate({ users: parsedData })
   }
 
   const showActions = parsedData.length > 0
@@ -223,6 +224,7 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                       variant="ghost"
                       onClick={handleReset}
                       aria-label="Reset Upload"
+                      disabled={bulkRegister.isPending}
                     >
                       <RotateCcw className="h-4 w-4 text-primary-blue" />
                     </Button>
@@ -238,6 +240,11 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
       </CardHeader>
 
       <CardContent className="space-y-6 pt-6">
+        {bulkRegister.isError && (
+          <p className="text-destructive">
+            Error: {bulkRegister.error.response?.data.message}
+          </p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Upload Section */}
           <section className="space-y-4">
@@ -254,6 +261,7 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                   accept=".csv"
                   onChange={handleFileChange}
                   className="cursor-pointer"
+                  disabled={bulkRegister.isPending}
                 />
               </div>
 
@@ -262,6 +270,7 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                 variant="outline"
                 onClick={handleDownloadTemplate}
                 className="shrink-0"
+                disabled={bulkRegister.isPending}
               >
                 <Download className="h-4 w-4 mr-2" />
                 Download Template
@@ -273,6 +282,21 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                 Selected file: <span className="font-medium">{file.name}</span>
               </p>
             )}
+
+            {/* Tips */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 space-y-2">
+              <p className="text-sm font-semibold text-blue-900">Tips:</p>
+              <ul className="text-xs sm:text-sm text-blue-800 space-y-1 ml-4 list-disc">
+                <li>
+                  <span className="font-medium">Allowed roles:</span> admin,
+                  records, sds, chief, staff
+                </li>
+                <li>
+                  <span className="font-medium">Headers:</span> Must match
+                  exactly (case-sensitive) but can be in any order
+                </li>
+              </ul>
+            </div>
           </section>
 
           {/* Validation Status */}
@@ -337,9 +361,9 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                           </TableCell>
                           <TableCell>{user.first_name || '-'}</TableCell>
                           <TableCell>{user.last_name || '-'}</TableCell>
-                          <TableCell>{user.email || '-'}</TableCell>
                           <TableCell>{user.role || '-'}</TableCell>
                           <TableCell>{user.office || '-'}</TableCell>
+                          <TableCell>{user.email || '-'}</TableCell>
                           <TableCell>{user.password || '-'}</TableCell>
                           <TableCell>
                             {user.errors.length > 0 ? (
@@ -372,10 +396,16 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
 
           {/* Submit */}
           {parsedData.length > 0 && (
-            <Button type="submit" className="w-full" disabled={!isValid}>
-              {isValid
-                ? `Upload ${parsedData.length} Users`
-                : 'Fix Errors to Continue'}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!isValid || bulkRegister.isPending}
+            >
+              {bulkRegister.isPending
+                ? 'Uploading...'
+                : isValid
+                  ? `Upload ${parsedData.length} Users`
+                  : 'Fix Errors to Continue'}
             </Button>
           )}
         </form>
