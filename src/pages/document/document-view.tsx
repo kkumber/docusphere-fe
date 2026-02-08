@@ -59,6 +59,7 @@ const DocumentView = () => {
   })
 
   const errorDetailsMsg = isError ? error?.message : null
+  const isDraft = document.tracking_no.startsWith('DRAFT-')
 
   // prefetch attachments and actions/logs
   usePrefetchRequest({
@@ -97,7 +98,14 @@ const DocumentView = () => {
             {/* Actions + Download */}
             <div className="flex flex-wrap items-center gap-2">
               {/* Document Actions Dropdown */}
-              <DocumentActions documentId={document.id.toString()} />
+
+              {userRole !== 'records' && (
+                <DocumentActions documentId={document.id.toString()} />
+              )}
+
+              {userRole === 'records' && !isDraft && (
+                <DocumentActions documentId={document.id.toString()} />
+              )}
 
               {/* Document Details Modal */}
               <DocumentDetails
