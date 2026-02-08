@@ -22,7 +22,6 @@ import {
   UserPlus,
   User,
   Mail,
-  Lock,
   Building2,
   ShieldCheck,
   RotateCcw,

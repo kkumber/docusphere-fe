@@ -30,6 +30,15 @@ export const userColumns: ColumnDef<User>[] = [
     cell: ({ row }) => <div className="uppercase">{row.getValue('role')}</div>,
   },
   {
+    accessorKey: 'email_verified_at',
+    header: 'Verified',
+    cell: ({ row }) => (
+      <div className="uppercase">
+        {row.original?.email_verified_at ? 'True' : 'False'}
+      </div>
+    ),
+  },
+  {
     accessorKey: 'status',
     header: () => <div className="text-right">Status</div>,
     cell: ({ row }) => (
