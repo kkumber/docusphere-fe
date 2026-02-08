@@ -115,12 +115,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+              <SidebarMenuButton
+                size="lg"
+                asChild
+                className="h-10 max-md:w-10 md:h-8 md:p-0"
+              >
                 <Link to="/">
                   <img
                     src="/docusphere-icon.png"
                     alt="Icon"
-                    className="w-full"
+                    className="w-full object-contain"
                   />
                 </Link>
               </SidebarMenuButton>

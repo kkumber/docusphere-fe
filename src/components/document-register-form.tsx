@@ -153,7 +153,7 @@ export default function DocumentRegistrationForm() {
     <Card className="max-w-3xl mx-auto border border-muted shadow-sm">
       {/* Header */}
       <CardHeader className="border-b space-y-2 relative">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-wrap max-md:gap-4 items-start justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-xl">
               <FileText className="h-5 w-5 text-primary-blue" />
