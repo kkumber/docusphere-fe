@@ -68,7 +68,7 @@ export default function DocumentRegistrationForm() {
     authentication.userRole() === 'admin'
 
   const [formData, setFormData] = useState<DocumentFormState>({
-    tracking_no: !isUserRecords ? `DRAFT-${Math.random().toString(10)}` : '',
+    tracking_no: !isUserRecords ? `DRAFT-` : '',
     title: '',
     instructions: '',
     category: '',
@@ -127,7 +127,7 @@ export default function DocumentRegistrationForm() {
 
   const handleResetForm = () => {
     setFormData({
-      tracking_no: !isUserRecords ? `DRAFT-${Math.random().toString(10)}` : '',
+      tracking_no: !isUserRecords ? `DRAFT-` : '',
       title: '',
       instructions: '',
       category: '',
@@ -153,7 +153,7 @@ export default function DocumentRegistrationForm() {
     <Card className="max-w-3xl mx-auto border border-muted shadow-sm">
       {/* Header */}
       <CardHeader className="border-b space-y-2 relative">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-wrap max-md:gap-4 items-start justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-xl">
               <FileText className="h-5 w-5 text-primary-blue" />
@@ -176,7 +176,6 @@ export default function DocumentRegistrationForm() {
                       variant="ghost"
                       aria-label="View Document"
                       asChild
-                      disabled={!showActions}
                     >
                       <Link
                         to="/documents/$documentId"
@@ -194,27 +193,26 @@ export default function DocumentRegistrationForm() {
                 </Tooltip>
 
                 {/* Assign */}
-                <AssignDocModal
-                  documentId={uploadedData.document.id}
-                  documentTitle={formData.title}
-                  trigger={
-                    <Tooltip>
+                <Tooltip>
+                  <AssignDocModal
+                    documentId={uploadedData.document.id}
+                    documentTitle={formData.title}
+                    trigger={
                       <TooltipTrigger asChild>
                         <Button
                           size="icon"
                           variant="ghost"
                           aria-label="Assign Document"
-                          disabled={!showActions}
                         >
                           <Send className="h-4 w-4 text-primary-blue" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Assign to Users</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  }
-                />
+                    }
+                  />
+                  <TooltipContent>
+                    <p>Assign to Users</p>
+                  </TooltipContent>
+                </Tooltip>
 
                 {/* Reset */}
                 <Tooltip>
@@ -224,7 +222,6 @@ export default function DocumentRegistrationForm() {
                       variant="ghost"
                       onClick={handleResetForm}
                       aria-label="Reset Form"
-                      disabled={!showActions}
                     >
                       <RotateCcw className="h-4 w-4 text-primary-blue" />
                     </Button>

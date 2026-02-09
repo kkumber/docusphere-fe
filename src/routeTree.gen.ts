@@ -10,20 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthenticatedLayoutRouteImport } from './routes/_authenticated/_layout'
 import { Route as AuthenticatedLayoutIndexRouteImport } from './routes/_authenticated/_layout/index'
+import { Route as AuthPasswordResetTokenRouteImport } from './routes/auth/password-reset.$token'
 import { Route as AuthenticatedLayoutNotificationsRouteImport } from './routes/_authenticated/_layout/notifications'
 import { Route as AuthenticatedLayoutRecordsUploadDocumentRouteImport } from './routes/_authenticated/_layout/records/upload-document'
 import { Route as AuthenticatedLayoutDocumentsDocumentManagementRouteImport } from './routes/_authenticated/_layout/documents/document-management'
 import { Route as AuthenticatedLayoutDocumentsDocumentIdRouteImport } from './routes/_authenticated/_layout/documents/$documentId'
 import { Route as AuthenticatedLayoutAdminUserManagementRouteImport } from './routes/_authenticated/_layout/admin/user-management'
 import { Route as AuthenticatedLayoutAdminRegisterUserRouteImport } from './routes/_authenticated/_layout/admin/register-user'
+import { Route as AuthenticatedLayoutAdminBulkRegisterRouteImport } from './routes/_authenticated/_layout/admin/bulk-register'
 import { Route as AuthenticatedLayoutAccountUserIdDetailsRouteImport } from './routes/_authenticated/_layout/account/$userId/details'
 import { Route as AuthenticatedLayoutAdminUsersUserIdUpdateRouteImport } from './routes/_authenticated/_layout/admin/users/$userId/update'
 
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedLayoutRoute = AuthenticatedLayoutRouteImport.update({
@@ -36,6 +44,11 @@ const AuthenticatedLayoutIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedLayoutRoute,
   } as any)
+const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
+  id: '/auth/password-reset/$token',
+  path: '/auth/password-reset/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedLayoutNotificationsRoute =
   AuthenticatedLayoutNotificationsRouteImport.update({
     id: '/notifications',
@@ -72,6 +85,12 @@ const AuthenticatedLayoutAdminRegisterUserRoute =
     path: '/admin/register-user',
     getParentRoute: () => AuthenticatedLayoutRoute,
   } as any)
+const AuthenticatedLayoutAdminBulkRegisterRoute =
+  AuthenticatedLayoutAdminBulkRegisterRouteImport.update({
+    id: '/admin/bulk-register',
+    path: '/admin/bulk-register',
+    getParentRoute: () => AuthenticatedLayoutRoute,
+  } as any)
 const AuthenticatedLayoutAccountUserIdDetailsRoute =
   AuthenticatedLayoutAccountUserIdDetailsRouteImport.update({
     id: '/account/$userId/details',
@@ -86,9 +105,12 @@ const AuthenticatedLayoutAdminUsersUserIdUpdateRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/notifications': typeof AuthenticatedLayoutNotificationsRoute
+  '/auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/': typeof AuthenticatedLayoutIndexRoute
+  '/admin/bulk-register': typeof AuthenticatedLayoutAdminBulkRegisterRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
   '/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
@@ -98,9 +120,12 @@ export interface FileRoutesByFullPath {
   '/admin/users/$userId/update': typeof AuthenticatedLayoutAdminUsersUserIdUpdateRoute
 }
 export interface FileRoutesByTo {
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/notifications': typeof AuthenticatedLayoutNotificationsRoute
+  '/auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/': typeof AuthenticatedLayoutIndexRoute
+  '/admin/bulk-register': typeof AuthenticatedLayoutAdminBulkRegisterRoute
   '/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
   '/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
@@ -112,9 +137,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated/_layout': typeof AuthenticatedLayoutRouteWithChildren
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/_authenticated/_layout/notifications': typeof AuthenticatedLayoutNotificationsRoute
+  '/auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/_authenticated/_layout/': typeof AuthenticatedLayoutIndexRoute
+  '/_authenticated/_layout/admin/bulk-register': typeof AuthenticatedLayoutAdminBulkRegisterRoute
   '/_authenticated/_layout/admin/register-user': typeof AuthenticatedLayoutAdminRegisterUserRoute
   '/_authenticated/_layout/admin/user-management': typeof AuthenticatedLayoutAdminUserManagementRoute
   '/_authenticated/_layout/documents/$documentId': typeof AuthenticatedLayoutDocumentsDocumentIdRoute
@@ -126,9 +154,12 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/notifications'
+    | '/auth/password-reset/$token'
     | '/'
+    | '/admin/bulk-register'
     | '/admin/register-user'
     | '/admin/user-management'
     | '/documents/$documentId'
@@ -138,9 +169,12 @@ export interface FileRouteTypes {
     | '/admin/users/$userId/update'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/notifications'
+    | '/auth/password-reset/$token'
     | '/'
+    | '/admin/bulk-register'
     | '/admin/register-user'
     | '/admin/user-management'
     | '/documents/$documentId'
@@ -151,9 +185,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated/_layout'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/_authenticated/_layout/notifications'
+    | '/auth/password-reset/$token'
     | '/_authenticated/_layout/'
+    | '/_authenticated/_layout/admin/bulk-register'
     | '/_authenticated/_layout/admin/register-user'
     | '/_authenticated/_layout/admin/user-management'
     | '/_authenticated/_layout/documents/$documentId'
@@ -165,7 +202,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRouteWithChildren
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
+  AuthPasswordResetTokenRoute: typeof AuthPasswordResetTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -175,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/_layout': {
@@ -190,6 +236,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedLayoutIndexRouteImport
       parentRoute: typeof AuthenticatedLayoutRoute
+    }
+    '/auth/password-reset/$token': {
+      id: '/auth/password-reset/$token'
+      path: '/auth/password-reset/$token'
+      fullPath: '/auth/password-reset/$token'
+      preLoaderRoute: typeof AuthPasswordResetTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/_layout/notifications': {
       id: '/_authenticated/_layout/notifications'
@@ -233,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLayoutAdminRegisterUserRouteImport
       parentRoute: typeof AuthenticatedLayoutRoute
     }
+    '/_authenticated/_layout/admin/bulk-register': {
+      id: '/_authenticated/_layout/admin/bulk-register'
+      path: '/admin/bulk-register'
+      fullPath: '/admin/bulk-register'
+      preLoaderRoute: typeof AuthenticatedLayoutAdminBulkRegisterRouteImport
+      parentRoute: typeof AuthenticatedLayoutRoute
+    }
     '/_authenticated/_layout/account/$userId/details': {
       id: '/_authenticated/_layout/account/$userId/details'
       path: '/account/$userId/details'
@@ -253,6 +313,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedLayoutRouteChildren {
   AuthenticatedLayoutNotificationsRoute: typeof AuthenticatedLayoutNotificationsRoute
   AuthenticatedLayoutIndexRoute: typeof AuthenticatedLayoutIndexRoute
+  AuthenticatedLayoutAdminBulkRegisterRoute: typeof AuthenticatedLayoutAdminBulkRegisterRoute
   AuthenticatedLayoutAdminRegisterUserRoute: typeof AuthenticatedLayoutAdminRegisterUserRoute
   AuthenticatedLayoutAdminUserManagementRoute: typeof AuthenticatedLayoutAdminUserManagementRoute
   AuthenticatedLayoutDocumentsDocumentIdRoute: typeof AuthenticatedLayoutDocumentsDocumentIdRoute
@@ -265,6 +326,8 @@ interface AuthenticatedLayoutRouteChildren {
 const AuthenticatedLayoutRouteChildren: AuthenticatedLayoutRouteChildren = {
   AuthenticatedLayoutNotificationsRoute: AuthenticatedLayoutNotificationsRoute,
   AuthenticatedLayoutIndexRoute: AuthenticatedLayoutIndexRoute,
+  AuthenticatedLayoutAdminBulkRegisterRoute:
+    AuthenticatedLayoutAdminBulkRegisterRoute,
   AuthenticatedLayoutAdminRegisterUserRoute:
     AuthenticatedLayoutAdminRegisterUserRoute,
   AuthenticatedLayoutAdminUserManagementRoute:
@@ -286,7 +349,9 @@ const AuthenticatedLayoutRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedLayoutRoute: AuthenticatedLayoutRouteWithChildren,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthPasswordResetTokenRoute: AuthPasswordResetTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

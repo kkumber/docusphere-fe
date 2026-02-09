@@ -22,13 +22,23 @@ import {
   UserPlus,
   User,
   Mail,
-  Lock,
   Building2,
   ShieldCheck,
+  RotateCcw,
 } from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip'
+import { useUserContext } from '@/context/user-context'
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const mutation = useRegisterUser()
+  const { user } = useUserContext()
+  const isSuperAdmin = user?.email === import.meta.env.VITE_SUPER_ADMIN
+
   const [userInfo, setUserInfo] = useState<UserRegister>({
     first_name: '',
     last_name: '',
@@ -47,6 +57,20 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     setUserInfo({ ...userInfo, [event.target.id]: event.target.value })
   }
 
+  const handleResetForm = () => {
+    setUserInfo({
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      role: '',
+      office: '',
+    })
+    mutation.reset()
+  }
+
+  const showActions = mutation.isSuccess
+
   return (
     <Card
       {...props}
@@ -54,14 +78,41 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     >
       {/* Header */}
       <CardHeader className="space-y-2 border-b">
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <UserPlus className="h-5 w-5 text-primary-blue" />
-          Register User
-        </CardTitle>
-        <CardDescription className="max-w-xl">
-          Create a new system account and assign the appropriate access level.
-        </CardDescription>
+        <div className="flex flex-wrap max-md:gap-4 items-start justify-between">
+          <div className="">
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <UserPlus className="h-5 w-5 text-primary-blue" />
+              Register User
+            </CardTitle>
+            <CardDescription className="max-w-xl">
+              Create a new system account and assign the appropriate access
+              level.
+            </CardDescription>
+          </div>
 
+          {showActions && (
+            <TooltipProvider>
+              <div className="flex items-center gap-2">
+                {/* Reset */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={handleResetForm}
+                      aria-label="Reset Form"
+                    >
+                      <RotateCcw className="h-4 w-4 text-primary-blue" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Reset Form</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
+          )}
+        </div>
         {mutation.error && (
           <p className="text-sm text-destructive">
             {mutation.error.response?.data.message}
@@ -87,6 +138,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   placeholder="Juan"
                   required
                   onChange={handleChange}
+                  value={userInfo.first_name}
                 />
               </Field>
 
@@ -98,6 +150,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   placeholder="Dela Cruz"
                   required
                   onChange={handleChange}
+                  value={userInfo.last_name}
                 />
               </Field>
             </div>
@@ -118,6 +171,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 placeholder="Division Office / HR / Accounting"
                 required
                 onChange={handleChange}
+                value={userInfo.office}
               />
             </Field>
           </section>
@@ -146,6 +200,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   <SelectValue placeholder="Assign a role" />
                 </SelectTrigger>
                 <SelectContent>
+                  {isSuperAdmin && <SelectItem value="admin">Admin</SelectItem>}
                   <SelectItem value="records">Records</SelectItem>
                   <SelectItem value="sds">
                     Schools Division Superintendent
@@ -172,6 +227,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 placeholder="example@deped.gov.ph"
                 required
                 onChange={handleChange}
+                value={userInfo.email}
               />
             </Field>
 
@@ -186,6 +242,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 placeholder="••••••••"
                 required
                 onChange={handleChange}
+                value={userInfo.password}
               />
             </Field>
           </section>

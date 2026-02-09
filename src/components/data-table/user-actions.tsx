@@ -7,7 +7,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { MoreHorizontal, UserCog, UserX, UserCheck } from 'lucide-react'
+import {
+  MoreHorizontal,
+  UserCog,
+  UserX,
+  UserCheck,
+  MailCheck,
+} from 'lucide-react'
 import { Button } from '../ui/button'
 import { Link } from '@tanstack/react-router'
 import useActivateUser from '@/hooks/use-activate-user'
@@ -15,6 +21,8 @@ import { DialogConfirmation } from '../dialog-confirmation'
 import { useState } from 'react'
 import useDeactivateUser from '@/hooks/use-deactivate-user'
 import ErrorDialog from '../error-dialog'
+import { useUserContext } from '@/context/user-context'
+import useSendEmailVerification from '@/hooks/use-resend-email-verification'
 
 type Props = {
   row: Row<User>
@@ -24,10 +32,13 @@ const UserActions = ({ row }: Props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [errorDialogOpen, setErrorDialogOpen] = useState(false)
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false)
+  const { user: currentUser } = useUserContext()
 
   const user = row.original
   const activate = useActivateUser()
   const deactivate = useDeactivateUser()
+  const resendEmailVerification = useSendEmailVerification()
+  const isSuperAdmin = currentUser?.email === import.meta.env.VITE_SUPER_ADMIN
 
   const handleActivateUser = () => {
     activate.mutate(user)
@@ -43,9 +54,14 @@ const UserActions = ({ row }: Props) => {
     setDropdownOpen(!dropdownOpen)
   }
 
+  const handleResendEmailVerificationLink = (email: string) => {
+    resendEmailVerification.mutate({ email })
+    setDropdownOpen(!dropdownOpen)
+  }
+
   return (
     <>
-      {row!.original!.role === 'admin' ? (
+      {!isSuperAdmin && row!.original!.role === 'admin' ? (
         <span className="sr-only">Admin</span>
       ) : (
         <DropdownMenu>
@@ -58,6 +74,21 @@ const UserActions = ({ row }: Props) => {
 
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>User Actions</DropdownMenuLabel>
+
+            {!row.original?.email_verified_at && (
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault()
+                  handleResendEmailVerificationLink(row!.original!.email!)
+                }}
+                asChild
+              >
+                <span className="flex items-center">
+                  <MailCheck className="mr-2 h-4 w-4" />
+                  Resend email verification link
+                </span>
+              </DropdownMenuItem>
+            )}
 
             <DropdownMenuItem asChild>
               <Link

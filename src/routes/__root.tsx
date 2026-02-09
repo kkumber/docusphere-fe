@@ -26,21 +26,6 @@ function App() {
   const navigate = useNavigate()
   const [user, setUser] = useState(authentication.user)
 
-  if (!user) {
-    api
-      .get('/api/user')
-      .then((res) => {
-        authentication.signIn(res.data.data)
-        setUser(res.data.data)
-      })
-      .catch((error) => {
-        if (error.response) {
-          authentication.signOut()
-          navigate({ to: '/auth/login' })
-        }
-      })
-  }
-
   return (
     <>
       <QueryClientProvider client={queryClient}>
