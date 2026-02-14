@@ -53,6 +53,7 @@ const DocumentActions = ({ row }: Props) => {
     userRole === 'admin' ||
     userRole === 'records' ||
     row.original.uploaded_by === user?.id
+  const canRouteDraft = userRole !== 'admin' || userRole !== 'records'
 
   return (
     <>
@@ -81,21 +82,23 @@ const DocumentActions = ({ row }: Props) => {
           <DropdownMenuSeparator />
 
           {/* Workflow actions */}
-          <AssignDocModal
-            trigger={
-              <DropdownMenuItem
-                onSelect={(e: Event) => {
-                  e.preventDefault()
-                  setShowTrackingModal(!showTrackingModal)
-                }}
-              >
-                <Send className="mr-2 h-4 w-4" />
-                Assign for action
-              </DropdownMenuItem>
-            }
-            documentTitle={row.original.title}
-            documentId={row.original.id}
-          />
+          {canRouteDraft && (
+            <AssignDocModal
+              trigger={
+                <DropdownMenuItem
+                  onSelect={(e: Event) => {
+                    e.preventDefault()
+                    setShowTrackingModal(!showTrackingModal)
+                  }}
+                >
+                  <Send className="mr-2 h-4 w-4" />
+                  Assign for action
+                </DropdownMenuItem>
+              }
+              documentTitle={row.original.title}
+              documentId={row.original.id}
+            />
+          )}
 
           <DropdownMenuItem onClick={() => setShowModal(true)}>
             <Clock className="mr-2 h-4 w-4" />
