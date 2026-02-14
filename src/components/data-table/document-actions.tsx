@@ -48,12 +48,11 @@ const DocumentActions = ({ row }: Props) => {
     setShowDeleteModal(false)
   }
 
-  const canArchiveDocument = userRole === 'admin' || userRole === 'records'
+  const isAdminOrRecords = userRole === 'admin' || userRole === 'records'
+  const canArchiveDocument = isAdminOrRecords
   const canDeleteDocument =
-    userRole === 'admin' ||
-    userRole === 'records' ||
-    row.original.uploaded_by === user?.id
-  const canRouteDraft = userRole !== 'admin' || userRole !== 'records'
+    isAdminOrRecords || row.original.uploaded_by === user?.id
+  const isDraft = row.original.status_id === 18 || row.original.status_id === 19
 
   return (
     <>
@@ -81,8 +80,27 @@ const DocumentActions = ({ row }: Props) => {
 
           <DropdownMenuSeparator />
 
+          {/*  if not a draft just render */}
+          {!isDraft && (
+            <AssignDocModal
+              trigger={
+                <DropdownMenuItem
+                  onSelect={(e: Event) => {
+                    e.preventDefault()
+                    setShowTrackingModal(!showTrackingModal)
+                  }}
+                >
+                  <Send className="mr-2 h-4 w-4" />
+                  Assign for action
+                </DropdownMenuItem>
+              }
+              documentTitle={row.original.title}
+              documentId={row.original.id}
+            />
+          )}
+
           {/* Workflow actions */}
-          {canRouteDraft && (
+          {isDraft && !isAdminOrRecords && (
             <AssignDocModal
               trigger={
                 <DropdownMenuItem
