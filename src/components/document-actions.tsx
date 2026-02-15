@@ -50,7 +50,7 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
   const canCompleteDocument =
     userRole === 'admin' || userRole === 'records' || userRole === 'sds'
   const canRejectDocument =
-    userRole === 'sds' || (userRole === 'records' && status_id === 20)
+    userRole === 'sds' || (userRole === 'records' && status_id === 21) // 21 is for issuance
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()

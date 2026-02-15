@@ -103,7 +103,7 @@ const DocumentView = () => {
                 <DocumentActions documentId={document.id.toString()} />
               )}
 
-              {userRole === 'records' && !isDraftForIssuance && (
+              {userRole === 'records' && isDraftForIssuance && (
                 <DocumentActions
                   documentId={document.id.toString()}
                   status_id={document.status_id}

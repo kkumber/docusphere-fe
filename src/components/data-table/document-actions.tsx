@@ -53,6 +53,11 @@ const DocumentActions = ({ row }: Props) => {
   const canDeleteDocument =
     isAdminOrRecords || row.original.uploaded_by === user?.id
   const isDraft = row.original.status_id === 18 || row.original.status_id === 19
+  const isDocumentCompleted =
+    row.original.status_id === 21 || // for issuance
+    row.original.status_id === 22 || // rejected
+    row.original.status_id === 2 || // archived
+    row.original.status_id === 3 // completed
 
   return (
     <>
@@ -81,7 +86,7 @@ const DocumentActions = ({ row }: Props) => {
           <DropdownMenuSeparator />
 
           {/*  if not a draft just render */}
-          {!isDraft && (
+          {!isDraft && !isDocumentCompleted && (
             <AssignDocModal
               trigger={
                 <DropdownMenuItem
@@ -100,7 +105,7 @@ const DocumentActions = ({ row }: Props) => {
           )}
 
           {/* Workflow actions */}
-          {isDraft && !isAdminOrRecords && (
+          {isDraft && !isAdminOrRecords && !isDocumentCompleted && (
             <AssignDocModal
               trigger={
                 <DropdownMenuItem
