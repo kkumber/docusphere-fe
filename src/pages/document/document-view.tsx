@@ -59,7 +59,7 @@ const DocumentView = () => {
   })
 
   const errorDetailsMsg = isError ? error?.message : null
-  const isDraft = document.tracking_no.startsWith('DRAFT-')
+  const isDraftForIssuance = document.status_id === 21
 
   // prefetch attachments and actions/logs
   usePrefetchRequest({
@@ -103,8 +103,11 @@ const DocumentView = () => {
                 <DocumentActions documentId={document.id.toString()} />
               )}
 
-              {userRole === 'records' && !isDraft && (
-                <DocumentActions documentId={document.id.toString()} />
+              {userRole === 'records' && !isDraftForIssuance && (
+                <DocumentActions
+                  documentId={document.id.toString()}
+                  status_id={document.status_id}
+                />
               )}
 
               {/* Document Details Modal */}

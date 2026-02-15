@@ -29,9 +29,10 @@ import useSignDocument from '@/hooks/use-sign-document'
 
 interface Props {
   documentId: string
+  status_id?: number
 }
 
-const DocumentActions = ({ documentId }: Props) => {
+const DocumentActions = ({ documentId, status_id }: Props) => {
   const performActionMutation = usePerformAction()
   const uploadAttachFile = useUploadAttachment()
   const uploadReview = useUploadReview()
@@ -48,7 +49,8 @@ const DocumentActions = ({ documentId }: Props) => {
   const userRole = authentication.userRole()
   const canCompleteDocument =
     userRole === 'admin' || userRole === 'records' || userRole === 'sds'
-  const canRejectDocument = userRole === 'sds'
+  const canRejectDocument =
+    userRole === 'sds' || (userRole === 'records' && status_id === 20)
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
