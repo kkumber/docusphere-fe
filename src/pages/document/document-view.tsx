@@ -59,7 +59,8 @@ const DocumentView = () => {
   })
 
   const errorDetailsMsg = isError ? error?.message : null
-  const isDraftForIssuance = document.status_id === 21
+  const isDraftReadyForRecords =
+    document.status_id === 21 || document.status_id === 20
 
   // prefetch attachments and actions/logs
   usePrefetchRequest({
@@ -103,7 +104,7 @@ const DocumentView = () => {
                 <DocumentActions documentId={document.id.toString()} />
               )}
 
-              {userRole === 'records' && isDraftForIssuance && (
+              {userRole === 'records' && isDraftReadyForRecords && (
                 <DocumentActions
                   documentId={document.id.toString()}
                   status_id={document.status_id}

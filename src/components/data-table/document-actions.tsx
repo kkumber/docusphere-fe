@@ -54,6 +54,7 @@ const DocumentActions = ({ row }: Props) => {
     isAdminOrRecords || row.original.uploaded_by === user?.id
   const isDraft = row.original.status_id === 18 || row.original.status_id === 19
   const isDocumentCompleted =
+    row.original.status_id === 20 || // draft approved
     row.original.status_id === 21 || // for issuance
     row.original.status_id === 22 || // rejected
     row.original.status_id === 2 || // archived

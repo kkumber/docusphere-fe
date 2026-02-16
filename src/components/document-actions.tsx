@@ -50,7 +50,8 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
   const canCompleteDocument =
     userRole === 'admin' || userRole === 'records' || userRole === 'sds'
   const canRejectDocument =
-    userRole === 'sds' || (userRole === 'records' && status_id === 21) // 21 is for issuance
+    userRole === 'sds' ||
+    (userRole === 'records' && [20, 21].includes(status_id!)) // 20 is draft approved, 21 is for issuance
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
