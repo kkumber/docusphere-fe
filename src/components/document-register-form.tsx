@@ -68,7 +68,7 @@ export default function DocumentRegistrationForm() {
     authentication.userRole() === 'admin'
 
   const [formData, setFormData] = useState<DocumentFormState>({
-    tracking_no: !isUserRecords ? `DRAFT-` : '',
+    tracking_no: !isUserRecords ? `DRAFT-` : 'DM No.',
     title: '',
     instructions: '',
     category: '',
@@ -127,7 +127,7 @@ export default function DocumentRegistrationForm() {
 
   const handleResetForm = () => {
     setFormData({
-      tracking_no: !isUserRecords ? `DRAFT-` : '',
+      tracking_no: `DRAFT-`,
       title: '',
       instructions: '',
       category: '',
@@ -160,7 +160,7 @@ export default function DocumentRegistrationForm() {
               Upload Document
             </CardTitle>
             <CardDescription>
-              Register and route official documents for processing and tracking.
+              Register and route documents for processing and tracking.
             </CardDescription>
           </div>
 
@@ -261,7 +261,7 @@ export default function DocumentRegistrationForm() {
                   value={formData.tracking_no}
                   required
                   onChange={handleInputChange}
-                  disabled={!isUserRecords}
+                  disabled={true}
                 />
               </Field>
 
