@@ -14,6 +14,7 @@ import type {
 } from '@/types/ui'
 import { Link, useRouteContext } from '@tanstack/react-router'
 import { Files, Upload } from 'lucide-react'
+import { DocumentStatusMap } from '@/lib/document-status-map'
 
 const breadcrumbs: Breadcrumbs[] = [
   {
@@ -48,26 +49,108 @@ const DocumentManagementPage = () => {
   // Map column values for filter must corresponds to the status ID in the database
   const columnValuesForFilter: ColumnValuesForFilterStatus[] = isRecordsLevel
     ? [
-        { value: '1', label: 'Pending' },
-        { value: '2', label: 'Archived' },
-        { value: '3', label: 'Completed' },
-        { value: '4', label: 'Delayed' },
-        { value: '5', label: 'Released' },
-        { value: '20', label: 'Draft Approved' },
-        { value: '21', label: 'For Issuance' },
-        { value: '22', label: 'Rejected' },
+        {
+          value: String(DocumentStatusMap.DOC_PENDING),
+          label: 'Pending',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.DOC_ARCHIVED),
+          label: 'Archived',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.DOC_COMPLETED),
+          label: 'Completed',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.DOC_DELAYED),
+          label: 'Delayed',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.DOC_RELEASED),
+          label: 'Released',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.REJECTED),
+          label: 'Rejected',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_PENDING),
+          label: 'Draft',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_IN_REVIEW),
+          label: 'Draft In Review',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_APPROVED),
+          label: 'Draft Approved',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_FOR_ISSUANCE),
+          label: 'For Issuance',
+          group: 'draft',
+        },
       ]
     : [
-        { value: '2', label: 'Archived' },
-        { value: '3', label: 'Completed Documents' },
-        { value: '6', label: 'Pending' },
-        { value: '12', label: 'Completed Assignments' },
-        { value: '13', label: 'Delayed' },
-        { value: '18', label: 'Draft' },
-        { value: '19', label: 'Draft In Review' },
-        { value: '20', label: 'Draft Approved' },
-        { value: '21', label: 'For Issuance' },
-        { value: '22', label: 'Rejected' },
+        {
+          value: String(DocumentStatusMap.DOC_ARCHIVED),
+          label: 'Archived',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.DOC_COMPLETED),
+          label: 'Completed',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.REJECTED),
+          label: 'Rejected',
+          group: 'document',
+        },
+        {
+          value: String(DocumentStatusMap.ASSIGNMENT_PENDING),
+          label: 'Pending',
+          group: 'assignment',
+        },
+        {
+          value: String(DocumentStatusMap.ASSIGNMENT_COMPLETED),
+          label: 'Completed',
+          group: 'assignment',
+        },
+        {
+          value: String(DocumentStatusMap.ASSIGNMENT_DELAYED),
+          label: 'Delayed',
+          group: 'assignment',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_PENDING),
+          label: 'Draft',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_IN_REVIEW),
+          label: 'Draft In Review',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_APPROVED),
+          label: 'Draft Approved',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DRAFT_FOR_ISSUANCE),
+          label: 'For Issuance',
+          group: 'draft',
+        },
       ]
 
   const searchFilterInputValues: FilterSearchInput = {

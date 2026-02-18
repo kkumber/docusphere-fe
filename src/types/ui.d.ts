@@ -6,6 +6,7 @@ export interface Breadcrumbs {
 export interface ColumnValuesForFilterStatus {
   value: string | number
   label: string
+  group?: 'document' | 'assignment' | 'draft'
 }
 
 export interface FilterSearchInput {

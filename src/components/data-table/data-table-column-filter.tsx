@@ -15,6 +15,16 @@ interface StatusFilterProps<TData> {
   columnValuesForFilter: ColumnValuesForFilterStatus[]
 }
 
+const GROUP_LABELS: Record<string, string> = {
+  document: 'Document Status',
+  assignment: 'Assignment Status',
+  draft: 'Draft Status',
+}
+
+type RenderEntry =
+  | { type: 'header'; label: string }
+  | { type: 'item'; item: ColumnValuesForFilterStatus }
+
 export function TableColumnFilter<TData>({
   table,
   columnValuesForFilter,
@@ -30,6 +40,25 @@ export function TableColumnFilter<TData>({
     }
   }
 
+  const renderItems = columnValuesForFilter.reduce<RenderEntry[]>(
+    (acc, item) => {
+      if (item.group) {
+        const lastHeader = [...acc].reverse().find((r) => r.type === 'header')
+        const isDifferentGroup =
+          !lastHeader ||
+          (lastHeader.type === 'header' &&
+            lastHeader.label !== GROUP_LABELS[item.group])
+
+        if (isDifferentGroup) {
+          acc.push({ type: 'header', label: GROUP_LABELS[item.group] })
+        }
+      }
+      acc.push({ type: 'item', item })
+      return acc
+    },
+    [],
+  )
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -43,18 +72,30 @@ export function TableColumnFilter<TData>({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-40 space-y-2">
+      <PopoverContent className="w-48 space-y-2">
         <p className="text-sm font-medium leading-none">Filter By:</p>
         <Separator className="my-2" />
-        {columnValuesForFilter.map((item, index) => (
-          <div className="flex items-center space-x-2" key={index}>
-            <Checkbox
-              checked={value.includes(String(item.value))}
-              onCheckedChange={() => toggle(String(item.value))}
-            />
-            <span className="text-sm">{item.label}</span>
-          </div>
-        ))}
+        {renderItems.map((entry, index) =>
+          entry.type === 'header' ? (
+            <div key={`header-${index}`}>
+              {index !== 0 && <Separator className="my-2" />}
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide pb-1">
+                {entry.label}
+              </p>
+            </div>
+          ) : (
+            <div
+              className="flex items-center space-x-2"
+              key={`item-${entry.item.value}`}
+            >
+              <Checkbox
+                checked={value.includes(String(entry.item.value))}
+                onCheckedChange={() => toggle(String(entry.item.value))}
+              />
+              <span className="text-sm">{entry.item.label}</span>
+            </div>
+          ),
+        )}
       </PopoverContent>
     </Popover>
   )
