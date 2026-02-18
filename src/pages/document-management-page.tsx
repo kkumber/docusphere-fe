@@ -59,8 +59,9 @@ const DocumentManagementPage = () => {
       ]
     : [
         { value: '2', label: 'Archived' },
+        { value: '3', label: 'Completed Documents' },
         { value: '6', label: 'Pending' },
-        { value: '12', label: 'Completed' },
+        { value: '12', label: 'Completed Assignments' },
         { value: '13', label: 'Delayed' },
         { value: '18', label: 'Draft' },
         { value: '19', label: 'Draft In Review' },

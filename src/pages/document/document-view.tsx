@@ -62,7 +62,16 @@ const DocumentView = () => {
   const errorDetailsMsg = isError ? error?.message : null
   const isDraftReadyForRecords =
     document.status_id === DocumentStatusMap.DRAFT_FOR_ISSUANCE ||
-    document.status_id === DocumentStatusMap.DRAFT_APPROVED
+    document.status_id === DocumentStatusMap.DRAFT_APPROVED ||
+    document.status_id === DocumentStatusMap.DOC_PENDING
+
+  const terminalStatuses = [
+    DocumentStatusMap.DOC_COMPLETED,
+    DocumentStatusMap.DOC_ARCHIVED,
+    DocumentStatusMap.DRAFT_FOR_ISSUANCE,
+    DocumentStatusMap.REJECTED,
+  ]
+  const isDocTerminal = terminalStatuses.includes(document.status_id!)
 
   // prefetch attachments and actions/logs
   usePrefetchRequest({
@@ -102,7 +111,7 @@ const DocumentView = () => {
             <div className="flex flex-wrap items-center gap-2">
               {/* Document Actions Dropdown */}
 
-              {userRole !== 'records' && (
+              {userRole !== 'records' && !isDocTerminal && (
                 <DocumentActions documentId={document.id.toString()} />
               )}
 
