@@ -19,6 +19,7 @@ import { DialogConfirmation } from '../dialog-confirmation'
 import useArchiveDocument from '@/hooks/use-archive-document'
 import useDeleteDocument from '@/hooks/use-delete-document'
 import { useUserContext } from '@/context/user-context'
+import { DocumentStatusMap } from '@/lib/document-status-map'
 
 type Props = {
   row: Row<Document>
@@ -48,17 +49,35 @@ const DocumentActions = ({ row }: Props) => {
     setShowDeleteModal(false)
   }
 
+  const completedStatuses = [
+    DocumentStatusMap.DOC_COMPLETED,
+    DocumentStatusMap.DOC_ARCHIVED,
+    DocumentStatusMap.DRAFT_APPROVED,
+    DocumentStatusMap.DRAFT_FOR_ISSUANCE,
+    DocumentStatusMap.REJECTED,
+  ]
+
+  const deleteStatuses = [
+    DocumentStatusMap.DOC_PENDING,
+    DocumentStatusMap.DRAFT_PENDING,
+    DocumentStatusMap.DOC_ARCHIVED,
+  ]
+
   const isAdminOrRecords = userRole === 'admin' || userRole === 'records'
+
   const canArchiveDocument = isAdminOrRecords
+
   const canDeleteDocument =
-    isAdminOrRecords || row.original.uploaded_by === user?.id
-  const isDraft = row.original.status_id === 18 || row.original.status_id === 19
-  const isDocumentCompleted =
-    row.original.status_id === 20 || // draft approved
-    row.original.status_id === 21 || // for issuance
-    row.original.status_id === 22 || // rejected
-    row.original.status_id === 2 || // archived
-    row.original.status_id === 3 // completed
+    (isAdminOrRecords || row.original.uploaded_by === user?.id) &&
+    deleteStatuses.includes(row.original.status_id!)
+
+  const isDraft =
+    row.original.status_id === DocumentStatusMap.DRAFT_PENDING ||
+    row.original.status_id === DocumentStatusMap.DRAFT_IN_REVIEW
+
+  const isDocumentCompleted = completedStatuses.includes(
+    row.original.status_id!,
+  )
 
   return (
     <>

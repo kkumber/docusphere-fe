@@ -13,6 +13,7 @@ import usePrefetchRequest from '@/hooks/use-prefetch-request'
 import { Download, Files, Info } from 'lucide-react'
 import { downloadSignedPdf } from '@/lib/download-signed-pdf'
 import { Route } from '@/routes/__root'
+import { DocumentStatusMap } from '@/lib/document-status-map'
 
 interface DocumentDetailsResponse {
   data: {
@@ -60,7 +61,8 @@ const DocumentView = () => {
 
   const errorDetailsMsg = isError ? error?.message : null
   const isDraftReadyForRecords =
-    document.status_id === 21 || document.status_id === 20
+    document.status_id === DocumentStatusMap.DRAFT_FOR_ISSUANCE ||
+    document.status_id === DocumentStatusMap.DRAFT_APPROVED
 
   // prefetch attachments and actions/logs
   usePrefetchRequest({

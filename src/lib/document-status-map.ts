@@ -1,0 +1,35 @@
+export const DocumentStatusMap = {
+    // Document
+    DOC_PENDING: 1,
+    DOC_ARCHIVED: 2,
+    DOC_COMPLETED: 3,
+    DOC_DELAYED: 4,
+    DOC_RELEASED: 5,
+
+    // Assignment
+    ASSIGNMENT_PENDING: 6,
+    ASSIGNMENT_ACKNOWLEDGED: 7,
+    ASSIGNMENT_APPROVED: 8,
+    ASSIGNMENT_SIGNED: 9,
+    ASSIGNMENT_REVIEWED: 10,
+    ASSIGNMENT_RESPONDED: 11,
+    ASSIGNMENT_COMPLETED: 12,
+    ASSIGNMENT_DELAYED: 13,
+
+    // Tracking
+    TRACKING_ROUTED: 14,
+    TRACKING_COMPLETED: 15,
+    TRACKING_RETURNED: 16,
+    TRACKING_APPROVED: 17,
+
+    // Draft
+    DRAFT_PENDING: 18,
+    DRAFT_IN_REVIEW: 19,
+    DRAFT_APPROVED: 20,
+    DRAFT_FOR_ISSUANCE: 21,
+
+    // Global
+    REJECTED: 22
+}
+
+export type DocumentStatusMap = typeof DocumentStatusMap

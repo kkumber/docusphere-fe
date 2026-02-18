@@ -26,6 +26,7 @@ import { Route } from '@/routes/__root'
 import useRejectDocument from '@/hooks/use-reject-document'
 import { Input } from './ui/input'
 import useSignDocument from '@/hooks/use-sign-document'
+import { DocumentStatusMap } from '@/lib/document-status-map'
 
 interface Props {
   documentId: string
@@ -51,7 +52,11 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
     userRole === 'admin' || userRole === 'records' || userRole === 'sds'
   const canRejectDocument =
     userRole === 'sds' ||
-    (userRole === 'records' && [20, 21].includes(status_id!)) // 20 is draft approved, 21 is for issuance
+    (userRole === 'records' &&
+      [
+        DocumentStatusMap.DRAFT_APPROVED,
+        DocumentStatusMap.DRAFT_FOR_ISSUANCE,
+      ].includes(status_id!)) // 20 is draft approved, 21 is for issuance
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
