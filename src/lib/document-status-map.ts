@@ -7,29 +7,25 @@ export const DocumentStatusMap = {
     DOC_RELEASED: 5,
 
     // Assignment
-    ASSIGNMENT_PENDING: 6,
-    ASSIGNMENT_ACKNOWLEDGED: 7,
-    ASSIGNMENT_APPROVED: 8,
-    ASSIGNMENT_SIGNED: 9,
-    ASSIGNMENT_REVIEWED: 10,
-    ASSIGNMENT_RESPONDED: 11,
-    ASSIGNMENT_COMPLETED: 12,
-    ASSIGNMENT_DELAYED: 13,
+    DOC_ASSIGN_PENDING: 6,
+    DOC_ASSIGN_COMPLETED: 7,
+    DOC_ASSIGN_DELAYED: 8,
 
     // Tracking
-    TRACKING_ROUTED: 14,
-    TRACKING_COMPLETED: 15,
-    TRACKING_RETURNED: 16,
-    TRACKING_APPROVED: 17,
+    DOC_TRACK_ROUTED: 9,
+    DOC_TRACK_COMPLETED: 10,
+    DOC_TRACK_RETURNED: 11,
 
     // Draft
-    DRAFT_PENDING: 18,
-    DRAFT_IN_REVIEW: 19,
-    DRAFT_APPROVED: 20,
-    DRAFT_FOR_ISSUANCE: 21,
+    DOC_DRAFT_PENDING: 12,
+    DOC_DRAFT_IN_REVIEW: 13,
+    DOC_DRAFT_APPROVED: 14,
 
-    // Global
-    REJECTED: 22
+    // SDS & Records
+    DOC_REJECTED: 15,
+    DOC_RETURNED: 16,
 }
 
 export type DocumentStatusMap = typeof DocumentStatusMap
+export type DocumentStatusKey = keyof typeof DocumentStatusMap
+export type DocumentStatusValue = DocumentStatusMap[DocumentStatusKey]

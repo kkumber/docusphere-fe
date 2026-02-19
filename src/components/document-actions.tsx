@@ -8,6 +8,7 @@ import {
   CheckCircle,
   Edit,
   XCircle,
+  ArrowLeft,
 } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import {
@@ -27,6 +28,8 @@ import useRejectDocument from '@/hooks/use-reject-document'
 import { Input } from './ui/input'
 import useSignDocument from '@/hooks/use-sign-document'
 import { DocumentStatusMap } from '@/lib/document-status-map'
+import useReturnDocument from '@/hooks/use-return-document'
+import { is } from 'date-fns/locale'
 
 interface Props {
   documentId: string
@@ -39,6 +42,7 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
   const uploadReview = useUploadReview()
   const rejectDocument = useRejectDocument()
   const signDocument = useSignDocument()
+  const returnDocument = useReturnDocument()
 
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
@@ -48,15 +52,18 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
   const { authentication } = Route.useRouteContext()
 
   const userRole = authentication.userRole()
-  const canCompleteDocument =
-    userRole === 'admin' || userRole === 'records' || userRole === 'sds'
-  const canRejectDocument =
-    userRole === 'sds' ||
-    (userRole === 'records' &&
-      [
-        DocumentStatusMap.DRAFT_APPROVED,
-        DocumentStatusMap.DRAFT_FOR_ISSUANCE,
-      ].includes(status_id!)) // 20 is draft approved, 21 is for issuance
+  const isUserRecords = userRole === 'records'
+  const canCompleteDocument = userRole === 'admin' || userRole === 'sds'
+  const canRejectDocument = userRole === 'sds'
+  const canReturnDocument = isUserRecords
+
+  const draftStatuses = [
+    DocumentStatusMap.DOC_DRAFT_PENDING,
+    DocumentStatusMap.DOC_DRAFT_IN_REVIEW,
+    DocumentStatusMap.DOC_DRAFT_APPROVED,
+  ]
+  const isDraft = draftStatuses.includes(status_id!)
+  const showOtherActions = !isDraft && !isUserRecords
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
@@ -72,6 +79,12 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
   const handleRejectDocument = () => {
     rejectDocument.reset()
     rejectDocument.mutate({ documentId, remarks })
+    setRemarks('')
+  }
+
+  const handleReturnDocument = () => {
+    returnDocument.reset()
+    returnDocument.mutate({ documentId, remarks })
     setRemarks('')
   }
 
@@ -114,168 +127,158 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56">
-        {/* REVIEW */}
-        <ReusableAlertDialog
-          title="Add review or comments"
-          description="Provide internal remarks, observations, or recommendations regarding this document. These comments will be recorded as part of the review history."
-          confirmText="Submit review"
-          cancelText="Cancel"
-          onConfirm={() => handleUploadReview()}
-          triggerButton={
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2"
-            >
-              <Edit className="w-4 h-4" /> Add review
-            </DropdownMenuItem>
-          }
-          additionalContent={
-            <div className="flex flex-col gap-3 mt-3">
-              <label className="text-sm font-medium text-gray-800">
-                Review remarks
-              </label>
+        {showOtherActions && (
+          <>
+            {/* REVIEW */}
+            <ReusableAlertDialog
+              title="Add review or comments"
+              description="Provide internal remarks, observations, or recommendations regarding this document. These comments will be recorded as part of the review history."
+              confirmText="Submit review"
+              cancelText="Cancel"
+              onConfirm={() => handleUploadReview()}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <Edit className="w-4 h-4" /> Add review
+                </DropdownMenuItem>
+              }
+              additionalContent={
+                <div className="flex flex-col gap-3 mt-3">
+                  <label className="text-sm font-medium text-gray-800">
+                    Review remarks
+                  </label>
 
-              <textarea
-                rows={4}
-                placeholder="State your findings, suggested revisions, or comments relevant to this document."
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                  <textarea
+                    rows={4}
+                    placeholder="State your findings, suggested revisions, or comments relevant to this document."
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setRemarks(e.target.value)}
-                required
-                minLength={20}
-              />
-            </div>
-          }
-        />
+                    onChange={(e) => setRemarks(e.target.value)}
+                    required
+                    minLength={20}
+                  />
+                </div>
+              }
+            />
 
-        {/* ACKNOWLEDGE */}
-        <ReusableAlertDialog
-          title="Acknowledge document"
-          description="This confirms that you have received and reviewed the document. No further action will be required from you after acknowledgment."
-          confirmText="Acknowledge"
-          cancelText="Cancel"
-          onConfirm={() => handlePerformActionTask('acknowledge')}
-          triggerButton={
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2"
-            >
-              <CheckCircle2 className="w-4 h-4" /> Acknowledge
-            </DropdownMenuItem>
-          }
-        />
+            {/* ACKNOWLEDGE */}
+            <ReusableAlertDialog
+              title="Acknowledge document"
+              description="This confirms that you have received and reviewed the document. No further action will be required from you after acknowledgment."
+              confirmText="Acknowledge"
+              cancelText="Cancel"
+              onConfirm={() => handlePerformActionTask('acknowledge')}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <CheckCircle2 className="w-4 h-4" /> Acknowledge
+                </DropdownMenuItem>
+              }
+            />
 
-        {/* APPROVE */}
-        <ReusableAlertDialog
-          title="Approve document"
-          description="Approving this document signifies that it meets all requirements and is cleared to proceed. This action is final and cannot be reversed."
-          confirmText="Approve document"
-          onConfirm={() => handlePerformActionTask('approve')}
-          triggerButton={
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2"
-            >
-              <Check className="w-4 h-4" /> Approve
-            </DropdownMenuItem>
-          }
-        />
+            {/* SIGN */}
+            <ReusableAlertDialog
+              title="Sign document"
+              description="Signing will apply your official digital signature when the document is downloaded or finalized. This action is permanent."
+              confirmText="Sign document"
+              onConfirm={() => handleSignDocument()}
+              additionalContent={
+                <div className="flex flex-col gap-3 mt-3">
+                  <label className="text-sm font-medium text-gray-800">
+                    Password
+                  </label>
 
-        {/* SIGN */}
-        <ReusableAlertDialog
-          title="Sign document"
-          description="Signing will apply your official digital signature when the document is downloaded or finalized. This action is permanent."
-          confirmText="Sign document"
-          onConfirm={() => handleSignDocument()}
-          additionalContent={
-            <div className="flex flex-col gap-3 mt-3">
-              <label className="text-sm font-medium text-gray-800">
-                Password
-              </label>
-
-              <Input
-                type="password"
-                placeholder="Enter your password"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                  <Input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-          }
-          triggerButton={
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2"
-            >
-              <PenLine className="w-4 h-4" /> Sign
-            </DropdownMenuItem>
-          }
-        />
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              }
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <PenLine className="w-4 h-4" /> Sign
+                </DropdownMenuItem>
+              }
+            />
 
-        <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-        {/* ATTACH FILE */}
-        <ReusableAlertDialog
-          title="Attach supporting document"
-          description="Upload a related or supporting PDF file and provide context or instructions associated with the attachment."
-          confirmText="Attach file"
-          cancelText="Cancel"
-          onConfirm={() => handleAttachFile()}
-          triggerButton={
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2"
-            >
-              <Paperclip className="w-4 h-4" /> Attach file
-            </DropdownMenuItem>
-          }
-          additionalContent={
-            <div className="flex flex-col gap-6 mt-3">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-gray-800">
-                  Supporting PDF file
-                </label>
+            {/* ATTACH FILE */}
+            <ReusableAlertDialog
+              title="Attach supporting document"
+              description="Upload a related or supporting PDF file and provide context or instructions associated with the attachment."
+              confirmText="Attach file"
+              cancelText="Cancel"
+              onConfirm={() => handleAttachFile()}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <Paperclip className="w-4 h-4" /> Attach file
+                </DropdownMenuItem>
+              }
+              additionalContent={
+                <div className="flex flex-col gap-6 mt-3">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-800">
+                      Supporting PDF file
+                    </label>
 
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  className="w-full text-sm text-gray-700
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="w-full text-sm text-gray-700
                   file:border file:border-gray-300 file:rounded-md
                   file:px-3 file:py-2 file:text-sm file:font-medium
                   file:bg-gray-100 hover:file:bg-gray-200"
-                  onChange={(e) => {
-                    const selectedFile = e.target.files?.[0] ?? null
-                    setFile(selectedFile)
-                  }}
-                />
+                      onChange={(e) => {
+                        const selectedFile = e.target.files?.[0] ?? null
+                        setFile(selectedFile)
+                      }}
+                    />
 
-                <p className="text-xs text-muted-foreground">
-                  Only PDF files are accepted.
-                </p>
-              </div>
+                    <p className="text-xs text-muted-foreground">
+                      Only PDF files are accepted.
+                    </p>
+                  </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-gray-800">
-                  Remarks / instructions
-                </label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-800">
+                      Remarks / instructions
+                    </label>
 
-                <textarea
-                  rows={3}
-                  placeholder="Describe the purpose of this attachment or provide instructions for review."
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                    <textarea
+                      rows={3}
+                      placeholder="Describe the purpose of this attachment or provide instructions for review."
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  onChange={(e) => setRemarks(e.target.value)}
-                  required
-                />
-              </div>
+                      onChange={(e) => setRemarks(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              {fileError && (
-                <span className="text-sm text-destructive">{fileError}</span>
-              )}
-            </div>
-          }
-        />
+                  {fileError && (
+                    <span className="text-sm text-destructive">
+                      {fileError}
+                    </span>
+                  )}
+                </div>
+              }
+            />
+          </>
+        )}
 
         <DropdownMenuSeparator />
 
@@ -299,6 +302,22 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
           />
         )}
 
+        {/* APPROVE */}
+        <ReusableAlertDialog
+          title="Approve document"
+          description="Approving this document signifies that it meets all requirements and is cleared to proceed. This action is final and cannot be reversed."
+          confirmText="Approve document"
+          onConfirm={() => handlePerformActionTask('approve')}
+          triggerButton={
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="flex items-center gap-2"
+            >
+              <Check className="w-4 h-4" /> Approve
+            </DropdownMenuItem>
+          }
+        />
+
         {/* REJECT */}
         {canRejectDocument && (
           <>
@@ -306,7 +325,7 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
             <ReusableAlertDialog
               title="Reject document"
               description="Rejecting this document will permanently terminate its workflow. The document will no longer be routed, reviewed, or acted upon. This action is irreversible."
-              confirmText="Reject document"
+              confirmText="Reject Document"
               cancelText="Cancel"
               onConfirm={() => handleRejectDocument()}
               triggerButton={
@@ -326,6 +345,46 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
                   <textarea
                     rows={4}
                     placeholder="Clearly state the reason for rejection and any required corrective action."
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    onChange={(e) => setRemarks(e.target.value)}
+                    required
+                    minLength={20}
+                  />
+                </div>
+              }
+            />
+          </>
+        )}
+
+        {/* RETURN */}
+        {canReturnDocument && (
+          <>
+            <DropdownMenuSeparator />
+
+            <ReusableAlertDialog
+              title="Return document"
+              description="Returning this document will send it back to the uploader for review."
+              confirmText="Return Document"
+              cancelText="Cancel"
+              onConfirm={() => handleReturnDocument()}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2 text-destructive"
+                >
+                  <ArrowLeft className="w-4 h-4 text-destructive" /> Return
+                </DropdownMenuItem>
+              }
+              additionalContent={
+                <div className="flex flex-col gap-3 mt-3">
+                  <label className="text-sm font-medium text-gray-800">
+                    Reason for return
+                  </label>
+
+                  <textarea
+                    rows={4}
+                    placeholder="Clearly state the reason for return and any required corrective action."
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     onChange={(e) => setRemarks(e.target.value)}

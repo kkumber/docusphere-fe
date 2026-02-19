@@ -75,28 +75,23 @@ const DocumentManagementPage = () => {
           group: 'document',
         },
         {
-          value: String(DocumentStatusMap.REJECTED),
+          value: String(DocumentStatusMap.DOC_REJECTED),
           label: 'Rejected',
           group: 'document',
         },
         {
-          value: String(DocumentStatusMap.DRAFT_PENDING),
+          value: String(DocumentStatusMap.DOC_DRAFT_PENDING),
           label: 'Draft',
           group: 'draft',
         },
         {
-          value: String(DocumentStatusMap.DRAFT_IN_REVIEW),
+          value: String(DocumentStatusMap.DOC_DRAFT_IN_REVIEW),
           label: 'Draft In Review',
           group: 'draft',
         },
         {
-          value: String(DocumentStatusMap.DRAFT_APPROVED),
+          value: String(DocumentStatusMap.DOC_DRAFT_APPROVED),
           label: 'Draft Approved',
-          group: 'draft',
-        },
-        {
-          value: String(DocumentStatusMap.DRAFT_FOR_ISSUANCE),
-          label: 'For Issuance',
           group: 'draft',
         },
       ]
@@ -112,43 +107,38 @@ const DocumentManagementPage = () => {
           group: 'document',
         },
         {
-          value: String(DocumentStatusMap.REJECTED),
+          value: String(DocumentStatusMap.DOC_REJECTED),
           label: 'Rejected',
           group: 'document',
         },
         {
-          value: String(DocumentStatusMap.ASSIGNMENT_PENDING),
+          value: String(DocumentStatusMap.DOC_ASSIGN_PENDING),
           label: 'Pending',
           group: 'assignment',
         },
         {
-          value: String(DocumentStatusMap.ASSIGNMENT_COMPLETED),
+          value: String(DocumentStatusMap.DOC_ASSIGN_COMPLETED),
           label: 'Completed',
           group: 'assignment',
         },
         {
-          value: String(DocumentStatusMap.ASSIGNMENT_DELAYED),
+          value: String(DocumentStatusMap.DOC_ASSIGN_DELAYED),
           label: 'Delayed',
           group: 'assignment',
         },
         {
-          value: String(DocumentStatusMap.DRAFT_PENDING),
+          value: String(DocumentStatusMap.DOC_DRAFT_PENDING),
           label: 'Draft',
           group: 'draft',
         },
         {
-          value: String(DocumentStatusMap.DRAFT_IN_REVIEW),
+          value: String(DocumentStatusMap.DOC_DRAFT_IN_REVIEW),
           label: 'Draft In Review',
           group: 'draft',
         },
         {
-          value: String(DocumentStatusMap.DRAFT_APPROVED),
+          value: String(DocumentStatusMap.DOC_DRAFT_APPROVED),
           label: 'Draft Approved',
-          group: 'draft',
-        },
-        {
-          value: String(DocumentStatusMap.DRAFT_FOR_ISSUANCE),
-          label: 'For Issuance',
           group: 'draft',
         },
       ]

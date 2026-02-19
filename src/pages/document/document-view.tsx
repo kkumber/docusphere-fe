@@ -61,15 +61,13 @@ const DocumentView = () => {
 
   const errorDetailsMsg = isError ? error?.message : null
   const isDraftReadyForRecords =
-    document.status_id === DocumentStatusMap.DRAFT_FOR_ISSUANCE ||
-    document.status_id === DocumentStatusMap.DRAFT_APPROVED ||
+    document.status_id === DocumentStatusMap.DOC_DRAFT_APPROVED ||
     document.status_id === DocumentStatusMap.DOC_PENDING
 
   const terminalStatuses = [
     DocumentStatusMap.DOC_COMPLETED,
     DocumentStatusMap.DOC_ARCHIVED,
-    DocumentStatusMap.DRAFT_FOR_ISSUANCE,
-    DocumentStatusMap.REJECTED,
+    DocumentStatusMap.DOC_REJECTED,
   ]
   const isDocTerminal = terminalStatuses.includes(document.status_id!)
 
