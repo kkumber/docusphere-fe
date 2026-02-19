@@ -1,0 +1,202 @@
+{
+  "Offices": [
+    {
+      "name": "Office of the Schools Division Superintendent",
+      "departments": [
+        {
+          "name": "Legal",
+          "roles": [
+            "Attorney III",
+            "Administrative Aide VI"
+          ]
+        },
+        {
+          "name": "ICT",
+          "roles": [
+            "Information Technology Officer I",
+            "Administrative Aide III"
+          ]
+        },
+        {
+          "name": "Finance",
+          "sub_departments": [
+            {
+              "name": "Budget",
+              "roles": [
+                "Administrative Officer V",
+                "Administrative Assistant III",
+                "Administrative Assistant I"
+              ]
+            },
+            {
+              "name": "Accounting",
+              "roles": [
+                "Accountant III",
+                "Administrative Assistant III (3)",
+                "Administrative Aide III"
+              ]
+            }
+          ]
+        }
+      ],
+      "roles": [
+        "Schools Division Superintendent"
+      ]
+    },
+    {
+      "name": "Office of the Assistant Schools Division Superintendent",
+      "roles": [
+        "Assistant Schools Division Superintendent",
+        "Administrative Aide IV",
+        "Administrative Aide III (2)",
+        "Administrative Aide I"
+      ]
+    },
+    {
+      "name": "Administrative",
+      "departments": [
+        {
+          "name": "Cash",
+          "roles": [
+            "Administrative Officer II",
+            "Administrative Assistant III"
+          ]
+        },
+        {
+          "name": "Personnel",
+          "roles": [
+            "Administrative Officer IV",
+            "Administrative Assistant III (4)",
+            "Administrative Aide III",
+            "Administrative Aide IV (2)",
+            "Administrative Officer II"
+          ]
+        },
+        {
+          "name": "Property & Supply",
+          "roles": [
+            "Assistant Department Head II (Education Department)",
+            "Administrative Officer IV",
+            "Administrative Aide III (2)",
+            "Administrative Aide VI",
+            "Administrative Aide III (2)",
+            "Administrative Aide I (4)",
+            "Utility (2)",
+            "Administrative Assistant III"
+          ]
+        },
+        {
+          "name": "Records",
+          "roles": [
+            "Administrative Officer IV",
+            "Administrative Aide II",
+            "Administrative Aide VI",
+            "REMO I",
+            "Administrative Aide III"
+          ]
+        }
+      ],
+      "roles": [
+        "Administrative Officer, OIC Administrative Services Unit"
+      ]
+    },
+    {
+      "name": "Curriculum Implemented Division",
+      "departments": [
+        {
+          "name": "Instructional Management",
+          "roles": [
+            "Educational Program Supervisor Science",
+            "Educational Program Supervisor Filipino / Mother Tongue",
+            "Educational Program Supervisor Music and Arts",
+            "Educational Program Supervisor English",
+            "Educational Program Supervisor Mathematics",
+            "Educational Program Supervisor TLE/EPP/ TVL/ ABM",
+            "Educational Program Supervisor Araling Panlipunan",
+            "Educational Program Supervisor (Values / Kinder)",
+            "Division Coordinator for Health and Sports",
+            "Division Program Coordinator (ALS)",
+            "Concurrent Division Coordinator in Charge (MAPEH)"
+          ]
+        },
+        {
+          "name": "Learning Resource Management",
+          "roles": [
+            "Education Program Supervisor (LRMDS)",
+            "Project Development Officer II",
+            "Librarian II"
+          ]
+        },
+        {
+          "name": "District Instructional Supervision",
+          "roles": [
+            "Public Schools District Supervisor (8)",
+            "Public School District Supervisor SPED Coordinator"
+          ]
+        }
+      ],
+      "roles": [
+        "Education Program Supervisor Araling Panlipunan, OIC Chief",
+        "Administrative Aide VI",
+        "Administrative Aide III",
+        "Administrative Aide IV (2)"
+      ]
+    },
+    {
+      "name": "School Governance & Operations Division",
+      "departments": [
+        {
+          "name": "Planning and Research",
+          "roles": [
+            "Education Program Specialist",
+            "Planning Officer III"
+          ]
+        },
+        {
+          "name": "School Management Monitoring & Evaluation",
+          "roles": [
+            "Senior Education Program Specialist",
+            "Education Program Specialist II"
+          ]
+        },
+        {
+          "name": "Human Resource Development",
+          "roles": [
+            "Senior Education Program Specialist",
+            "Education Program Specialist II"
+          ]
+        },
+        {
+          "name": "Social Mobilization & Networking",
+          "roles": [
+            "Senior Education Program Specialist",
+            "Education Program Specialist II",
+            "Project Development Officer II- DRRM"
+          ]
+        },
+        {
+          "name": "Education Facilities",
+          "roles": [
+            "Engineer II"
+          ]
+        },
+        {
+          "name": "School Health",
+          "roles": [
+            "Dentist II",
+            "Nurse II (3)"
+          ]
+        }
+      ],
+      "roles": [
+        "Chief Education Supervisor",
+        "Education Program Supervisor",
+        "Administrative Assistant III",
+        "Administrative Aide IV",
+        "Project Development Officer I",
+        "Project Development Officer",
+        "Special Disbursing Officer"
+      ]
+    }
+  ]
+}

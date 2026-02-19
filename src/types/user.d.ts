@@ -4,6 +4,8 @@ interface UserInterface {
     last_name: string;
     email?: string;
     office: string;
+    designation?: string;
+    department?: string;
     status?: number;
     email_verified_at?: string;
     created_at?: string;
@@ -20,4 +22,6 @@ export interface UserRegister {
   password: string
   role: string
   office: string
+  designation?: string;
+  department?: string;
 }

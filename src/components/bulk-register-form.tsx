@@ -44,6 +44,8 @@ export type CSVUser = {
   password: string
   role: string
   office: string
+  department: string | null
+  designation: string
   rowNumber: number
   errors: string[]
 }

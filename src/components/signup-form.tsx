@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import useRegisterUser from '@/hooks/use-register-user'
 import type { UserRegister } from '@/types/user'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   UserPlus,
   User,
@@ -25,6 +25,7 @@ import {
   Building2,
   ShieldCheck,
   RotateCcw,
+  Layers,
 } from 'lucide-react'
 import {
   Tooltip,
@@ -33,20 +34,52 @@ import {
   TooltipTrigger,
 } from './ui/tooltip'
 import { useUserContext } from '@/context/user-context'
+import officesData from '@/departments.json'
+import type { Department, Office } from '@/utils/deped-office'
+import {
+  getDesignationsForDepartment,
+  parseRoles,
+  getDepartmentsForOffice,
+} from '@/utils/deped-office'
+
+type ExtendedUserRegister = UserRegister & {
+  department: string
+  designation: string
+}
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const mutation = useRegisterUser()
   const { user } = useUserContext()
   const isSuperAdmin = user?.email === import.meta.env.VITE_SUPER_ADMIN
 
-  const [userInfo, setUserInfo] = useState<UserRegister>({
+  const officeNames = useMemo(
+    () => (officesData.Offices as Office[]).map((o) => o.name),
+    [],
+  )
+
+  const [userInfo, setUserInfo] = useState<ExtendedUserRegister>({
     first_name: '',
     last_name: '',
     email: '',
     password: '',
     role: '',
     office: '',
+    department: '',
+    designation: '',
   })
+
+  const departments = useMemo(
+    () => getDepartmentsForOffice(userInfo.office),
+    [userInfo.office],
+  )
+
+  const designations = useMemo(
+    () =>
+      parseRoles(
+        getDesignationsForDepartment(userInfo.office, userInfo.department),
+      ),
+    [userInfo.office, userInfo.department],
+  )
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -57,6 +90,23 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     setUserInfo({ ...userInfo, [event.target.id]: event.target.value })
   }
 
+  const handleSelectChange =
+    (field: keyof ExtendedUserRegister) => (value: string) => {
+      // Reset downstream selections when a parent changes
+      if (field === 'office') {
+        setUserInfo({
+          ...userInfo,
+          office: value,
+          department: '',
+          designation: '',
+        })
+      } else if (field === 'department') {
+        setUserInfo({ ...userInfo, department: value, designation: '' })
+      } else {
+        setUserInfo({ ...userInfo, [field]: value })
+      }
+    }
+
   const handleResetForm = () => {
     setUserInfo({
       first_name: '',
@@ -65,6 +115,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       password: '',
       role: '',
       office: '',
+      department: '',
+      designation: '',
     })
     mutation.reset()
   }
@@ -156,7 +208,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </div>
           </section>
 
-          {/* Office */}
+          {/* Office Assignment */}
           <section className="space-y-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
               <Building2 className="h-4 w-4 text-primary-blue" />
@@ -165,15 +217,91 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <Field>
               <FieldLabel htmlFor="office">Office</FieldLabel>
-              <Input
-                id="office"
-                type="text"
-                placeholder="Division Office / HR / Accounting"
+              <Select
                 required
-                onChange={handleChange}
+                onValueChange={handleSelectChange('office')}
                 value={userInfo.office}
-              />
+              >
+                <SelectTrigger id="office" name="office">
+                  <SelectValue placeholder="Select an office" />
+                </SelectTrigger>
+                <SelectContent>
+                  {officeNames.map((name) => (
+                    <SelectItem key={name} value={name}>
+                      {name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
+          </section>
+
+          {/* Department & Designation */}
+          <section className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+              <Layers className="h-4 w-4 text-primary-blue" />
+              Department & Designation
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="department">Department</FieldLabel>
+                <Select
+                  required
+                  onValueChange={handleSelectChange('department')}
+                  value={userInfo.department}
+                  disabled={!userInfo.office || departments.length === 0}
+                >
+                  <SelectTrigger id="department" name="department">
+                    <SelectValue
+                      placeholder={
+                        !userInfo.office
+                          ? 'Select an office first'
+                          : departments.length === 0
+                            ? 'No departments available'
+                            : 'Select a department'
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="designation">Designation</FieldLabel>
+                <Select
+                  required
+                  onValueChange={handleSelectChange('designation')}
+                  value={userInfo.designation}
+                  disabled={!userInfo.department || designations.length === 0}
+                >
+                  <SelectTrigger id="designation" name="designation">
+                    <SelectValue
+                      placeholder={
+                        !userInfo.department
+                          ? 'Select a department first'
+                          : designations.length === 0
+                            ? 'No designations available'
+                            : 'Select a designation'
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {designations.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+            </div>
           </section>
 
           {/* Role */}
@@ -191,9 +319,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
               <Select
                 required
-                onValueChange={(value) =>
-                  setUserInfo({ ...userInfo, role: value })
-                }
+                onValueChange={handleSelectChange('role')}
                 value={userInfo.role}
               >
                 <SelectTrigger id="role" name="role">

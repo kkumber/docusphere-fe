@@ -25,6 +25,17 @@ export const userColumns: ColumnDef<User>[] = [
     header: 'Office',
   },
   {
+    accessorKey: 'department',
+    header: 'Department',
+    cell: ({ row }) => (
+      <div className="">{row.getValue('department') ?? 'None'}</div>
+    ),
+  },
+  {
+    accessorKey: 'designation',
+    header: 'Designation',
+  },
+  {
     accessorKey: 'role',
     header: 'Role',
     cell: ({ row }) => <div className="uppercase">{row.getValue('role')}</div>,
