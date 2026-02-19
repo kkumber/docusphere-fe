@@ -48,36 +48,11 @@ const statusMap: DocumentStatusMap = {
   },
 
   7: {
-    label: 'Acknowledged',
-    color: 'bg-green-100 text-green-800 border-green-300',
-  },
-
-  8: {
-    label: 'Approved',
-    color: 'bg-blue-100 text-blue-800 border-blue-300 ',
-  },
-
-  9: {
-    label: 'Signed',
-    color: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-  },
-
-  10: {
-    label: 'Reviewed',
-    color: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-  },
-
-  11: {
-    label: 'Responded',
-    color: 'bg-cyan-100 text-cyan-800 border-cyan-300',
-  },
-
-  12: {
     label: 'Completed',
     color: 'bg-green-100 text-green-800 border-green-300',
   },
 
-  13: {
+  8: {
     label: 'Delayed',
     color: 'bg-orange-100 text-orange-800 border-orange-300',
   },
@@ -87,25 +62,25 @@ const statusMap: DocumentStatusMap = {
    * DOCUMENT DRAFTS
    * ==============================
    */
-  18: {
+  12: {
     label: 'Draft',
     color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
   },
-  19: {
+  13: {
     label: 'Draft In Review',
     color: 'bg-indigo-100 text-indigo-800 border-indigo-300',
   },
-  20: {
+  14: {
     label: 'Draft Approved',
     color: 'bg-blue-100 text-blue-800 border-blue-300',
   },
-  21: {
-    label: 'For Issuance',
-    color: 'bg-green-100 text-green-800 border-green-300',
-  },
 
-  22: {
+  15: {
     label: 'Rejected',
+    color: 'bg-red-100 text-red-800 border-red-300',
+  },
+  16: {
+    label: 'Returned',
     color: 'bg-red-100 text-red-800 border-red-300',
   },
 }

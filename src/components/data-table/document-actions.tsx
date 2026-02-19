@@ -52,32 +52,30 @@ const DocumentActions = ({ row }: Props) => {
   const completedStatuses = [
     DocumentStatusMap.DOC_COMPLETED,
     DocumentStatusMap.DOC_ARCHIVED,
-    DocumentStatusMap.DRAFT_APPROVED,
-    DocumentStatusMap.DRAFT_FOR_ISSUANCE,
-    DocumentStatusMap.REJECTED,
+    DocumentStatusMap.DOC_DRAFT_APPROVED,
+    DocumentStatusMap.DOC_REJECTED,
   ]
 
   const deleteStatuses = [
     DocumentStatusMap.DOC_PENDING,
-    DocumentStatusMap.DRAFT_PENDING,
+    DocumentStatusMap.DOC_DRAFT_PENDING,
     DocumentStatusMap.DOC_ARCHIVED,
   ]
 
   const isAdminOrRecords = userRole === 'admin' || userRole === 'records'
-
-  const canArchiveDocument = isAdminOrRecords
 
   const canDeleteDocument =
     (isAdminOrRecords || row.original.uploaded_by === user?.id) &&
     deleteStatuses.includes(row.original.status_id!)
 
   const isDraft =
-    row.original.status_id === DocumentStatusMap.DRAFT_PENDING ||
-    row.original.status_id === DocumentStatusMap.DRAFT_IN_REVIEW
+    row.original.status_id === DocumentStatusMap.DOC_DRAFT_PENDING ||
+    row.original.status_id === DocumentStatusMap.DOC_DRAFT_IN_REVIEW
 
   const isDocumentCompleted = completedStatuses.includes(
     row.original.status_id!,
   )
+  const canArchiveDocument = isAdminOrRecords && isDocumentCompleted
 
   return (
     <>

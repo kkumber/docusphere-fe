@@ -62,7 +62,8 @@ const DocumentView = () => {
   const errorDetailsMsg = isError ? error?.message : null
   const isDraftReadyForRecords =
     document.status_id === DocumentStatusMap.DOC_DRAFT_APPROVED ||
-    document.status_id === DocumentStatusMap.DOC_PENDING
+    document.status_id === DocumentStatusMap.DOC_PENDING ||
+    document.status_id === DocumentStatusMap.DOC_RETURNED
 
   const terminalStatuses = [
     DocumentStatusMap.DOC_COMPLETED,

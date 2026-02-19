@@ -47,6 +47,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './ui/tooltip'
+import { getOffices } from '@/utils/deped-office'
+import type { Office } from '@/utils/deped-office'
+import { Checkbox } from './ui/checkbox'
 
 export interface DocumentFormState {
   tracking_no: string
@@ -67,8 +70,13 @@ export default function DocumentRegistrationForm() {
     authentication.userRole() === 'records' ||
     authentication.userRole() === 'admin'
 
+  const offices: Office[] = getOffices()
+  const currentYear = new Date().getFullYear()
+
   const [formData, setFormData] = useState<DocumentFormState>({
-    tracking_no: !isUserRecords ? `DRAFT-` : 'DM No.',
+    tracking_no: !isUserRecords
+      ? `DRAFT-`
+      : `Category, ID, S. ${currentYear} Title`,
     title: '',
     instructions: '',
     category: '',
@@ -79,6 +87,7 @@ export default function DocumentRegistrationForm() {
   })
   const [fileError, setFileError] = useState('')
   const [dueDateError, setDueDateError] = useState('')
+  const [otherOffice, setOtherOffice] = useState(false)
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -399,13 +408,47 @@ export default function DocumentRegistrationForm() {
               <FieldLabel htmlFor="originating_office">
                 Originating Office
               </FieldLabel>
-              <Input
-                id="originating_office"
-                placeholder="e.g. HR, Accounting, Curriculum"
-                value={formData.originating_office}
-                required
-                onChange={handleInputChange}
-              />
+              {!otherOffice ? (
+                <Select
+                  required
+                  value={formData.originating_office}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      originating_office: value,
+                    }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select originating office" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {offices.map((office) => (
+                      <SelectItem key={office.name} value={office.name}>
+                        {office.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  id="originating_office"
+                  placeholder="e.g. HR, Accounting, Curriculum"
+                  value={formData.originating_office}
+                  required
+                  onChange={handleInputChange}
+                />
+              )}
+
+              {/* Others office input field */}
+              <div className="flex gap-2 items-center mt-2">
+                <Checkbox
+                  checked={otherOffice}
+                  onCheckedChange={() => setOtherOffice(!otherOffice)}
+                  className="w-4 h-4"
+                />
+                <FieldDescription>Other (please specify).</FieldDescription>
+              </div>
             </Field>
           </section>
 
@@ -452,53 +495,6 @@ export default function DocumentRegistrationForm() {
               : 'Upload Document'}
           </Button>
         </form>
-
-        {/* ACTION ICONS only after success */}
-        {/* {showActions && (
-          <div className="flex items-center gap-2 mt-4">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
-              asChild
-            >
-              <Link
-                to="/documents/$documentId"
-                params={{
-                  documentId: uploadedData.document.id?.toString(),
-                }}
-              >
-                <Eye className="h-4 w-4 mr-1.5" />
-                View
-              </Link>
-            </Button>
-
-            <AssignDocModal
-              documentId={uploadedData.document.id}
-              documentTitle={formData.title}
-              trigger={
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
-                >
-                  <Send className="h-4 w-4 mr-1.5" />
-                  Assign
-                </Button>
-              }
-            />
-
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
-              onClick={handleResetForm}
-            >
-              <RotateCcw className="h-4 w-4 mr-1.5" />
-              Reset
-            </Button>
-          </div>
-        )} */}
       </CardContent>
     </Card>
   )

@@ -84,6 +84,8 @@ export function BulkUploadForm({
     if (!row.password?.trim()) errors.push('Password is required')
     if (!row.role?.trim()) errors.push('Role is required')
     if (!row.office?.trim()) errors.push('Office is required')
+    if (!row.designation?.trim()) errors.push('Designation is required')
+    if (!row.department?.trim()) errors.push('Department is required')
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -131,6 +133,8 @@ export function BulkUploadForm({
             last_name: row.last_name?.trim() || '',
             role: row.role?.trim().toLowerCase() || '',
             office: row.office?.trim() || '',
+            designation: row.designation?.trim() || '',
+            department: row.department?.trim() || '',
             email: row.email?.trim() || '',
             password: row.password?.trim() || '',
             rowNumber,
@@ -169,9 +173,9 @@ export function BulkUploadForm({
   }
 
   const handleDownloadTemplate = () => {
-    const template = `first_name,last_name,office,role,email,password
-Juan,Dela Cruz,Division Office,staff,juan.delacruz@deped.gov.ph,Password123
-Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
+    const template = `first_name,last_name,office,department,designation,role,email,password
+Juan,Dela Cruz,Office of the Schools Division Superintendent,Accounting,Accountant I,staff,juan.delacruz@deped.gov.ph,Password123
+Maria,Santos,Office of the Assistant Schools Division Superintendent,None,Accountant II,records,maria.santos@deped.gov.ph,Password123`
 
     const blob = new Blob([template], { type: 'text/csv' })
     const url = window.URL.createObjectURL(blob)
@@ -347,6 +351,8 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                         <TableHead>Last Name</TableHead>
                         <TableHead>Role</TableHead>
                         <TableHead>Office</TableHead>
+                        <TableHead>Department</TableHead>
+                        <TableHead>Designation</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead className="w-20">Password</TableHead>
                         <TableHead className="w-20">Status</TableHead>
@@ -365,6 +371,8 @@ Maria,Santos,Records Office,records,maria.santos@deped.gov.ph,Password123`
                           <TableCell>{user.last_name || '-'}</TableCell>
                           <TableCell>{user.role || '-'}</TableCell>
                           <TableCell>{user.office || '-'}</TableCell>
+                          <TableCell>{user.department || '-'}</TableCell>
+                          <TableCell>{user.designation || '-'}</TableCell>
                           <TableCell>{user.email || '-'}</TableCell>
                           <TableCell>{user.password || '-'}</TableCell>
                           <TableCell>

@@ -18,6 +18,11 @@ export interface Office {
   departments?: Department[]
 }
 
+
+export function getOffices(): Office[] {
+  return (officesData.Offices as Office[])
+}
+
 /** Collect all department / sub-department names that belong to an office. */
 export function getDepartmentsForOffice(officeName: string): string[] {
   const office = (officesData.Offices as Office[]).find(

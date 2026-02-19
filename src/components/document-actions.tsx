@@ -9,6 +9,7 @@ import {
   Edit,
   XCircle,
   ArrowLeft,
+  Repeat,
 } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import {
@@ -29,7 +30,6 @@ import { Input } from './ui/input'
 import useSignDocument from '@/hooks/use-sign-document'
 import { DocumentStatusMap } from '@/lib/document-status-map'
 import useReturnDocument from '@/hooks/use-return-document'
-import { is } from 'date-fns/locale'
 
 interface Props {
   documentId: string
@@ -55,15 +55,16 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
   const isUserRecords = userRole === 'records'
   const canCompleteDocument = userRole === 'admin' || userRole === 'sds'
   const canRejectDocument = userRole === 'sds'
-  const canReturnDocument = isUserRecords
 
   const draftStatuses = [
     DocumentStatusMap.DOC_DRAFT_PENDING,
     DocumentStatusMap.DOC_DRAFT_IN_REVIEW,
     DocumentStatusMap.DOC_DRAFT_APPROVED,
+    DocumentStatusMap.DOC_RETURNED,
   ]
   const isDraft = draftStatuses.includes(status_id!)
-  const showOtherActions = !isDraft && !isUserRecords
+  const showOtherActions = (!isDraft && isUserRecords) || !isUserRecords
+  const canReturnDocument = isUserRecords && isDraft
 
   const handlePerformActionTask = (action: ActionTypes) => {
     performActionMutation.reset()
@@ -285,22 +286,26 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
         {canCompleteDocument ? (
           <DocumentStatusWarningModal documentId={documentId} />
         ) : (
-          <ReusableAlertDialog
-            title="Mark assignment as completed"
-            description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
-            confirmText="Mark as completed"
-            cancelText="Cancel"
-            onConfirm={() => handlePerformActionTask('complete')}
-            triggerButton={
-              <DropdownMenuItem
-                onSelect={(e) => e.preventDefault()}
-                className="flex items-center gap-2"
-              >
-                <CheckCircle className="w-4 h-4" /> Mark as completed
-              </DropdownMenuItem>
-            }
-          />
+          !isDraft && (
+            <ReusableAlertDialog
+              title="Mark assignment as completed"
+              description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
+              confirmText="Mark as completed"
+              cancelText="Cancel"
+              onConfirm={() => handlePerformActionTask('complete')}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <CheckCircle className="w-4 h-4" /> Mark as completed
+                </DropdownMenuItem>
+              }
+            />
+          )
         )}
+
+        <DropdownMenuSeparator />
 
         {/* APPROVE */}
         <ReusableAlertDialog
@@ -321,7 +326,6 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
         {/* REJECT */}
         {canRejectDocument && (
           <>
-            <DropdownMenuSeparator />
             <ReusableAlertDialog
               title="Reject document"
               description="Rejecting this document will permanently terminate its workflow. The document will no longer be routed, reviewed, or acted upon. This action is irreversible."
@@ -373,7 +377,7 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
                   onSelect={(e) => e.preventDefault()}
                   className="flex items-center gap-2 text-destructive"
                 >
-                  <ArrowLeft className="w-4 h-4 text-destructive" /> Return
+                  <Repeat className="w-4 h-4 text-destructive" /> Return
                 </DropdownMenuItem>
               }
               additionalContent={
