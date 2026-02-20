@@ -300,9 +300,10 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                             checked={selectedUsers.includes(user!.id)}
                             onCheckedChange={() => toggleUser(user!.id)}
                           />
-                          <UserIcon className="size-3 text-muted-foreground" />
+                          <UserIcon className="size-6 text-muted-foreground" />
                           <span>
-                            {user?.first_name} {user?.last_name}
+                            {user?.first_name} {user?.last_name} -{' '}
+                            {user?.office} - {user?.designation}
                           </span>
                         </label>
                       ))}

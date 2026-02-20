@@ -301,6 +301,10 @@ Maria,Santos,Office of the Assistant Schools Division Superintendent,None,Accoun
                   <span className="font-medium">Headers:</span> Must match
                   exactly (case-sensitive) but can be in any order
                 </li>
+                <li>
+                  If the user has no department, enter "None" in the Department
+                  column.
+                </li>
               </ul>
             </div>
           </section>

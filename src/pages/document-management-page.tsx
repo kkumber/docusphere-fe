@@ -94,6 +94,11 @@ const DocumentManagementPage = () => {
           label: 'Draft Approved',
           group: 'draft',
         },
+        {
+          value: String(DocumentStatusMap.DOC_RETURNED),
+          label: 'Returned',
+          group: 'draft',
+        },
       ]
     : [
         {
@@ -139,6 +144,11 @@ const DocumentManagementPage = () => {
         {
           value: String(DocumentStatusMap.DOC_DRAFT_APPROVED),
           label: 'Draft Approved',
+          group: 'draft',
+        },
+        {
+          value: String(DocumentStatusMap.DOC_RETURNED),
+          label: 'Returned',
           group: 'draft',
         },
       ]
