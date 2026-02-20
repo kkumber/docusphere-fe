@@ -50,64 +50,83 @@ const DocumentInformation = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Tracking No */}
-          <div className="flex items-start gap-3">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Tracking No</p>
-              </div>
-              <p className="font-medium">{document.tracking_no}</p>
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Tracking No</p>
             </div>
+            <p className="font-medium truncate">{document.tracking_no}</p>
+          </div>
+
+          {/* Title */}
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Title</p>
+            </div>
+            <p className="font-medium break-words">{document.title}</p>
           </div>
 
           {/* Category */}
-          <div className="flex items-start gap-3">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <Tag className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Category</p>
-              </div>
-              <p className="font-medium first-letter:uppercase">
-                {document.category}
-              </p>
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <Tag className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Category</p>
             </div>
+            <p className="font-medium first-letter:uppercase break-words">
+              {document.category}
+            </p>
+          </div>
+
+          {/* Request Type */}
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <ClipboardList className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Request Type</p>
+            </div>
+            <p className="font-medium break-words">{document.request_type}</p>
           </div>
 
           {/* Originating Office */}
-          <div className="flex items-start gap-3">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Originating Office</p>
-              </div>
-              <p className="font-medium">{document.originating_office}</p>
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Originating Office</p>
             </div>
+            <p className="font-medium break-words">
+              {document.originating_office}
+            </p>
+          </div>
+
+          {/* Uploaded By */}
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Uploaded By</p>
+            </div>
+            <p className="font-medium break-words">{document.uploaded_by}</p>
           </div>
 
           {/* Created At */}
-          <div className="flex items-start gap-3">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Created At</p>
-              </div>
-              <p className="font-medium">
-                {new Date(document.created_at).toLocaleString()}
-              </p>
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Created At</p>
             </div>
+            <p className="font-medium break-words">
+              {new Date(document.created_at).toLocaleString()}
+            </p>
           </div>
 
           {/* Updated At */}
-          <div className="flex items-start gap-3">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Last Updated</p>
-              </div>
-              <p className="font-medium">
-                {new Date(document.updated_at).toLocaleString()}
-              </p>
+          <div className="space-y-0.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-muted-foreground">Last Updated</p>
             </div>
+            <p className="font-medium break-words">
+              {new Date(document.updated_at).toLocaleString()}
+            </p>
           </div>
         </div>
       </div>
@@ -124,53 +143,49 @@ const DocumentInformation = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Assigned By */}
-              <div className="flex items-start gap-3">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">Assigned By</p>
-                  </div>
-                  <p className="font-medium">{assignment.assigned_by}</p>
+              <div className="space-y-0.5 min-w-0">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <p className="text-muted-foreground">Assigned By</p>
                 </div>
+                <p className="font-medium break-words">
+                  {assignment.assigned_by}
+                </p>
               </div>
 
               {/* Request Type */}
-              <div className="flex items-start gap-3">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <ClipboardList className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">Request Type</p>
-                  </div>
-                  <p className="font-medium">{assignment.request_type}</p>
+              <div className="space-y-0.5 min-w-0">
+                <div className="flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <p className="text-muted-foreground">Request Type</p>
                 </div>
+                <p className="font-medium break-words">
+                  {assignment.request_type}
+                </p>
               </div>
 
               {/* Due Date */}
-              <div className="flex items-start gap-3">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">Due Date</p>
-                  </div>
-                  <p className="font-medium">
-                    {assignment.due_date
-                      ? new Date(assignment.due_date).toLocaleDateString()
-                      : 'No due date'}
-                  </p>
+              <div className="space-y-0.5 min-w-0">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <p className="text-muted-foreground">Due Date</p>
                 </div>
+                <p className="font-medium break-words">
+                  {assignment.due_date
+                    ? new Date(assignment.due_date).toLocaleDateString()
+                    : 'No due date'}
+                </p>
               </div>
 
               {/* Status */}
-              <div className="flex items-start gap-3">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">Status</p>
-                  </div>
-                  <span className="inline-flex w-fit rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                    {assignment.status}
-                  </span>
+              <div className="space-y-0.5 min-w-0">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <p className="text-muted-foreground">Status</p>
                 </div>
+                <span className="inline-flex w-fit rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                  {assignment.status}
+                </span>
               </div>
             </div>
 
@@ -180,7 +195,9 @@ const DocumentInformation = ({
                 <p className="mb-1 text-xs font-medium text-muted-foreground">
                   Instructions
                 </p>
-                <p className="leading-relaxed">{assignment.instructions}</p>
+                <p className="leading-relaxed break-words">
+                  {assignment.instructions}
+                </p>
               </div>
             )}
           </div>

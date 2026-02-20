@@ -34,6 +34,7 @@ import useReturnDocument from '@/hooks/use-return-document'
 interface Props {
   documentId: string
   status_id?: number
+  uploaded_by?: number
 }
 
 const DocumentActions = ({ documentId, status_id }: Props) => {
@@ -278,39 +279,8 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
                 </div>
               }
             />
-          </>
-        )}
-
-        {canCompleteDocument ? (
-          <>
-            <DropdownMenuSeparator />
-
-            <DocumentStatusWarningModal documentId={documentId} />
             <DropdownMenuSeparator />
           </>
-        ) : (
-          !isDraft && (
-            <>
-              <DropdownMenuSeparator />
-
-              <ReusableAlertDialog
-                title="Mark assignment as completed"
-                description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
-                confirmText="Mark as completed"
-                cancelText="Cancel"
-                onConfirm={() => handlePerformActionTask('complete')}
-                triggerButton={
-                  <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
-                    className="flex items-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Mark as completed
-                  </DropdownMenuItem>
-                }
-              />
-              <DropdownMenuSeparator />
-            </>
-          )
         )}
 
         {/* APPROVE */}
@@ -403,6 +373,36 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
               }
             />
           </>
+        )}
+
+        {canCompleteDocument ? (
+          <>
+            <DropdownMenuSeparator />
+
+            <DocumentStatusWarningModal documentId={documentId} />
+          </>
+        ) : (
+          !isDraft && (
+            <>
+              <DropdownMenuSeparator />
+
+              <ReusableAlertDialog
+                title="Mark assignment as completed"
+                description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
+                confirmText="Mark as completed"
+                cancelText="Cancel"
+                onConfirm={() => handlePerformActionTask('complete')}
+                triggerButton={
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="flex items-center gap-2"
+                  >
+                    <CheckCircle className="w-4 h-4" /> Mark as completed
+                  </DropdownMenuItem>
+                }
+              />
+            </>
+          )
         )}
       </DropdownMenuContent>
     </DropdownMenu>

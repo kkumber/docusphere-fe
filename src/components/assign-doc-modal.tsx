@@ -290,21 +290,43 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                       Select all
                     </label>
 
-                    <div className="grid md:grid-cols-2 space-y-4 md:gap-2 mt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 max-h-72 overflow-y-auto pr-1">
                       {users.map((user) => (
                         <label
                           key={user?.id}
-                          className="flex items-center gap-2 cursor-pointer text-sm"
+                          className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors hover:bg-muted/50 w-full min-w-0 ${
+                            selectedUsers.includes(user!.id)
+                              ? 'border-primary bg-primary/5'
+                              : 'border-border bg-background'
+                          }`}
                         >
+                          {/* Checkbox pinned to top */}
                           <Checkbox
                             checked={selectedUsers.includes(user!.id)}
                             onCheckedChange={() => toggleUser(user!.id)}
+                            className="mt-1 shrink-0"
                           />
-                          <UserIcon className="size-6 text-muted-foreground" />
-                          <span>
-                            {user?.first_name} {user?.last_name} -{' '}
-                            {user?.office} - {user?.designation}
-                          </span>
+
+                          {/* Avatar initials */}
+                          <div className="shrink-0 size-8 rounded-full bg-muted flex items-center justify-center">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase">
+                              {user?.first_name?.[0]}
+                              {user?.last_name?.[0]}
+                            </span>
+                          </div>
+
+                          {/* Text — wraps naturally, never overflows */}
+                          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                            <span className=" font-medium leading-snug break-words">
+                              {user?.first_name} {user?.last_name}
+                            </span>
+                            <span className="text-sm text-muted-foreground leading-snug break-words">
+                              {user?.designation}
+                            </span>
+                            <span className="text-sm text-muted-foreground/60 leading-snug break-words">
+                              {user?.office}
+                            </span>
+                          </div>
                         </label>
                       ))}
                     </div>

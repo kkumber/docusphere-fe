@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Info } from 'lucide-react'
+import { Info, MessageSquare } from 'lucide-react'
 import { ReusableAlertDialog } from '@/components/reusable-alert-dialog'
 import DocumentInformation from '@/components/document-information'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -151,9 +151,9 @@ const DocumentDetails = ({
                 )}
 
                 {logs.length > 0 && (
-                  <div className="relative space-y-4 pl-6">
+                  <div className="relative space-y-3 pl-6">
                     {/* Timeline line */}
-                    <div className="absolute left-[7px] top-2 bottom-0 w-px bg-linear-to-b from-primary/40 via-primary/20 to-transparent" />
+                    <div className="absolute left-[7px] top-2 bottom-0 w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
 
                     {logs.map((log) => {
                       const user = log.performed_by
@@ -168,44 +168,23 @@ const DocumentDetails = ({
                         hour12: true,
                       })
 
+                      const initials =
+                        `${user.first_name?.[0] ?? ''}${user.last_name?.[0] ?? ''}`.toUpperCase()
+
                       return (
                         <div key={log.id} className="relative">
                           {/* Timeline dot */}
-                          <div className="absolute -left-6 top-1.5 flex h-4 w-4 items-center justify-center">
+                          <div className="absolute -left-6 top-3 flex h-4 w-4 items-center justify-center">
                             <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-background ring-4 ring-background" />
                           </div>
 
-                          {/* Content card */}
-                          <div className="group rounded-lg border bg-card p-3 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="min-w-0 flex-1 space-y-1">
-                                <p className="text-sm font-semibold leading-tight">
-                                  {log.action}
-                                </p>
-
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium text-foreground">
-                                    {user.first_name} {user.last_name}
-                                  </span>
-                                  {user.role && (
-                                    <span className="text-muted-foreground">
-                                      {' · '}
-                                      {user.role.toUpperCase()}
-                                    </span>
-                                  )}
-                                </p>
-
-                                {/* Remarks — ONLY for review (and only if present) */}
-                                {log.remarks && (
-                                  <div className="mt-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
-                                    <span className="font-medium text-foreground">
-                                      Remarks:
-                                    </span>{' '}
-                                    {log.remarks}
-                                  </div>
-                                )}
-                              </div>
-
+                          {/* Card */}
+                          <div className="rounded-lg border bg-card shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+                            {/* Top: action + date */}
+                            <div className="flex items-center justify-between gap-2 border-b px-3 py-2">
+                              <p className="text-xs font-semibold uppercase tracking-wide text-primary truncate">
+                                {log.action}
+                              </p>
                               <div className="shrink-0 text-right">
                                 <p className="text-xs font-medium text-muted-foreground">
                                   {formattedDate}
@@ -215,6 +194,50 @@ const DocumentDetails = ({
                                 </p>
                               </div>
                             </div>
+
+                            {/* Body: avatar + name + org info */}
+                            <div className="flex items-center gap-3 px-3 py-4 min-w-0">
+                              {/* Avatar */}
+                              <div className="shrink-0 size-8 rounded-full bg-muted flex items-center justify-center">
+                                <span className="text-xs font-bold text-muted-foreground">
+                                  {initials}
+                                </span>
+                              </div>
+
+                              {/* Name + org info */}
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-semibold leading-tight truncate">
+                                  {user.first_name} {user.last_name}
+                                </p>
+
+                                {/* Org info  */}
+                                <div className="flex items-center gap-1 mt-0.5 min-w-0 overflow-x-auto scrollbar-none">
+                                  {user.office && (
+                                    <>
+                                      <span className="text-xs text-muted-foreground ">
+                                        {user.office}{' '}
+                                        {user.department
+                                          ? `• ${user.department}`
+                                          : ''}{' '}
+                                        • {user.designation}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Remarks */}
+                            {log.remarks && (
+                              <div className="mx-3 mb-3 mt-4 flex gap-2.5 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40 px-3 py-2.5">
+                                <MessageSquare className="shrink-0 size-3.5 mt-0.5 text-amber-500" />
+                                <div className="min-w-0">
+                                  <p className="text-xs text-amber-900 dark:text-amber-200 break-words leading-relaxed">
+                                    {log.remarks}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       )

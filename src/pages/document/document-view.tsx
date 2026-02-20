@@ -22,6 +22,8 @@ interface DocumentDetailsResponse {
       title: string
       category: string
       originating_office: string
+      request_type: string
+      uploaded_by: string
       created_at: string
       updated_at: string
     }
