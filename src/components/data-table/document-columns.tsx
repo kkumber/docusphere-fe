@@ -89,11 +89,17 @@ export const documentColumns: ColumnDef<Document>[] = [
   {
     accessorKey: 'tracking_no',
     header: 'Tracking Number',
+    cell: ({ row }) => (
+      <div className="w-60 truncate">{row.original.tracking_no}</div>
+    ),
   },
   {
     accessorKey: 'title',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Title" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-60 truncate">{row.original.title}</div>
     ),
   },
   {
@@ -106,6 +112,11 @@ export const documentColumns: ColumnDef<Document>[] = [
   {
     accessorKey: 'originating_office',
     header: 'Originating Office',
+    cell: ({ row }) => (
+      <div className="w-48 truncate">
+        {row.original.originating_office ?? 'None'}
+      </div>
+    ),
   },
   {
     accessorKey: 'category',
