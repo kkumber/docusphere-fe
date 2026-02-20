@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import useUpdateUser from '@/hooks/use-update-user'
 import type { User } from '@/types/user'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
 import {
   UserCog,
@@ -25,7 +25,20 @@ import {
   Mail,
   Building2,
   ShieldCheck,
+  Layers,
 } from 'lucide-react'
+import officesData from '@/departments.json'
+import type { Office } from '@/utils/deped-office'
+import {
+  getDepartmentsForOffice,
+  getDesignationsForDepartment,
+  parseRoles,
+} from '@/utils/deped-office'
+
+type ExtendedUser = User & {
+  department: string
+  designation: string
+}
 
 type UpdateUserFormProps = {
   user: User
@@ -33,23 +46,67 @@ type UpdateUserFormProps = {
 }
 
 export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
-  const [userData, setUserData] = useState<User>(user)
+  if (!user) return null
+
+  const [userData, setUserData] = useState<ExtendedUser>({
+    ...user,
+    department: user.department ?? '',
+    designation: user.designation ?? '',
+  })
+
   const mutation = useUpdateUser()
 
+  const officeNames = useMemo(
+    () => (officesData.Offices as Office[]).map((o) => o.name),
+    [],
+  )
+
+  const departments = useMemo(
+    () => getDepartmentsForOffice(userData.office ?? ''),
+    [userData.office],
+  )
+
+  const designations = useMemo(
+    () =>
+      parseRoles(
+        getDesignationsForDepartment(
+          userData.office ?? '',
+          userData.department,
+        ),
+      ),
+    [userData.office, userData.department],
+  )
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!userData) return
     setUserData({ ...userData, [event.target.id]: event.target.value })
+  }
+
+  const handleSelectChange = (field: keyof ExtendedUser) => (value: string) => {
+    if (field === 'office') {
+      setUserData({
+        ...userData,
+        office: value,
+        department: '',
+        designation: '',
+      })
+    } else if (field === 'department') {
+      setUserData({ ...userData, department: value, designation: '' })
+    } else {
+      setUserData({ ...userData, [field]: value })
+    }
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (
-      userData!.first_name === user?.first_name &&
-      userData!.last_name === user.last_name &&
-      userData!.office === user.office &&
-      userData!.role === user.role &&
-      userData?.email === user.email
+      userData.first_name === user.first_name &&
+      userData.last_name === user.last_name &&
+      userData.office === user.office &&
+      userData.department === (user.department ?? '') &&
+      userData.designation === (user.designation ?? '') &&
+      userData.role === user.role &&
+      userData.email === user.email
     ) {
       return toast.error('No changes detected.')
     }
@@ -97,7 +154,7 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
                       id="first_name"
                       type="text"
                       required
-                      value={userData!.first_name}
+                      value={userData.first_name}
                       onChange={handleChange}
                     />
                   </Field>
@@ -108,15 +165,15 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
                       id="last_name"
                       type="text"
                       required
-                      value={userData!.last_name}
+                      value={userData.last_name}
                       onChange={handleChange}
                     />
                   </Field>
                 </div>
               </section>
 
-              {/* Office */}
-              <section className="space-y-4">
+              {/* Office Assignment */}
+              <section className="space-y-3">
                 <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
                   <Building2 className="h-4 w-4 text-primary-blue" />
                   Office Assignment
@@ -124,14 +181,93 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
 
                 <Field>
                   <FieldLabel htmlFor="office">Office</FieldLabel>
-                  <Input
-                    id="office"
-                    type="text"
+                  <Select
                     required
-                    value={userData!.office}
-                    onChange={handleChange}
-                  />
+                    onValueChange={handleSelectChange('office')}
+                    value={userData.office ?? ''}
+                  >
+                    <SelectTrigger id="office" name="office">
+                      <SelectValue placeholder="Select an office" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {officeNames.map((name) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </Field>
+              </section>
+
+              {/* Department & Designation */}
+              <section className="space-y-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                  <Layers className="h-4 w-4 text-primary-blue" />
+                  Department & Designation
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel htmlFor="department">Department</FieldLabel>
+                    <Select
+                      required
+                      onValueChange={handleSelectChange('department')}
+                      value={userData.department}
+                      disabled={!userData.office || departments.length === 0}
+                    >
+                      <SelectTrigger id="department" name="department">
+                        <SelectValue
+                          placeholder={
+                            !userData.office
+                              ? 'Select an office first'
+                              : departments.length === 0
+                                ? 'No departments available'
+                                : 'Select a department'
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {departments.map((name) => (
+                          <SelectItem key={name} value={name}>
+                            {name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+
+                  <Field>
+                    <FieldLabel htmlFor="designation">Designation</FieldLabel>
+                    <Select
+                      required
+                      onValueChange={handleSelectChange('designation')}
+                      value={userData.designation}
+                      disabled={
+                        !userData.department || designations.length === 0
+                      }
+                    >
+                      <SelectTrigger id="designation" name="designation">
+                        <SelectValue
+                          placeholder={
+                            !userData.department
+                              ? 'Select a department first'
+                              : designations.length === 0
+                                ? 'No designations available'
+                                : 'Select a designation'
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {designations.map((name) => (
+                          <SelectItem key={name} value={name}>
+                            {name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
               </section>
 
               {/* Role */}
@@ -149,13 +285,11 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
 
                   <Select
                     required
-                    onValueChange={(value) =>
-                      setUserData({ ...userData!, role: value })
-                    }
-                    value={userData!.role}
+                    onValueChange={handleSelectChange('role')}
+                    value={userData.role ?? ''}
                   >
                     <SelectTrigger id="role">
-                      <SelectValue placeholder={userData!.role} />
+                      <SelectValue placeholder={userData.role} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="records">Records</SelectItem>
@@ -182,7 +316,7 @@ export function UpdateUserForm({ user, ...props }: UpdateUserFormProps) {
                     id="email"
                     type="email"
                     required
-                    value={userData!.email}
+                    value={userData.email}
                     onChange={handleChange}
                   />
                 </Field>

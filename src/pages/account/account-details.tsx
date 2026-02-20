@@ -12,6 +12,8 @@ import {
   Lock,
   AlertCircle,
   Check,
+  Layers,
+  Briefcase,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import useChangePassword from '@/hooks/use-change-password'
@@ -155,8 +157,9 @@ const AccountDetails: React.FC = () => {
                 Personal Information
               </h2>
               <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
+                {/* Full Name */}
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
                       <User className="w-4 h-4 text-slate-600" />
                     </div>
@@ -164,13 +167,14 @@ const AccountDetails: React.FC = () => {
                       Full Name
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium text-right">
+                  <span className="text-sm text-slate-900 font-medium text-right ml-4 break-words min-w-0">
                     {user.first_name} {user.last_name}
                   </span>
                 </div>
 
+                {/* Email */}
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
                       <Mail className="w-4 h-4 text-slate-600" />
                     </div>
@@ -178,27 +182,59 @@ const AccountDetails: React.FC = () => {
                       Email Address
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium break-all text-right max-w-[50%]">
+                  <span className="text-sm text-slate-900 font-medium break-all text-right max-w-[50%] ml-4">
                     {user.email || '—'}
                   </span>
                 </div>
 
+                {/* Office */}
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
                       <Building2 className="w-4 h-4 text-slate-600" />
                     </div>
                     <span className="text-sm font-medium text-slate-600">
-                      Office Location
+                      Office
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium text-right">
-                    {user.office}
+                  <span className="text-sm text-slate-900 font-medium text-right ml-4 break-words min-w-0 max-w-[55%]">
+                    {user.office || '—'}
                   </span>
                 </div>
 
+                {/* Department */}
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+                      <Layers className="w-4 h-4 text-slate-600" />
+                    </div>
+                    <span className="text-sm font-medium text-slate-600">
+                      Department
+                    </span>
+                  </div>
+                  <span className="text-sm text-slate-900 font-medium text-right ml-4 break-words min-w-0 max-w-[55%]">
+                    {user.department || '—'}
+                  </span>
+                </div>
+
+                {/* Designation */}
+                <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+                      <Briefcase className="w-4 h-4 text-slate-600" />
+                    </div>
+                    <span className="text-sm font-medium text-slate-600">
+                      Designation
+                    </span>
+                  </div>
+                  <span className="text-sm text-slate-900 font-medium text-right ml-4 break-words min-w-0 max-w-[55%]">
+                    {user.designation || '—'}
+                  </span>
+                </div>
+
+                {/* Account Role */}
+                <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
                       <Shield className="w-4 h-4 text-slate-600" />
                     </div>
@@ -206,13 +242,14 @@ const AccountDetails: React.FC = () => {
                       Account Role
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium capitalize text-right">
+                  <span className="text-sm text-slate-900 font-medium capitalize text-right ml-4">
                     {user.role}
                   </span>
                 </div>
 
+                {/* Member Since */}
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
                       <Calendar className="w-4 h-4 text-slate-600" />
                     </div>
@@ -220,7 +257,7 @@ const AccountDetails: React.FC = () => {
                       Member Since
                     </span>
                   </div>
-                  <span className="text-sm text-slate-900 font-medium text-right">
+                  <span className="text-sm text-slate-900 font-medium text-right ml-4">
                     {formatDate(user.created_at)}
                   </span>
                 </div>

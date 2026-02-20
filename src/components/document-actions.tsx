@@ -34,7 +34,6 @@ import useReturnDocument from '@/hooks/use-return-document'
 interface Props {
   documentId: string
   status_id?: number
-  uploaded_by?: number
 }
 
 const DocumentActions = ({ documentId, status_id }: Props) => {
