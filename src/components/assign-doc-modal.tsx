@@ -290,13 +290,13 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                       Select all
                     </label>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 max-h-72 overflow-y-auto pr-1">
+                    <div className="grid gap-2 mt-2 max-h-72 overflow-y-auto pr-1">
                       {users.map((user) => (
                         <label
                           key={user?.id}
-                          className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors hover:bg-muted/50 w-full min-w-0 ${
+                          className={`flex items-start gap-3 p-3 rounded-sm border cursor-pointer transition-colors hover:bg-primary-blue/10 w-full min-w-0 ${
                             selectedUsers.includes(user!.id)
-                              ? 'border-primary bg-primary/5'
+                              ? 'border-primary-blue bg-primary-blue/5'
                               : 'border-border bg-background'
                           }`}
                         >
@@ -308,8 +308,8 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
                           />
 
                           {/* Avatar initials */}
-                          <div className="shrink-0 size-8 rounded-full bg-muted flex items-center justify-center">
-                            <span className="text-xs font-semibold text-muted-foreground uppercase">
+                          <div className="shrink-0 size-8 rounded-full bg-primary-blue flex items-center justify-center">
+                            <span className="text-xs font-semibold text-white uppercase">
                               {user?.first_name?.[0]}
                               {user?.last_name?.[0]}
                             </span>

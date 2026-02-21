@@ -75,7 +75,10 @@ const DocumentActions = ({ row }: Props) => {
   const isDocumentCompleted = completedStatuses.includes(
     row.original.status_id!,
   )
-  const canArchiveDocument = isAdminOrRecords && isDocumentCompleted
+  const canArchiveDocument =
+    isAdminOrRecords &&
+    isDocumentCompleted &&
+    row.original.status_id !== DocumentStatusMap.DOC_ARCHIVED
 
   return (
     <>

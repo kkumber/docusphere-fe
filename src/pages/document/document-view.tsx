@@ -61,6 +61,8 @@ const DocumentView = () => {
     key: ['documentDetails', document.id],
   })
 
+  const uploadedBy = documentDetails?.data.document.uploaded_by
+
   const errorDetailsMsg = isError ? error?.message : null
   const isDraftReadyForRecords =
     document.status_id === DocumentStatusMap.DOC_DRAFT_APPROVED ||
@@ -73,6 +75,16 @@ const DocumentView = () => {
     DocumentStatusMap.DOC_REJECTED,
   ]
   const isDocTerminal = terminalStatuses.includes(document.status_id!)
+
+  const draftStatuses = [
+    DocumentStatusMap.DOC_DRAFT_PENDING,
+    DocumentStatusMap.DOC_DRAFT_IN_REVIEW,
+    DocumentStatusMap.DOC_DRAFT_APPROVED,
+    DocumentStatusMap.DOC_RETURNED,
+  ]
+  const isDraft =
+    draftStatuses.includes(document.status_id!) ||
+    document.tracking_no.startsWith('DRAFT-')
 
   // prefetch attachments and actions/logs
   usePrefetchRequest({
@@ -113,13 +125,18 @@ const DocumentView = () => {
               {/* Document Actions Dropdown */}
 
               {userRole !== 'records' && !isDocTerminal && (
-                <DocumentActions documentId={document.id.toString()} />
+                <DocumentActions
+                  documentId={document.id.toString()}
+                  uploaded_by={uploadedBy}
+                  isDraft={isDraft}
+                />
               )}
 
               {userRole === 'records' && isDraftReadyForRecords && (
                 <DocumentActions
                   documentId={document.id.toString()}
                   status_id={document.status_id}
+                  isDraft={isDraft}
                 />
               )}
 
@@ -145,7 +162,7 @@ const DocumentView = () => {
                   className="p-2 rounded hover:bg-gray-100 transition-colors"
                   title="Download Signed PDF"
                 >
-                  <Download className="h-5 w-5 text-primary-blue" />
+                  <Download className="h-5 w-5 text-primary" />
                 </button>
               )}
             </div>

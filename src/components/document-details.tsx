@@ -198,8 +198,8 @@ const DocumentDetails = ({
                             {/* Body: avatar + name + org info */}
                             <div className="flex items-center gap-3 px-3 py-4 min-w-0">
                               {/* Avatar */}
-                              <div className="shrink-0 size-8 rounded-full bg-muted flex items-center justify-center">
-                                <span className="text-xs font-bold text-muted-foreground">
+                              <div className="shrink-0 size-8 rounded-full bg-primary-blue flex items-center justify-center">
+                                <span className="text-xs font-bold text-white">
                                   {initials}
                                 </span>
                               </div>

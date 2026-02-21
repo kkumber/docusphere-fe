@@ -34,9 +34,16 @@ import useReturnDocument from '@/hooks/use-return-document'
 interface Props {
   documentId: string
   status_id?: number
+  uploaded_by?: string
+  isDraft: boolean
 }
 
-const DocumentActions = ({ documentId, status_id }: Props) => {
+const DocumentActions = ({
+  documentId,
+  status_id,
+  uploaded_by,
+  isDraft,
+}: Props) => {
   const performActionMutation = usePerformAction()
   const uploadAttachFile = useUploadAttachment()
   const uploadReview = useUploadReview()
@@ -53,16 +60,12 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
 
   const userRole = authentication.userRole()
   const isUserRecords = userRole === 'records'
-  const canCompleteDocument = userRole === 'admin' || userRole === 'sds'
+  const isUserSds = userRole === 'sds'
   const canRejectDocument = userRole === 'sds'
+  const isUserUploader =
+    uploaded_by ===
+    `${authentication.user?.first_name} ${authentication.user?.last_name} - ${authentication.user?.designation}`
 
-  const draftStatuses = [
-    DocumentStatusMap.DOC_DRAFT_PENDING,
-    DocumentStatusMap.DOC_DRAFT_IN_REVIEW,
-    DocumentStatusMap.DOC_DRAFT_APPROVED,
-    DocumentStatusMap.DOC_RETURNED,
-  ]
-  const isDraft = draftStatuses.includes(status_id!)
   const showOtherActions = (!isDraft && isUserRecords) || !isUserRecords
   const canReturnDocument = isUserRecords && isDraft
 
@@ -374,34 +377,34 @@ const DocumentActions = ({ documentId, status_id }: Props) => {
           </>
         )}
 
-        {canCompleteDocument ? (
+        {isUserSds && !isDraft && (
           <>
             <DropdownMenuSeparator />
 
             <DocumentStatusWarningModal documentId={documentId} />
           </>
-        ) : (
-          !isDraft && (
-            <>
-              <DropdownMenuSeparator />
+        )}
 
-              <ReusableAlertDialog
-                title="Mark assignment as completed"
-                description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
-                confirmText="Mark as completed"
-                cancelText="Cancel"
-                onConfirm={() => handlePerformActionTask('complete')}
-                triggerButton={
-                  <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
-                    className="flex items-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Mark as completed
-                  </DropdownMenuItem>
-                }
-              />
-            </>
-          )
+        {!isDraft && !isUserSds && !isUserUploader && !isUserRecords && (
+          <>
+            <DropdownMenuSeparator />
+
+            <ReusableAlertDialog
+              title="Mark assignment as completed"
+              description="This indicates that all assigned actions related to this document have been completed. This status cannot be changed once confirmed."
+              confirmText="Mark as completed"
+              cancelText="Cancel"
+              onConfirm={() => handlePerformActionTask('complete')}
+              triggerButton={
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex items-center gap-2"
+                >
+                  <CheckCircle className="w-4 h-4" /> Mark as completed
+                </DropdownMenuItem>
+              }
+            />
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
