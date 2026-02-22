@@ -385,7 +385,7 @@ const DocumentActions = ({
           </>
         )}
 
-        {!isDraft && !isUserSds && !isUserUploader && !isUserRecords && (
+        {!isUserSds && !isUserUploader && !isUserRecords && (
           <>
             <DropdownMenuSeparator />
 
