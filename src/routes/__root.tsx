@@ -38,7 +38,7 @@ function App() {
         <UserContext.Provider value={{ user: user, setUser: setUser }}>
           <Outlet />
         </UserContext.Provider>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
+        {/* <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
@@ -49,7 +49,7 @@ function App() {
               render: <TanStackRouterDevtoolsPanel />,
             },
           ]}
-        />
+        /> */}
       </QueryClientProvider>
     </>
   )

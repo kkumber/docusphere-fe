@@ -88,8 +88,17 @@ function LoginPage() {
         </div>
       </div>
       <div className="bg-[url('/login-bg.png')] bg-cover relative hidden lg:block space-y-40 text-white">
-        <div className="w-full flex items-center justify-center ">
-          <img src="/DepEd.png" alt="DepEd Icon" className="w-1/4" />
+        <div className="w-full flex items-center justify-center gap-4">
+          <div className="w-full flex items-center justify-end">
+            <img src="/DepEd.png" alt="DepEd Icon" className="w-1/4" />
+          </div>
+          <div className="w-full flex items-center justify-start">
+            <img
+              src="/deped-makati.png"
+              alt="DepEd Makati Icon"
+              className="w-1/4"
+            />
+          </div>
         </div>
 
         <div className="flex items-center justify-center">

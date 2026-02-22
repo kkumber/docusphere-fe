@@ -114,8 +114,7 @@ const DocumentView = () => {
                   {document.title}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  Tracking No: {document.tracking_no} • Category:{' '}
-                  {document.category}
+                  Tracking No: {document.tracking_no}
                 </p>
               </div>
             </div>
