@@ -164,6 +164,15 @@ const DocumentInformation = ({
                 </p>
               </div>
 
+              {/* Assigner Office */}
+              <div className="space-y-0.5 min-w-0">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <p className="text-muted-foreground">Assigner Office</p>
+                </div>
+                <p className="font-medium break-words">{assignment.office}</p>
+              </div>
+
               {/* Request Type */}
               <div className="space-y-0.5 min-w-0">
                 <div className="flex items-center gap-2">
