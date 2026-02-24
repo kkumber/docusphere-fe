@@ -302,8 +302,8 @@ Maria,Santos,Office of the Assistant Schools Division Superintendent,None,Accoun
                   exactly (case-sensitive) but can be in any order
                 </li>
                 <li>
-                  If the user has no department, enter "None" in the Department
-                  column.
+                  Do not leave cells blank. Enter null if the field has no
+                  value.
                 </li>
               </ul>
             </div>

@@ -136,7 +136,9 @@ export default function DocumentRegistrationForm() {
 
   const handleResetForm = () => {
     setFormData({
-      tracking_no: `DRAFT-`,
+      tracking_no: !isUserRecords
+        ? `DRAFT-`
+        : `Category, ID, S. ${currentYear} Title`,
       title: '',
       instructions: '',
       category: '',

@@ -129,6 +129,17 @@ const DocumentInformation = ({
             </p>
           </div>
         </div>
+        {/* Instructions */}
+        {document.instructions && (
+          <div className="rounded-lg border bg-muted/40 p-4">
+            <p className="mb-1 text-xs font-medium text-muted-foreground">
+              General Instructions
+            </p>
+            <p className="leading-relaxed break-words">
+              {document.instructions}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Assignment Information */}
@@ -193,7 +204,7 @@ const DocumentInformation = ({
             {assignment.instructions && (
               <div className="rounded-lg border bg-muted/40 p-4">
                 <p className="mb-1 text-xs font-medium text-muted-foreground">
-                  Instructions
+                  Assignment Instructions
                 </p>
                 <p className="leading-relaxed break-words">
                   {assignment.instructions}
