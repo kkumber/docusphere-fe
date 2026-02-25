@@ -175,7 +175,7 @@ export function BulkUploadForm({
   const handleDownloadTemplate = () => {
     const template = `first_name,last_name,office,department,designation,role,email,password
 Juan,Dela Cruz,Office of the Schools Division Superintendent,Accounting,Accountant I,staff,juan.delacruz@deped.gov.ph,Password123
-Maria,Santos,Office of the Assistant Schools Division Superintendent,None,Accountant II,records,maria.santos@deped.gov.ph,Password123`
+Maria,Santos,Office of the Assistant Schools Division Superintendent,null,Accountant II,records,maria.santos@deped.gov.ph,Password123`
 
     const blob = new Blob([template], { type: 'text/csv' })
     const url = window.URL.createObjectURL(blob)
