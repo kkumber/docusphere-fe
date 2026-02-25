@@ -34,6 +34,9 @@ export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'designation',
     header: 'Designation',
+    cell: ({ row }) => (
+      <div className="">{row.getValue('designation') ?? 'None'}</div>
+    ),
   },
   {
     accessorKey: 'role',

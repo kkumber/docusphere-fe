@@ -52,7 +52,6 @@ const DocumentActions = ({ row }: Props) => {
   const completedStatuses = [
     DocumentStatusMap.DOC_COMPLETED,
     DocumentStatusMap.DOC_ARCHIVED,
-    DocumentStatusMap.DOC_DRAFT_APPROVED,
     DocumentStatusMap.DOC_REJECTED,
   ]
 

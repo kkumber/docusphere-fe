@@ -305,6 +305,8 @@ Maria,Santos,Office of the Assistant Schools Division Superintendent,None,Accoun
                   Do not leave cells blank. Enter null if the field has no
                   value.
                 </li>
+                <li>Only 'department' and 'designation' can be null</li>
+                <li>Only CSV files with a .csv extension are allowed.</li>
               </ul>
             </div>
           </section>
