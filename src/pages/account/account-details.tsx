@@ -14,9 +14,14 @@ import {
   Check,
   Layers,
   Briefcase,
+  FileText,
+  Download,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import useChangePassword from '@/hooks/use-change-password'
+import useGetRequest from '@/hooks/use-get'
+import api from '@/lib/api'
 
 const AccountDetails: React.FC = () => {
   const { user } = useUserContext()
@@ -112,6 +117,34 @@ const AccountDetails: React.FC = () => {
         </MainContainer>
       </>
     )
+  }
+
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false)
+
+  const handleDownloadMonthlyReport = async () => {
+    setIsDownloadingReport(true)
+    try {
+      const response = await api.get('/api/download/monthly-report', {
+        responseType: 'blob',
+      })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute(
+        'download',
+        `monthly_report_${new Date().toISOString().slice(0, 7)}.pdf`,
+      )
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error('Failed to download report:' + error.message)
+      }
+    } finally {
+      setIsDownloadingReport(false)
+    }
   }
 
   return (
@@ -384,6 +417,58 @@ const AccountDetails: React.FC = () => {
                     </div>
                   </form>
                 )}
+              </div>
+            </section>
+
+            {/* Monthly Reports */}
+            <section>
+              <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                Monthly Reports
+              </h2>
+              <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
+                {/* Current Month */}
+                <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-slate-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-900">
+                        {new Date().toLocaleString('default', {
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Current month report
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleDownloadMonthlyReport()}
+                    disabled={isDownloadingReport}
+                    className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isDownloadingReport ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Downloading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Download</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Info note */}
+                <div className="px-6 py-3 bg-slate-50 rounded-b-lg">
+                  <p className="text-xs text-slate-400">
+                    Report includes all documents handled in the current month.
+                  </p>
+                </div>
               </div>
             </section>
           </div>
