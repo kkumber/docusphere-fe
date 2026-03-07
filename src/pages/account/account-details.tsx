@@ -421,56 +421,59 @@ const AccountDetails: React.FC = () => {
             </section>
 
             {/* Monthly Reports */}
-            <section>
-              <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
-                Monthly Reports
-              </h2>
-              <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
-                {/* Current Month */}
-                <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3 shrink-0">
-                    <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
-                      <FileText className="w-4 h-4 text-slate-600" />
+            {user.role !== 'admin' && (
+              <section>
+                <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                  Monthly Reports
+                </h2>
+                <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
+                  {/* Current Month */}
+                  <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-3 shrink-0">
+                      <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-slate-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-slate-900">
+                          {new Date().toLocaleString('default', {
+                            month: 'long',
+                            year: 'numeric',
+                          })}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          Current month report
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">
-                        {new Date().toLocaleString('default', {
-                          month: 'long',
-                          year: 'numeric',
-                        })}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Current month report
-                      </p>
-                    </div>
+                    <button
+                      onClick={() => handleDownloadMonthlyReport()}
+                      disabled={isDownloadingReport}
+                      className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDownloadingReport ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Downloading...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Download</span>
+                        </>
+                      )}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleDownloadMonthlyReport()}
-                    disabled={isDownloadingReport}
-                    className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isDownloadingReport ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Downloading...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Download</span>
-                      </>
-                    )}
-                  </button>
-                </div>
 
-                {/* Info note */}
-                <div className="px-6 py-3 bg-slate-50 rounded-b-lg">
-                  <p className="text-xs text-slate-400">
-                    Report includes all documents handled in the current month.
-                  </p>
+                  {/* Info note */}
+                  <div className="px-6 py-3 bg-slate-50 rounded-b-lg">
+                    <p className="text-xs text-slate-400">
+                      Report includes all documents handled in the current
+                      month.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
           </div>
         </div>
       </MainContainer>
