@@ -35,21 +35,6 @@ const DashboardPage = () => {
       <MainContainer>
         {isPending && <DashboardSkeleton />}
 
-        {isError && (
-          <div className="flex min-h-[400px] items-center justify-center">
-            <Card className="w-full max-w-md border-2 border-red-200 bg-red-50 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-center gap-3">
-                  <AlertCircle className="h-6 w-6 text-red-600" />
-                  <p className="text-center font-semibold text-red-800">
-                    {error?.message}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
         {dashboardData && (
           <div className="space-y-12">
             {/* WELCOME BANNER */}

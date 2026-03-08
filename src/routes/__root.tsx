@@ -12,6 +12,7 @@ import { UserContext } from '@/context/user-context'
 import { Toaster } from 'sonner'
 import api from '@/lib/api'
 import { useEffect, useState } from 'react'
+import NotFoundPage from '@/pages/not-found'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +20,7 @@ export const Route = createRootRouteWithContext<{
   authentication: AuthContext
 }>()({
   component: App,
+  notFoundComponent: NotFoundPage,
 })
 
 function App() {

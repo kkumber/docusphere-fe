@@ -46,6 +46,7 @@ const NotificationPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: ['sidebarNotifications'] })
     },
   })
 
