@@ -4,5 +4,18 @@
       "source": "/api/:path*",
       "destination": "https://docusphere-api-production.up.railway.app/:path*"
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://docusphere-api-production.up.railway.app/$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
