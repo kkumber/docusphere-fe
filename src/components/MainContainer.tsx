@@ -5,8 +5,8 @@ type MainProps = {
 
 export default function MainContainer({ children, ...props }: MainProps) {
   return (
-    <main className="w-full p-4 overflow-y-auto" {...props}>
+    <div className="p-4 flex-1 min-w-0 overflow-x-hidden" {...props}>
       {children}
-    </main>
+    </div>
   )
 }
