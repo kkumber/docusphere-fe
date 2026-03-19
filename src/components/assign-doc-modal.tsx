@@ -152,7 +152,7 @@ export const AssignDocModal: React.FC<AssignDocModalProps> = ({
         flex flex-col gap-4"
       >
         <AlertDialogHeader>
-          <AlertDialogTitle>Assign {documentTitle}</AlertDialogTitle>
+          <AlertDialogTitle>{documentTitle}</AlertDialogTitle>
           <AlertDialogDescription>
             You can assign this document to multiple users. Only one request
             type per assignment.
