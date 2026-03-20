@@ -268,7 +268,7 @@ export default function DocumentRegistrationForm() {
                 <FieldLabel htmlFor="tracking_no">Tracking Number</FieldLabel>
                 <Input
                   id="tracking_no"
-                  placeholder={!isUserRecords ? 'DRAFT-' : 'DOC-2023-0001'}
+                  placeholder={formData.tracking_no}
                   value={formData.tracking_no}
                   required
                   onChange={handleInputChange}
@@ -277,7 +277,12 @@ export default function DocumentRegistrationForm() {
               </Field>
 
               <Field>
-                <FieldLabel>Due Date (optional)</FieldLabel>
+                <FieldLabel>
+                  Due Date{' '}
+                  <span className="ml-1.5 text-xs font-normal text-slate-400">
+                    (optional)
+                  </span>
+                </FieldLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -286,6 +291,7 @@ export default function DocumentRegistrationForm() {
                         'w-full justify-start text-left font-normal',
                         !formData.due_date && 'text-muted-foreground',
                       )}
+                      disabled={isUserRecords}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4 text-primary-blue" />
                       {formData.due_date
@@ -331,7 +337,10 @@ export default function DocumentRegistrationForm() {
 
             <Field>
               <FieldLabel htmlFor="instructions">
-                Instructions (optional)
+                Instructions{' '}
+                <span className="ml-1.5 text-xs font-normal text-slate-400">
+                  (optional)
+                </span>
               </FieldLabel>
               <FieldDescription>
                 Provide routing notes or special handling instructions.

@@ -50,9 +50,9 @@ export default function ActionBars<TData>({
       </div>
 
       {/* DESKTOP VERSION */}
-      <div className="hidden md:flex gap-4 w-full">
+      <div className="hidden md:flex w-full gap-4">
         <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mr-4">
             <Input
               placeholder={searchFilterInput.placeholder}
               value={
@@ -65,7 +65,7 @@ export default function ActionBars<TData>({
                   .getColumn(searchFilterInput.column)
                   ?.setFilterValue(e.target.value)
               }
-              className="min-w-80"
+              className="min-w-0"
             />
             <TableColumnFilter
               table={table}

@@ -174,32 +174,37 @@ const DocumentManagementPage = () => {
       <Header breadcrumbs={breadcrumbs} />
 
       <MainContainer>
-        <div className="space-y-4 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-blue/10 p-2">
-              <Files className="h-5 w-5 text-primary-blue" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                Document List
-              </h2>
-              <p className="text-sm text-gray-500">
-                Browse, filter, and manage documents in your workflow
-              </p>
+        <div className="overflow-x-hidden">
+          <div className="space-y-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-blue/10 p-2">
+                <Files className="h-5 w-5 text-primary-blue" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Document List
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Browse, filter, and manage documents in your workflow
+                </p>
+              </div>
             </div>
           </div>
+
+          <div className="">
+            {isPending && <DataTableSkeleton columnCount={8} />}
+            {isError && <p>{error?.message}</p>}
+            {data && (
+              <DataTable
+                columns={documentColumns}
+                data={data.data}
+                columnValuesForFilter={columnValuesForFilter}
+                searchFilterInput={searchFilterInputValues}
+                btnActions={btnActions()}
+              />
+            )}
+          </div>
         </div>
-        {isPending && <DataTableSkeleton columnCount={8} />}
-        {isError && <p>{error?.message}</p>}
-        {data && (
-          <DataTable
-            columns={documentColumns}
-            data={data.data}
-            columnValuesForFilter={columnValuesForFilter}
-            searchFilterInput={searchFilterInputValues}
-            btnActions={btnActions()}
-          />
-        )}
       </MainContainer>
     </>
   )
