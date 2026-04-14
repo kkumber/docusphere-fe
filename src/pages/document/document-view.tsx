@@ -105,17 +105,14 @@ const DocumentView = () => {
         <div className="space-y-6 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {/* Icon + Document Info */}
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-blue/10 p-2">
                 <Files className="h-6 w-6 text-primary-blue" />
               </div>
-              <div>
+              <div className='flex'>
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {document.title}
+                  {document.tracking_no}
                 </h2>
-                <p className="text-sm text-gray-500">
-                  Tracking No: {document.tracking_no}
-                </p>
               </div>
             </div>
 
