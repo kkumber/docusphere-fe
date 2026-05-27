@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://docusphere-api.onrender.com/:path*"
+      "destination": "https://docusphere-api-prod.onrender.com/:path*"
     }
   ]
 }
