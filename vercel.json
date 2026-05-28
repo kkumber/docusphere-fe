@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://docusphere-api-prod.onrender.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
