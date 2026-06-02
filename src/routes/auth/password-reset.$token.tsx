@@ -103,7 +103,7 @@ function NewPasswordPage() {
       </div>
       <div className="bg-[url('/login-bg.png')] bg-cover relative hidden lg:block space-y-40 text-white">
         <div className="w-full flex items-center justify-center">
-          <img src="/DepEd.png" alt="DepEd Icon" className="w-1/4" />
+          <img src="/docusphere-icon.png" alt="Docusphere Icon" className="w-1/4" />
         </div>
 
         <div className="flex items-center justify-center">
@@ -111,7 +111,7 @@ function NewPasswordPage() {
         </div>
 
         <div className="mx-auto flex items-center justify-center rounded-full bg-white/20 px-8 py-2 max-w-max">
-          <p>DepEd Makati Division</p>
+          <p>DocuSphere Management</p>
         </div>
       </div>
     </div>
