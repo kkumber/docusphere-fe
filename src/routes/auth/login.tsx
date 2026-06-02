@@ -89,15 +89,8 @@ function LoginPage() {
       </div>
       <div className="bg-[url('/login-bg.png')] bg-cover relative hidden lg:block space-y-40 text-white">
         <div className="w-full flex items-center justify-center gap-4">
-          <div className="w-full flex items-center justify-end">
-            <img src="/DepEd.png" alt="DepEd Icon" className="w-1/4" />
-          </div>
-          <div className="w-full flex items-center justify-start">
-            <img
-              src="/deped-makati.png"
-              alt="DepEd Makati Icon"
-              className="w-1/4"
-            />
+          <div className="w-full flex items-center justify-center">
+            <img src="/docusphere-icon.png" alt="Docusphere Icon" className="w-1/4" />
           </div>
         </div>
 
@@ -106,7 +99,7 @@ function LoginPage() {
         </div>
 
         <div className="mx-auto flex items-center justify-center rounded-full bg-white/20 px-8 py-2 max-w-max">
-          <p>DepEd Makati Division</p>
+          <p>Capstone Project</p>
         </div>
       </div>
     </div>
