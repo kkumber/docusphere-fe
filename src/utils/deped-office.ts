@@ -18,6 +18,8 @@ export interface Office {
   departments?: Department[]
 }
 
+export const DEMO_ACCOUNTS = ['docusphere@admin.com', 'docusphere@staff.com', 'docusphere@sds.com', 'docusphere@chief.com', 'docusphere@records.com'];
+
 
 export function getOffices(): Office[] {
   return (officesData.Offices as Office[])
