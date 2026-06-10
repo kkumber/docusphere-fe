@@ -32,7 +32,7 @@ export function ForgotPasswordForm({
       <FieldGroup>
         <div className="flex flex-col items-start gap-1r text-center md:text-start">
           <h1 className="text-2xl font-bold mb-2">Forgot your password?</h1>
-          <p className="text-muted-foreground text-sm text-balance">
+          <p className="text-muted-foreground text-sm text-left">
             Enter your email address and we'll send you a link to reset your
             password
           </p>

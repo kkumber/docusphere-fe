@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input'
 import { Link } from '@tanstack/react-router'
 
 type LoginFormProps = {
+  email?: string
+  password?: string
   handleEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
@@ -16,6 +18,8 @@ type Props = React.ComponentProps<'form'> & LoginFormProps
 
 export function LoginForm({
   className,
+  email,
+  password,
   handleEmailChange,
   handlePasswordChange,
   handleSubmit,
@@ -32,7 +36,7 @@ export function LoginForm({
       <FieldGroup>
         <div className="flex flex-col items-start gap-1 text-center">
           <h1 className="text-2xl font-bold ">Login to your account</h1>
-          <p className="text-muted-foreground text-sm text-balance">
+          <p className="text-muted-foreground text-sm text-left">
             Enter your email below to login to your account
           </p>
         </div>
@@ -45,6 +49,7 @@ export function LoginForm({
             id="email"
             type="email"
             placeholder="employee@example.com"
+            value={email || ''}
             onChange={handleEmailChange}
             required
           />
@@ -58,6 +63,7 @@ export function LoginForm({
           <Input
             id="password"
             type="password"
+            value={password || ''}
             onChange={handlePasswordChange}
             required
           />
