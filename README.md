@@ -14,6 +14,22 @@ As a Capstone project, DocuSphere addresses the need for digital transformation 
 - **Analytics & Reporting**: Data visualization for document throughput and departmental performance.
 - **Bulk Operations**: Support for batch user registration and document processing.
 
+## Live Demo & Credentials
+
+Experience the system in action:
+- **Demo Video**: [How Docusphere Works](https://drive.google.com/file/d/1n5XNxZpGIcJKOSDS7FfqZBnVdsJE6mGC/view)
+
+You can log in using the following demo accounts (Password: `password`):
+
+| Role | Email |
+| :--- | :--- |
+| **Admin** | `docusphere@admin.com` |
+| **Records** | `docusphere@records.com` |
+| **SDS** | `docusphere@sds.com` |
+| **Chief** | `docusphere@chief.com` |
+| **Staff** | `docusphere@staff.com` |
+
+
 ## Technology Stack
 
 - **Framework**: [React 19](https://react.dev/)
