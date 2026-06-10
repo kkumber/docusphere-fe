@@ -22,6 +22,7 @@ import { toast } from 'sonner'
 import useChangePassword from '@/hooks/use-change-password'
 import useGetRequest from '@/hooks/use-get'
 import api from '@/lib/api'
+import { DEMO_ACCOUNTS } from '@/utils/deped-office'
 
 const AccountDetails: React.FC = () => {
   const { user } = useUserContext()
@@ -36,8 +37,14 @@ const AccountDetails: React.FC = () => {
 
   const breadcrumbs: Breadcrumbs[] = [{ title: 'Account', href: '#' }]
 
+
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (DEMO_ACCOUNTS.includes(user!.email!)) {
+      toast.error('You cannot change the password for this account')
+      return
+    }
 
     if (passwordForm.password !== passwordForm.password_confirmation) {
       toast.error('Passwords do not match')
